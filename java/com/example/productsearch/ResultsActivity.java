@@ -1,5 +1,6 @@
 package com.example.productsearch;
 
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +34,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class ResultsActivity extends AppCompatActivity
 {
@@ -44,6 +50,10 @@ public class ResultsActivity extends AppCompatActivity
     public TextView mShowingResult;
 
     public ListView mListView;
+    public RecyclerView mRecyclerView;
+
+    public List<item> listItem;
+
     public TextView noResultsView;
     public String[] placeIdList;
     public String[] iconList;
@@ -85,7 +95,12 @@ public class ResultsActivity extends AppCompatActivity
         mShowingResult = (TextView)findViewById(R.id.showingResult);
         mNextButton = (Button)findViewById(R.id.nextButton);
         mPrevButton = (Button)findViewById(R.id.previousButton);
+
         mListView = (ListView)findViewById(R.id.resultsList);
+        mRecyclerView = (RecyclerView) findViewById(R.id.resultsList2);
+
+        listItem = new ArrayList<>();
+
         noResultsView = (TextView) findViewById(R.id.noResults);
 
         mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message);;
@@ -132,6 +147,10 @@ public class ResultsActivity extends AppCompatActivity
                 requestDetails(rowData[currentPage][2][position], rowData[currentPage][0][position]);
             }
         });
+
+//        mRecyclerView.
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -238,6 +257,16 @@ public class ResultsActivity extends AppCompatActivity
         resultsListFragment resultsListAdapter = new resultsListFragment(this,rowData[currentPage][0], rowData[currentPage][1],
                 rowData[currentPage][2], rowData[currentPage][3], rowData[currentPage][4]);
         mListView.setAdapter(resultsListAdapter);
+
+
+        List<item> copy_listItem = new ArrayList<>();
+        for (int i = 0; i < rowData[currentPage][0].length; i++) {
+            copy_listItem.add(new item(rowData[currentPage][0][i], rowData[currentPage][1][i], rowData[currentPage][2][i], rowData[currentPage][3][i], rowData[currentPage][4][i]));
+        }
+
+        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, copy_listItem);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mRecyclerView.setAdapter(myAdapter);
     }
 
     public void generateTable(JSONObject jsonObject) throws JSONException
@@ -285,12 +314,23 @@ public class ResultsActivity extends AppCompatActivity
 
                 rowData[currentPage][0][i] = placeIdList[i];
                 rowData[currentPage][1][i] = iconList[i];
+                Log.v(TAG, "Rainie : iconList[" + i + "] = " + iconList[i]);
                 rowData[currentPage][2][i] = nameList[i];
                 rowData[currentPage][3][i] = addressList[i];
                 rowData[currentPage][4][i] = favoriteList[i];
+
+
+//                String placeId, String icon, String name, String address, String favorite
+                listItem.add(new item(placeIdList[i], iconList[i], nameList[i], addressList[i], favoriteList[i]));
             }
             resultsListFragment resultsListAdapter = new resultsListFragment(this, placeIdList, iconList, nameList, addressList, favoriteList);
             mListView.setAdapter(resultsListAdapter);
+
+
+            RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            mRecyclerView.setAdapter(myAdapter);
+
         }
         catch (JSONException e)
         {
@@ -501,8 +541,8 @@ public class ResultsActivity extends AppCompatActivity
         mShowingResult.setVisibility(View.VISIBLE);
 
         mListView.setVisibility(View.VISIBLE);
-        mNextButton.setVisibility(View.VISIBLE);
-        mPrevButton.setVisibility(View.VISIBLE);
+//        mNextButton.setVisibility(View.VISIBLE);
+//        mPrevButton.setVisibility(View.VISIBLE);
         noResultsView.setVisibility(View.GONE);
     }
 
