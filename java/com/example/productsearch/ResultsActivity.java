@@ -148,7 +148,19 @@ public class ResultsActivity extends AppCompatActivity
             }
         });
 
-//        mRecyclerView.
+
+        // set click listener
+//        mRecyclerView.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                newIntent = new Intent(ResultsActivity.this, DetailsActivity.class);
+//
+//
+//                // passing data to the detail activity
+//                requestDetails(rowData[currentPage][2][position], rowData[currentPage][0][position]);
+//            }
+//        });
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -314,7 +326,7 @@ public class ResultsActivity extends AppCompatActivity
 
                 rowData[currentPage][0][i] = placeIdList[i];
                 rowData[currentPage][1][i] = iconList[i];
-                Log.v(TAG, "Rainie : iconList[" + i + "] = " + iconList[i]);
+//                Log.v(TAG, "Rainie : iconList[" + i + "] = " + iconList[i]);
                 rowData[currentPage][2][i] = nameList[i];
                 rowData[currentPage][3][i] = addressList[i];
                 rowData[currentPage][4][i] = favoriteList[i];

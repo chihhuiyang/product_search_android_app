@@ -1,7 +1,9 @@
 package com.example.productsearch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +40,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
+    public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
 
         myViewHolder.tv_item_title.setText(mData.get(i).getName());
 //        Picasso.get().load(itemIcon[position]).into(iconView);
@@ -46,6 +48,24 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 //        Log.v(TAG, "Rainie : Picasso : getIcon()" + mData.get(i).getIcon() );
         Picasso.get().load(mData.get(i).getIcon()).into(myViewHolder.img_item_icon);
 //        myViewHolder.img_item_icon.setImage
+
+
+//        // set click listener
+        myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DetailsActivity.class);
+
+                // passing data to the detail activity
+                intent.putExtra("name", mData.get(i).getName());
+                intent.putExtra("place", mData.get(i).getPlaceId());
+
+                mContext.startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override
@@ -57,12 +77,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         TextView tv_item_title;
         ImageView img_item_icon;
+        CardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tv_item_title = (TextView) itemView.findViewById(R.id.item_title_id);
             img_item_icon = (ImageView) itemView.findViewById(R.id.item_img_id);
+            cardView = (CardView) itemView.findViewById(R.id.cardview_id);
         }
     }
 

@@ -72,6 +72,8 @@ public class DetailsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        Log.v(TAG, "Rainie: onCreate()");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
@@ -87,10 +89,10 @@ public class DetailsActivity extends AppCompatActivity
         try
         {
             receiveData();
-            placeName = placeDetails.getString("name");
-            setTitle(placeName);
-            bundle.putString("jsonObj", jsonObject.toString());
-            setupViewPager(mViewPager);
+//            placeName = placeDetails.getString("name");
+//            setTitle(placeName);
+//            bundle.putString("jsonObj", jsonObject.toString());
+//            setupViewPager(mViewPager);
         }
         catch (JSONException e)
         {
@@ -196,10 +198,21 @@ public class DetailsActivity extends AppCompatActivity
     public void receiveData() throws JSONException
     {
         Intent mIntent = getIntent();
-        String receivedData = mIntent.getStringExtra("jsonObj");
-        jsonObject = new JSONObject(receivedData);
-        placeDetails = jsonObject.getJSONObject("result");
-        placeId = placeDetails.getString("place_id");
+//        String receivedData = mIntent.getStringExtra("jsonObj");
+//        jsonObject = new JSONObject(receivedData);
+//        placeDetails = jsonObject.getJSONObject("result");
+//        placeId = placeDetails.getString("place_id");
+
+
+
+
+
+        String receivedName = mIntent.getStringExtra("name");
+        String receivedPlace = mIntent.getStringExtra("place");
+
+        Log.v(TAG, "Rainie: mIntent : " + mIntent);
+        Log.v(TAG, "Rainie: receivedName : " + receivedName);
+        Log.v(TAG, "Rainie: receivedPlace : " + receivedPlace);
     }
 
 
