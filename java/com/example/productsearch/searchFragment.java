@@ -78,15 +78,28 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     }
 
     private static final String TAG = "searchFragment";
-    public final String[] categories = {"Default", "Airport", "Amusement Park", "Aquarium", "Art Gallery", "Bakery", "Bar", "Beauty Salon", "Bowling Alley",
-            "Bus Station", "Cafe", "Campground", "Car Rental", "Casino", "Lodging", "Movie Theater", "Museum", "Night Club", "Park", "Parking",
-            "Restaurant", "Shopping Mall", "Stadium", "Subway Station", "Taxi Stand", "Train Station", "Transit Station", "Travel Agency", "Zoo"};
+    public final String[] categories = {
+            "Default",
+            "Art",
+            "Baby",
+            "Books",
+            "Clothing, Shoes & Accessories",
+            "Computers/Tablets & Networking",
+            "Health & Beauty",
+            "Music",
+            "Video Games & Consoles"};
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(25, -139), new LatLng(40, -60));
 
     public EditText mKeyword;
     public Spinner mSpinner;
     public EditText mDistance;
+
+    public CheckBox mNew;
+    public CheckBox mUsed;
+    public CheckBox mUnspecified;
+    public CheckBox mLPickup;
+    public CheckBox mFree;
 
     public CheckBox mInput_nearby;
 
@@ -95,6 +108,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     public RadioButton mCurrentLocation;
     public RadioButton mOtherLocation;
     public AutoCompleteTextView mInputLocation;
+
     public Button mSearchButton;
     public Button mClearButton;
     public TextView mKeywordError;
@@ -125,7 +139,12 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         //initialization
         mKeyword = (EditText)view.findViewById(R.id.keyword);
 
-
+        // 5 checkbox
+        mNew = (CheckBox) view.findViewById(R.id.input_new);
+        mUsed = (CheckBox) view.findViewById(R.id.input_used);
+        mUnspecified = (CheckBox) view.findViewById(R.id.input_unspecified);
+        mLPickup = (CheckBox) view.findViewById(R.id.input_pickup);
+        mFree = (CheckBox) view.findViewById(R.id.input_free);
 
         mInput_nearby = (CheckBox) view.findViewById(R.id.input_nearby);
 
@@ -338,49 +357,146 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 //        mProgressDialog = new ProgressDialog(this.getActivity());
 //        mProgressDialog.setMessage("Searching Products...");
 //        mProgressDialog.show();
-//
-//
-//
-//        mProgressDialog.dismiss();
-
-        String keywordVal = mKeyword.getText().toString();
-        String categoryVal = mSpinner.getSelectedItem().toString();
-        categoryVal = categoryVal.replaceAll(" ", "_").toLowerCase();
-
-        Log.v(TAG, "categoryVal=" + categoryVal);
 
 
-        int distanceVal;
-        if (mDistance.getText().toString().isEmpty())
+        String ipUrl = "http://ip-api.com/json";
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, ipUrl, new Response.Listener<String>()
         {
-            distanceVal = 10;
-        }
-        else
-        {
-            distanceVal = Integer.parseInt(mDistance.getText().toString());
-        }
+            @Override
+            public void onResponse(String response) {
+                try
+                {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Log.v(TAG, "Rainie : jsonObject = " + jsonObject.toString());
+                    mIntent.putExtra("jsonObj", jsonObject.toString());
 
-        if (mCurrentLocation.isChecked())
-        {
-            getCurrentGeoLocation();
-        }
-        else
-        {
+                    String currentZip = jsonObject.getString("zip");
+                    Log.v(TAG, "Rainie : currentZip = " + currentZip);
 
-            String inputLocationVal = mInputLocation.getText().toString();
-            System.out.println("------------------------");
-            System.out.println(inputLocationVal);
-            requestResultsByInputLocation(inputLocationVal);
-        }
 
+
+
+                    String keywordVal = mKeyword.getText().toString();
+                    String categoryVal = mSpinner.getSelectedItem().toString();
+
+
+                    if (categoryVal.equals("Default")) {
+                        categoryVal = "default";
+                    } else if (categoryVal.equals("Art")) {
+                        categoryVal = "550";
+                    } else if (categoryVal.equals("Baby")) {
+                        categoryVal = "2984";
+                    } else if (categoryVal.equals("Books")) {
+                        categoryVal = "267";
+                    } else if (categoryVal.equals("Clothing, Shoes & Accessories")) {
+                        categoryVal = "11450";
+                    } else if (categoryVal.equals("Computers/Tablets & Networking")) {
+                        categoryVal = "58058";
+                    } else if (categoryVal.equals("Health & Beauty")) {
+                        categoryVal = "26395";
+                    } else if (categoryVal.equals("Music")) {
+                        categoryVal = "11233";
+                    } else if (categoryVal.equals("Video Games & Consoles")) {
+                        categoryVal = "1249";
+                    }
+
+
+                    String url_params = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?";
+                    url_params += "category=" + categoryVal + "&keyword=" + keywordVal;
+
+
+                    // enable nearby : hw8 server.js
+                    if (mInput_nearby.isChecked()) {
+                        Log.v(TAG, "Rainie : url_params=" + url_params);
+
+                        int distanceVal;
+                        if (mDistance.getText().toString().isEmpty()) {
+                            distanceVal = 10;
+                        } else {
+                            distanceVal = Integer.parseInt(mDistance.getText().toString());
+                        }
+                        url_params += "&distance=" + distanceVal;
+
+                        // current location
+                        if (mCurrentLocation.isChecked()) {
+                            url_params += "&zipcode=" + currentZip;
+//                getCurrentGeoLocation();
+
+                        } else {    // input zipcode location
+                            String inputLocationVal = mInputLocation.getText().toString();
+                            url_params += "&location=" + inputLocationVal;
+//                requestResultsByInputLocation(inputLocationVal);
+                        }
+
+                    } else {    // disable nearby : hw9 (new server.js)
+                        Log.v(TAG, "Rainie : url_params=" + url_params);
+
+                        // TODO : fix server.js
+
+
+                    }
+
+
+
+                    // 5 checkbox
+                    if (mNew.isChecked()) {
+                        url_params += "&new_condition=" + "true";
+                    } else {
+                        url_params += "&new_condition=" + "false";
+                    }
+                    if (mUsed.isChecked()) {
+                        url_params += "&used=" + "true";
+                    } else {
+                        url_params += "&used=" + "false";
+                    }
+                    if (mUnspecified.isChecked()) {
+                        url_params += "&unspecified=" + "true";
+                    } else {
+                        url_params += "&unspecified=" + "false";
+                    }
+                    if (mLPickup.isChecked()) {
+                        url_params += "&local_pickup=" + "true";
+                    } else {
+                        url_params += "&local_pickup=" + "false";
+                    }
+                    if (mFree.isChecked()) {
+                        url_params += "&free_shipping=" + "true";
+                    } else {
+                        url_params += "&free_shipping=" + "false";
+                    }
+
+
+
+                    Log.v(TAG, "Rainie : (Before redirect()) getActivity() : " + getActivity());
+                    mIntent.putExtra("url", url_params);
+                    redirect();
+                }
+                catch (JSONException e)
+                {
+                    Toast.makeText(getActivity(), "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        },
+        new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Toast.makeText(getActivity(), "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        queue.add(stringRequest);
     }
 
     public void requestResultsByInputLocation(String inputLocation)
     {
         String keywordVal = mKeyword.getText().toString();
-        keywordVal = keywordVal.replaceAll(" ", "%20").toLowerCase();
+//        keywordVal = keywordVal.replaceAll(" ", "%20").toLowerCase();
         String categoryVal = mSpinner.getSelectedItem().toString();
-        categoryVal = categoryVal.replaceAll(" ", "_").toLowerCase();
+//        categoryVal = categoryVal.replaceAll(" ", "_").toLowerCase();
 
         int distanceVal;
         if (mDistance.getText().toString().isEmpty())

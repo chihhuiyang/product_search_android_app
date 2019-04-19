@@ -40,20 +40,20 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="0dp" />
 
-    <ListView
-        android:id="@+id/resultsList"
-        android:layout_width="match_parent"
-        android:layout_height="77dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="8dp"
-        android:divider="@null"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/showingResult"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="0dp" />
+            <ListView
+                android:id="@+id/resultsList"
+                android:layout_width="match_parent"
+                android:layout_height="77dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="8dp"
+                android:divider="@null"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/showingResult"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layout_editor_absoluteX="0dp" />
 
             <Button
                 android:id="@+id/previousButton"
@@ -103,12 +103,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/resultsList2"
-        android:layout_width="413dp"
-        android:layout_height="591dp"
-        app:layout_constraintTop_toBottomOf="@+id/resultsList"
-        tools:layout_editor_absoluteX="0dp" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/resultsList2"
+                android:layout_width="413dp"
+                android:layout_height="591dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/resultsList"
+                tools:layout_editor_absoluteX="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>

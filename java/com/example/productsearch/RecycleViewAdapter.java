@@ -34,12 +34,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
 
     public RecycleViewAdapter(Context mContext, List<item> mData) {
-
-
         mSharedPreferences = mContext.getSharedPreferences("mySP", Context.MODE_PRIVATE);
         spEditor = mSharedPreferences.edit();
-
-
 
         this.mContext = mContext;
         this.mData = mData;
@@ -53,27 +49,29 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.cardview_item, viewGroup, false);
 
-
-
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
-
-        myViewHolder.tv_item_title.setText(mData.get(i).getName());
 //        Picasso.get().load(itemIcon[position]).into(iconView);
 //        textName.setText(itemName[position]);
 //        Log.v(TAG, "Rainie : Picasso : getIcon()" + mData.get(i).getIcon() );
-        Picasso.get().load(mData.get(i).getIcon()).into(myViewHolder.img_item_icon);
 //        myViewHolder.img_item_icon.setImage
 
+
+        Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
+        myViewHolder.tv_item_title.setText(mData.get(i).getTitle());
+        myViewHolder.tv_item_zip.setText(mData.get(i).getZipcode());
+        myViewHolder.tv_item_ship.setText(mData.get(i).getShippingCost());
+        myViewHolder.tv_item_condition.setText(mData.get(i).getCondition());
+        myViewHolder.tv_item_price.setText(mData.get(i).getPrice());
 
         // add wish list
         // itemFavorite[position] == mData.get(i).getFavorite()
         // favoriteView == myViewHolder.img_item_wish
-        Picasso.get().load(mData.get(i).getFavorite()).into(myViewHolder.img_item_wish);
-        if (mData.get(i).getFavorite() == "no") {
+        Picasso.get().load(mData.get(i).getWish()).into(myViewHolder.img_item_wish);
+        if (mData.get(i).getWish() == "no") {
             myViewHolder.img_item_wish.setImageResource(R.drawable.cart_plus);
         } else {
             myViewHolder.img_item_wish.setImageResource(R.drawable.cart_remove);
@@ -133,12 +131,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 Intent intent = new Intent(mContext, DetailsActivity.class);
 
                 // passing data to the detail activity
-                intent.putExtra("name", mData.get(i).getName());
-                intent.putExtra("place", mData.get(i).getPlaceId());
-
+                intent.putExtra("title", mData.get(i).getTitle());
+                intent.putExtra("itemId", mData.get(i).getItemId());
 
                 // equal to redirect()
-                mContext.startActivity(intent);
+//                mContext.startActivity(intent);
             }
         });
 
@@ -152,56 +149,62 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_item_title;
-        ImageView img_item_icon;
         CardView cardView;
 
+        ImageView img_item_img;
+        TextView tv_item_title;
+        TextView tv_item_zip;
+        TextView tv_item_ship;
+        TextView tv_item_condition;
+        TextView tv_item_price;
         ImageView img_item_wish;
-
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tv_item_title = (TextView) itemView.findViewById(R.id.item_title_id);
-            img_item_icon = (ImageView) itemView.findViewById(R.id.item_img_id);
             cardView = (CardView) itemView.findViewById(R.id.cardview_id);
 
+            img_item_img = (ImageView) itemView.findViewById(R.id.item_img_id);
+            tv_item_title = (TextView) itemView.findViewById(R.id.item_title_id);
+            tv_item_zip = (TextView) itemView.findViewById(R.id.item_zip_id);
+            tv_item_ship = (TextView) itemView.findViewById(R.id.item_ship_id);
+            tv_item_condition = (TextView) itemView.findViewById(R.id.item_condition_id);
+            tv_item_price  = (TextView) itemView.findViewById(R.id.item_price_id);
             img_item_wish = (ImageView) itemView.findViewById(R.id.item_wish_id);
-
         }
     }
 
 
 //    itemFavorite[position] == mData.get(i).getFavorite()
     public void addToFavorite(int position) {
-        String placeName = mData.get(position).getName();
-        if (mData.get(position).getFavorite() == "yes")
-        {
-            mData.get(position).setFavorite("no");
-            spEditor.remove(mData.get(position).getPlaceId());
+        String item_title = mData.get(position).getTitle();
+        if (mData.get(position).getWish() == "yes") {
+            mData.get(position).setWish("no");
+            spEditor.remove(mData.get(position).getItemId());
             spEditor.apply();
 
             this.notifyDataSetChanged();
-            Toast.makeText(mContext, placeName + " was removed from favorites", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            mData.get(position).setFavorite("yes");
-            saveStr = new String[5];
-            saveStr[0] = mData.get(position).getPlaceId();
-            saveStr[1] = mData.get(position).getIcon();
-            saveStr[2] = mData.get(position).getName();
-            saveStr[3] = mData.get(position).getAddress();
-            saveStr[4] = mData.get(position).getFavorite();
+            Toast.makeText(mContext, item_title + " was removed from favorites", Toast.LENGTH_SHORT).show();
+        } else {
+            mData.get(position).setWish("yes");
+            saveStr = new String[8];
+            saveStr[0] = mData.get(position).getItemId();
+            saveStr[1] = mData.get(position).getProductImg();
+            saveStr[2] = mData.get(position).getTitle();
+            saveStr[3] = mData.get(position).getZipcode();
+            saveStr[4] = mData.get(position).getShippingCost();
+            saveStr[5] = mData.get(position).getCondition();
+            saveStr[6] = mData.get(position).getPrice();
+            saveStr[7] = mData.get(position).getWish();
 
             Gson gson = new Gson();
             String myStr = gson.toJson(saveStr);
 
-            spEditor.putString(mData.get(position).getPlaceId(), myStr);
+            spEditor.putString(mData.get(position).getItemId(), myStr);
             spEditor.apply();
 
             this.notifyDataSetChanged();
-            Toast.makeText(mContext, placeName + " was added to favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, item_title + " was added to favorites", Toast.LENGTH_SHORT).show();
         }
     }
 

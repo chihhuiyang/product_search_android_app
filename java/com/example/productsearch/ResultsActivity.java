@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,11 +50,18 @@ public class ResultsActivity extends AppCompatActivity
 
     public TextView mShowingResult;
 
-    public ListView mListView;
     public RecyclerView mRecyclerView;
-
     public List<item> listItem;
+    public String[] list_itemId;
+    public String[] list_productImg;
+    public String[] list_title;
+    public String[] list_zipcode;
+    public String[] list_shippingCost;
+    public String[] list_condition;
+    public String[] list_wish;
+    public String[] list_price;
 
+    public ListView mListView;
     public TextView noResultsView;
     public String[] placeIdList;
     public String[] iconList;
@@ -62,7 +70,11 @@ public class ResultsActivity extends AppCompatActivity
     public String[] favoriteList;
 
     public JSONArray jsonArray;
+    public JSONArray jsonArray_items;   // 50 items
+
     public String[][][] rowData = new String[3][5][20];
+
+
     public ProgressDialog mProgressDialog;
     public String nextPageToken;
     public boolean[] ifHasNextPage = new boolean[3];
@@ -149,20 +161,6 @@ public class ResultsActivity extends AppCompatActivity
         });
 
 
-        // set click listener
-//        mRecyclerView.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                newIntent = new Intent(ResultsActivity.this, DetailsActivity.class);
-//
-//
-//                // passing data to the detail activity
-//                requestDetails(rowData[currentPage][2][position], rowData[currentPage][0][position]);
-//            }
-//        });
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -173,6 +171,7 @@ public class ResultsActivity extends AppCompatActivity
         super.onResume();
         if (!ifFisrtTime)
         {
+            Log.v(TAG, "Rainie: not first time");
             checkIfFavorite();
             setAdapterForListView();
         }
@@ -220,25 +219,41 @@ public class ResultsActivity extends AppCompatActivity
 
 
                         JSONObject jsonObject = new JSONObject(response);
-                        JSONArray jsonArray = jsonObject.getJSONArray("results");
+
                         Log.v(TAG, "Rainie: JSON : " + jsonObject.toString());
 
+                        if (jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0).getJSONArray("searchResult") == null) {   // null searchResult
+                            noResults();
+                        } else {    // valid item
+                            String count_str = jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0).getJSONArray("searchResult").getJSONObject(0).getString("@count");
+                            int count_items = Integer.parseInt(count_str);
+                            if (count_items == 0) {
+                                noResults();
+                            } else {
+                                ifFisrtTime = true;
+                                Log.v(TAG, "Rainie: count_items = " + count_items);
+                                hasResults();
+                                generateTable2(jsonObject);
+                            }
+                        }
 
-                                if (jsonObject.getString("status").equals("OK"))
-                                {
 
-                                    ifFisrtTime = true;
-                                    Log.v(TAG, "Rainie: response OK");
-                                    hasResults();
-                                    generateTable(jsonObject);
-                                }
-                                else
-                                {
-                                    noResults();
-                                }
+
+//                                if (jsonObject.getString("status").equals("OK"))
+//                                {
+//                                    ifFisrtTime = true;
+//                                    Log.v(TAG, "Rainie: response OK");
+//                                    hasResults();
+//                                    generateTable(jsonObject);
+//                                }
+//                                else
+//                                {
+//                                    noResults();
+//                                }
                     }
                     catch (JSONException e)
                     {
+                        Toast.makeText(ResultsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Rainie: JSONException");
                         mProgressBar.setVisibility(View.GONE);
                         mProgressBarMsg.setVisibility(View.GONE);
@@ -266,20 +281,123 @@ public class ResultsActivity extends AppCompatActivity
 
     public void setAdapterForListView()
     {
-        resultsListFragment resultsListAdapter = new resultsListFragment(this,rowData[currentPage][0], rowData[currentPage][1],
-                rowData[currentPage][2], rowData[currentPage][3], rowData[currentPage][4]);
-        mListView.setAdapter(resultsListAdapter);
+//        resultsListFragment resultsListAdapter = new resultsListFragment(this,rowData[currentPage][0], rowData[currentPage][1],
+//                rowData[currentPage][2], rowData[currentPage][3], rowData[currentPage][4]);
+//        mListView.setAdapter(resultsListAdapter);
 
 
-        List<item> copy_listItem = new ArrayList<>();
-        for (int i = 0; i < rowData[currentPage][0].length; i++) {
-            copy_listItem.add(new item(rowData[currentPage][0][i], rowData[currentPage][1][i], rowData[currentPage][2][i], rowData[currentPage][3][i], rowData[currentPage][4][i]));
-        }
+//        List<item> copy_listItem = new ArrayList<>();
+//        for (int i = 0; i < rowData[currentPage][0].length; i++) {
+//            copy_listItem.add(new item(rowData[currentPage][0][i], rowData[currentPage][1][i], rowData[currentPage][2][i], rowData[currentPage][3][i], rowData[currentPage][4][i]));
+//        }
 
-        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, copy_listItem);
+//        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, copy_listItem);
+        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(myAdapter);
     }
+
+
+    public void generateTable2(JSONObject jsonObject) throws JSONException {
+        try
+        {
+            jsonArray_items = jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0).getJSONArray("searchResult").getJSONObject(0).getJSONArray("item");
+            int count_items = jsonArray_items.length();
+
+            list_itemId = new String[count_items];
+            list_productImg = new String[count_items];
+            list_title = new String[count_items];
+            list_zipcode = new String[count_items];
+            list_shippingCost = new String[count_items];
+            list_condition = new String[count_items];
+            list_wish = new String[count_items];
+            list_price = new String[count_items];
+
+
+            for (int i = 0; i < count_items; i++) {
+                // itemId
+                String itemId = jsonArray_items.getJSONObject(i).getJSONArray("itemId").getString(0);
+                Log.v(TAG, "Rainie : itemId[" + i + "] = " + itemId);
+
+                // productImg
+                String productImg = jsonArray_items.getJSONObject(i).getJSONArray("galleryURL").getString(0);
+                Log.v(TAG, "Rainie : productImg[" + i + "] = " + productImg);
+
+                // short title
+                String title = jsonArray_items.getJSONObject(i).getJSONArray("title").getString(0);
+                if (title.length() > 35) {
+                    title = title.substring(0,35) + "...";
+                }
+                Log.v(TAG, "Rainie : title[" + i + "] = " + title);
+
+                // zipcode (could be N/A)
+                String zipcode = "N/A";
+                if (!jsonArray_items.getJSONObject(i).isNull("postalCode")) {
+                    zipcode = "Zip: " + jsonArray_items.getJSONObject(i).getJSONArray("postalCode").getString(0);
+                }
+                Log.v(TAG, "Rainie : zipcode[" + i + "] = " + zipcode);
+
+                // free shipping (could be N/A)
+                String shippingCost = "N/A";
+                if (!jsonArray_items.getJSONObject(i).isNull("shippingInfo")) {
+                    if (!jsonArray_items.getJSONObject(i).getJSONArray("shippingInfo").getJSONObject(0).isNull("shippingServiceCost")) {
+                        if (!jsonArray_items.getJSONObject(i).getJSONArray("shippingInfo").getJSONObject(0).getJSONArray("shippingServiceCost").getJSONObject(0).isNull("__value__")) {
+                            shippingCost = jsonArray_items.getJSONObject(i).getJSONArray("shippingInfo").getJSONObject(0).getJSONArray("shippingServiceCost").getJSONObject(0).getString("__value__");
+                            double shippingCost_double = Double.parseDouble(shippingCost);
+                            if (shippingCost_double == 0.0) {
+                                shippingCost = "Free Shipping";
+                            } else {
+                                shippingCost = "$" + shippingCost;
+                            }
+                        }
+                    }
+                }
+                Log.v(TAG, "Rainie : shippingCost[" + i + "] = " + shippingCost);
+
+                // condition (could be N/A)
+                String condition = "N/A";
+                if (!jsonArray_items.getJSONObject(i).isNull("condition")) {
+                    Log.v(TAG, "Rainie : condition");
+                    if (!jsonArray_items.getJSONObject(i).getJSONArray("condition").getJSONObject(0).isNull("conditionDisplayName")) {
+                        Log.v(TAG, "Rainie : conditionDisplayName");
+                        condition = jsonArray_items.getJSONObject(i).getJSONArray("condition").getJSONObject(0).getJSONArray("conditionDisplayName").getString(0);
+                    }
+                }
+                Log.v(TAG, "Rainie : condition[" + i + "] = " + condition);
+
+                // price
+                String price = jsonArray_items.getJSONObject(i).getJSONArray("sellingStatus").getJSONObject(0).getJSONArray("currentPrice").getJSONObject(0).getString("__value__");
+                price = "$" + price;
+                Log.v(TAG, "Rainie : price[" + i + "] = " + price);
+
+                list_itemId[i] = itemId;
+                list_productImg[i] = productImg;
+                list_title[i] = title;
+                list_zipcode[i] = zipcode;
+                list_shippingCost[i] = shippingCost;
+                list_condition[i] = condition;
+                list_price[i] = price;
+
+                if (mSharedPreferences.contains(list_itemId[i])) {
+                    list_wish[i] = "yes";
+                } else {
+                    list_wish[i] = "no";
+                }
+
+                listItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i]));
+
+            }
+            RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
+            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            mRecyclerView.setAdapter(myAdapter);
+
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     public void generateTable(JSONObject jsonObject) throws JSONException
     {
@@ -333,7 +451,7 @@ public class ResultsActivity extends AppCompatActivity
 
 
 //                String placeId, String icon, String name, String address, String favorite
-                listItem.add(new item(placeIdList[i], iconList[i], nameList[i], addressList[i], favoriteList[i]));
+//                listItem.add(new item(placeIdList[i], iconList[i], nameList[i], addressList[i], favoriteList[i]));
             }
             resultsListFragment resultsListAdapter = new resultsListFragment(this, placeIdList, iconList, nameList, addressList, favoriteList);
             mListView.setAdapter(resultsListAdapter);
@@ -352,15 +470,26 @@ public class ResultsActivity extends AppCompatActivity
 
     public void checkIfFavorite()
     {
-        for (int i = 0; i < rowData[currentPage][0].length; i++)
-        {
-            if (mSharedPreferences.contains(rowData[currentPage][0][i]))
-            {
-                rowData[currentPage][4][i] = "yes";
-            }
-            else
-            {
-                rowData[currentPage][4][i] = "no";
+//        for (int i = 0; i < rowData[currentPage][0].length; i++)
+//        {
+//            if (mSharedPreferences.contains(rowData[currentPage][0][i]))
+//            {
+//                rowData[currentPage][4][i] = "yes";
+//            }
+//            else
+//            {
+//                rowData[currentPage][4][i] = "no";
+//            }
+//        }
+
+        if (list_itemId != null) {
+            Log.v(TAG, "Rainie : list_itemId is not null");
+            for (int i = 0; i < list_itemId.length; i++) {
+                if (mSharedPreferences.contains(list_itemId[i])) {
+                    list_wish[i] = "yes";
+                } else {
+                    list_wish[i] = "no";
+                }
             }
         }
     }
@@ -553,6 +682,9 @@ public class ResultsActivity extends AppCompatActivity
         mShowingResult.setVisibility(View.VISIBLE);
 
         mListView.setVisibility(View.VISIBLE);
+
+        mRecyclerView.setVisibility(View.VISIBLE);
+
 //        mNextButton.setVisibility(View.VISIBLE);
 //        mPrevButton.setVisibility(View.VISIBLE);
         noResultsView.setVisibility(View.GONE);
@@ -563,6 +695,9 @@ public class ResultsActivity extends AppCompatActivity
         mShowingResult.setVisibility(View.GONE);
 
         mListView.setVisibility(View.GONE);
+
+        mRecyclerView.setVisibility(View.GONE);
+
         mNextButton.setVisibility(View.GONE);
         mPrevButton.setVisibility(View.GONE);
         noResultsView.setVisibility(View.VISIBLE);

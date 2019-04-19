@@ -22,7 +22,6 @@
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_gravity="center"
-            android:background="#FFA9A9"
             android:scaleType="centerCrop" />
 
 
