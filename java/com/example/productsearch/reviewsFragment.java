@@ -4,6 +4,7 @@ import android.media.Image;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,8 @@ public class reviewsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        Log.v(TAG, "Rainie : onCreateView()");
+
         View view = inflater.inflate(R.layout.fragment_reviews, container, false);
         mListView = (ListView)view.findViewById(R.id.reviewList);
         noResultsView = (TextView)view.findViewById(R.id.noReviews);

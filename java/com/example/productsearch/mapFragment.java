@@ -98,6 +98,10 @@ public class mapFragment extends Fragment implements GoogleApiClient.OnConnectio
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+
+        Log.v(TAG, "Rainie : onCreateView()");
+
+
         view = inflater.inflate(R.layout.fragment_map, container, false);
 //
 //        mSpinner = (Spinner)view.findViewById(R.id.modesSpinner);

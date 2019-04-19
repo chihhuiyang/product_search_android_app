@@ -3,6 +3,7 @@ package com.example.productsearch;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class infoFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
+        Log.v(TAG, "Rainie : onCreateView()");
 
         mAddress = (TextView)view.findViewById(R.id.address);
         mPhoneNumber = (TextView)view.findViewById(R.id.phoneNumber);
@@ -81,6 +83,9 @@ public class infoFragment extends Fragment
 
     public void generateDetails() throws JSONException
     {
+        Log.v(TAG, "Rainie : generateDetails()");
+
+
         if (placeDetails.has("formatted_address"))
         {
             String address = placeDetails.getString("formatted_address");
@@ -143,6 +148,8 @@ public class infoFragment extends Fragment
 
     public void setVisible(TextView title, TextView content, String text)
     {
+        Log.v(TAG, "Rainie : setVisible()");
+
         title.setVisibility(View.VISIBLE);
         content.setVisibility(View.VISIBLE);
         content.setText(text);

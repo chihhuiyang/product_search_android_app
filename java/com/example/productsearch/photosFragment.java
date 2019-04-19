@@ -42,6 +42,8 @@ public class photosFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        Log.v(TAG, "Rainie : onCreateView()");
+
         View view = inflater.inflate(R.layout.fragment_photos, container, false);
 
         mLinearLayout = (LinearLayout)view.findViewById(R.id.imageLayout);
@@ -71,6 +73,8 @@ public class photosFragment extends Fragment
     // Request photos and metadata for the specified place.
     private void getPhotos(String mPlaceId)
     {
+        Log.v(TAG, "Rainie : getPhotos()");
+
         final String placeId = mPlaceId;
 //        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
 //        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>()

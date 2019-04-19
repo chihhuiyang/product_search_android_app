@@ -1,10 +1,12 @@
 package com.example.productsearch;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -22,10 +24,21 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -40,6 +53,11 @@ import static android.support.design.widget.TabLayout.MODE_SCROLLABLE;
 
 public class DetailsActivity extends AppCompatActivity
 {
+
+    public TextView mProgressBarMsg;
+    public ProgressBar mProgressBar;
+
+
     private static final String TAG = "DetailsActivity";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -74,6 +92,10 @@ public class DetailsActivity extends AppCompatActivity
 
         Log.v(TAG, "Rainie: onCreate()");
 
+        setProgressBarVisibility(true);
+        setProgressBarIndeterminateVisibility(true);
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
@@ -82,9 +104,14 @@ public class DetailsActivity extends AppCompatActivity
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.detailsContainer);
 
+        mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message_detail);;
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar_detail);
+
         tabLayout = (TabLayout) findViewById(R.id.detailsTabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.setTabMode(MODE_SCROLLABLE);
+//        tabLayout.setTabMode(MODE_SCROLLABLE);
+
+//        setupTabIcons();
 
         try
         {
@@ -151,48 +178,98 @@ public class DetailsActivity extends AppCompatActivity
     }
 
 
+    private void setupTabIcons() {
+        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabOne.setText("PRODUCT");
+        tabOne.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        tabOne.setGravity(Gravity.CENTER_HORIZONTAL);
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.information_variant, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabTwo.setText("SHIPPING");
+        tabTwo.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tabTwo.setGravity(Gravity.CENTER_HORIZONTAL);
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.truck_delivery, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabThree.setText("PHOTOS");
+        tabThree.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.google, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        tabFour.setText("SIMILAR");
+        tabFour.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.equal, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setupViewPager(ViewPager viewPager)
     {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        Log.v(TAG, "Rainie : bundle = " + bundle);
+
 
         infoFragment mInfoFragment = new infoFragment();
         mInfoFragment.setArguments(bundle);
-        Spannable infoSpan = new SpannableString("   INFO");
-//        Drawable infoImage = getBaseContext().getDrawable(R.drawable.info_outline);
+        adapter.addFrag(mInfoFragment, "ONE");
+
+        infoFragment mInfoFragment2 = new infoFragment();
+        mInfoFragment2.setArguments(bundle);
+        adapter.addFrag(mInfoFragment2, "TWO");
+
+        infoFragment mInfoFragment3 = new infoFragment();
+        mInfoFragment3.setArguments(bundle);
+        adapter.addFrag(mInfoFragment3, "THREE");
+
+        infoFragment mInfoFragment4 = new infoFragment();
+        mInfoFragment4.setArguments(bundle);
+        adapter.addFrag(mInfoFragment4, "FOUR");
+
+
+
+//        infoFragment mInfoFragment = new infoFragment();
+//        mInfoFragment.setArguments(bundle);
+//        Spannable infoSpan = new SpannableString("   PRODUCT");
+//        Drawable infoImage = getBaseContext().getDrawable(R.drawable.information_variant);
 //        infoImage.setBounds(25, 25, 75, 75);
 //        ImageSpan infoImageSpan = new ImageSpan(infoImage, ImageSpan.ALIGN_BASELINE);
 //        infoSpan.setSpan(infoImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        adapter.addFragment(mInfoFragment, infoSpan);
-
-        photosFragment mPhotosFragment = new photosFragment();
-        mPhotosFragment.setArguments(bundle);
-        Spannable photosSpan = new SpannableString("   PHOTOS");
-//        Drawable photosImage = getBaseContext().getDrawable(R.drawable.photos);
+//        adapter.addFragment(mInfoFragment, infoSpan);
+//
+//        photosFragment mPhotosFragment = new photosFragment();
+//        mPhotosFragment.setArguments(bundle);
+//        Spannable photosSpan = new SpannableString("   SHIPPING");
+//        Drawable photosImage = getBaseContext().getDrawable(R.drawable.truck_delivery);
 //        photosImage.setBounds(25, 25, 75, 75);
 //        ImageSpan photosImageSpan = new ImageSpan(photosImage, ImageSpan.ALIGN_BASELINE);
 //        photosSpan.setSpan(photosImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        adapter.addFragment(mPhotosFragment, photosSpan);
-
-        mapFragment mMapFragment = new mapFragment();
-        mMapFragment.setArguments(bundle);
-        Spannable mapSpan = new SpannableString("   MAP");
-//        Drawable mapImage = getBaseContext().getDrawable(R.drawable.maps);
+//        adapter.addFragment(mPhotosFragment, photosSpan);
+//
+//        mapFragment mMapFragment = new mapFragment();
+//        mMapFragment.setArguments(bundle);
+//        Spannable mapSpan = new SpannableString("   PHOTOS");
+//        Drawable mapImage = getBaseContext().getDrawable(R.drawable.google);
 //        mapImage.setBounds(25, 25, 75, 75);
 //        ImageSpan mapImageSpan = new ImageSpan(mapImage, ImageSpan.ALIGN_BASELINE);
 //        mapSpan.setSpan(mapImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        adapter.addFragment(mMapFragment, mapSpan);
-
-        reviewsFragment mReviewsFragment = new reviewsFragment();
-        mReviewsFragment.setArguments(bundle);
-        Spannable reviewsSpan = new SpannableString("   REVIEWS");
-//        Drawable reviewsImage = getBaseContext().getDrawable(R.drawable.review);
+//        adapter.addFragment(mMapFragment, mapSpan);
+//
+//        reviewsFragment mReviewsFragment = new reviewsFragment();
+//        mReviewsFragment.setArguments(bundle);
+//        Spannable reviewsSpan = new SpannableString("   SIMILAR");
+//        Drawable reviewsImage = getBaseContext().getDrawable(R.drawable.equal);
 //        reviewsImage.setBounds(25, 25, 75, 75);
 //        ImageSpan reviewsImageSpan = new ImageSpan(reviewsImage, ImageSpan.ALIGN_BASELINE);
 //        reviewsSpan.setSpan(reviewsImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        adapter.addFragment(mReviewsFragment, reviewsSpan);
+//        adapter.addFragment(mReviewsFragment, reviewsSpan);
 
         viewPager.setAdapter(adapter);
+        Log.v(TAG, "Rainie : Finish setupViewPager()");
     }
 
     public void receiveData() throws JSONException
@@ -205,14 +282,93 @@ public class DetailsActivity extends AppCompatActivity
 
 
 
-
-
         String receivedName = mIntent.getStringExtra("name");
         String receivedPlace = mIntent.getStringExtra("place");
 
         Log.v(TAG, "Rainie: mIntent : " + mIntent);
         Log.v(TAG, "Rainie: receivedName : " + receivedName);
         Log.v(TAG, "Rainie: receivedPlace : " + receivedPlace);
+
+        setTitle(receivedName);
+
+
+
+        requestDetails(receivedName, receivedPlace);
+    }
+
+
+    public void requestDetails(String mName, String mPlaceId)
+    {
+//        mProgressDialog = new ProgressDialog(this);
+//        mProgressDialog.setMessage("Fetching details");
+//        mProgressDialog.show();
+
+        String mUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
+        mUrl += "placeid=" + mPlaceId;
+        mUrl += "&key=AIzaSyC9HBExGTftsTmeBjHXLucUi5NH2QXCQkY";
+        Log.v(TAG, "Rainie : mUrl = " + mUrl);
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                try
+                {
+
+                    mProgressBar.setVisibility(View.GONE);
+                    mProgressBarMsg.setVisibility(View.GONE);
+
+                    JSONObject jsonObject = new JSONObject(response);
+                    //System.out.println(jsonObject.toString());
+                    Log.v(TAG, "Rainie: JSON : " + jsonObject.toString());
+
+
+                        placeDetails = jsonObject.getJSONObject("result");
+                        placeId = placeDetails.getString("place_id");
+
+
+//                    newIntent.putExtra("jsonObj", jsonObject.toString());
+//                    redirect();
+//                    mProgressDialog.dismiss();
+
+                                placeName = placeDetails.getString("name");
+//                                setTitle(placeName);
+                                bundle.putString("jsonObj", jsonObject.toString());
+
+                                Log.v(TAG, "Rainie : Start setupViewPager()");
+                                setupViewPager(mViewPager);
+
+                                setupTabIcons();
+                }
+                catch (JSONException e)
+                {
+                    mProgressBar.setVisibility(View.GONE);
+                    mProgressBarMsg.setVisibility(View.GONE);
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+
+                        Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+
+                        System.out.println("Request error!");
+                        System.out.println(error);
+
+                        Log.v(TAG, "Rainie: VolleyError");
+                        mProgressBar.setVisibility(View.GONE);
+                        mProgressBarMsg.setVisibility(View.GONE);
+                    }
+                });
+        queue.add(stringRequest);
     }
 
 
@@ -223,22 +379,35 @@ public class DetailsActivity extends AppCompatActivity
     public class SectionsPagerAdapter extends FragmentPagerAdapter
     {
         private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<Spannable> mFragmentTitleList = new ArrayList<>();
+//        private final List<Spannable> mFragmentTitleList = new ArrayList<>();
+
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
 
         public SectionsPagerAdapter(FragmentManager fm)
         {
             super(fm);
         }
 
-        public void addFragment(Fragment fragment, Spannable title)
-        {
+//        public void addFragment(Fragment fragment, Spannable title)
+//        {
+//            mFragmentList.add(fragment);
+//            mFragmentTitleList.add(title);
+//        }
+
+
+        public void addFrag(Fragment fragment, String title) {
+            Log.v(TAG, "Rainie : addFrag()");
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
 
+
+
         @Override
         public Fragment getItem(int position)
         {
+            Log.v(TAG, "Rainie : getItem() = " + position);
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return mFragmentList.get(position);
@@ -248,11 +417,13 @@ public class DetailsActivity extends AppCompatActivity
         @Override
         public CharSequence getPageTitle(int position)
         {
+            Log.v(TAG, "Rainie : getPageTitle() = " + position);
             return mFragmentTitleList.get(position);
         }
 
         @Override
         public int getCount() {
+            Log.v(TAG, "Rainie : getCount() = " + mFragmentList.size());
             // Show 2 total pages.
             return mFragmentList.size();
         }

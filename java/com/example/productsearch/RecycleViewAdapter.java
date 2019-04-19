@@ -61,6 +61,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 intent.putExtra("name", mData.get(i).getName());
                 intent.putExtra("place", mData.get(i).getPlaceId());
 
+
+                // equal to redirect()
                 mContext.startActivity(intent);
             }
         });
