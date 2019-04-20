@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class favoritesFragment extends Fragment
@@ -40,7 +43,20 @@ public class favoritesFragment extends Fragment
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor spEditor;
 
+
     public static ListView mFavoriteListView;
+    public static RecyclerView mRecyclerWishView;
+    public List<item> wishItem;
+
+    private List<String> list_itemId;
+    private List<String> list_productImg;
+    private List<String> list_title;
+    private List<String> list_zipcode;
+    private List<String> list_shippingCost;
+    private List<String> list_condition;
+    private List<String> list_wish;
+    private List<String> list_price;
+
     public static TextView noFavoritesView;
     public ProgressDialog mProgressDialog;
     public Intent newIntent;
@@ -55,6 +71,8 @@ public class favoritesFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+
+        Log.v(TAG, "Rainie: onCreateView()");
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
         //setUserVisibleHint(true);
 
@@ -68,6 +86,10 @@ public class favoritesFragment extends Fragment
         spEditor = mSharedPreferences.edit();
 
         mFavoriteListView = (ListView)view.findViewById(R.id.favoriteList);
+        mRecyclerWishView = (RecyclerView) view.findViewById(R.id.wishList2);
+
+
+
         noFavoritesView = (TextView)view.findViewById(R.id.noFavorites);
         newIntent = new Intent(this.getActivity(), favoritesFragment.class);
 
@@ -92,17 +114,23 @@ public class favoritesFragment extends Fragment
 
     public void getFavoriteList()
     {
+        wishItem = new ArrayList<>();
+
+
         int numOfSP = mSharedPreferences.getAll().size();
 
         if (numOfSP == 0)
         {
             noFavoritesView.setVisibility(View.VISIBLE);
             mFavoriteListView.setVisibility(View.GONE);
+            mRecyclerWishView.setVisibility(View.GONE);
+
         }
         else
         {
             noFavoritesView.setVisibility(View.GONE);
             mFavoriteListView.setVisibility(View.VISIBLE);
+            mRecyclerWishView.setVisibility(View.VISIBLE);
 
             placeId = new ArrayList<>(numOfSP);
             icon = new ArrayList<>(numOfSP);
@@ -110,13 +138,23 @@ public class favoritesFragment extends Fragment
             address = new ArrayList<>(numOfSP);
             ifFavorite = new ArrayList<>(numOfSP);
 
+            list_itemId = new ArrayList<>(numOfSP);;
+            list_productImg = new ArrayList<>(numOfSP);;
+            list_title = new ArrayList<>(numOfSP);;
+            list_zipcode = new ArrayList<>(numOfSP);;
+            list_shippingCost = new ArrayList<>(numOfSP);;
+            list_condition = new ArrayList<>(numOfSP);;
+            list_price = new ArrayList<>(numOfSP);;
+            list_wish = new ArrayList<>(numOfSP);;
+
+
             Map<String,?> keys = mSharedPreferences.getAll();
 
             String[] spElement;
             int index = 0;
             for(Map.Entry<String,?> entry : keys.entrySet())
             {
-                //Log.d("map values",entry.getKey() + ": " + entry.getValue());
+                Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
                 spElement = entry.getValue().toString().split(",");
 
                 String tempStr = spElement[0].substring(2, spElement[0].length()-1);
@@ -124,6 +162,27 @@ public class favoritesFragment extends Fragment
                 icon.add(index, spElement[1].substring(1, spElement[1].length()-1));
                 spElement[2] = spElement[2].replace("\\u0027", "'");
                 name.add(index, spElement[2].substring(1, spElement[2].length()-1));
+
+
+                spElement[0] = spElement[0].substring(1, spElement[0].length() - 1);
+                spElement[1] = spElement[1].substring(1, spElement[1].length() - 1);
+                spElement[2] = spElement[2].substring(1, spElement[2].length() - 1);
+                spElement[3] = spElement[3].substring(1, spElement[3].length() - 1);
+                spElement[4] = spElement[4].substring(1, spElement[4].length() - 1);
+                spElement[5] = spElement[5].substring(1, spElement[5].length() - 1);
+                spElement[6] = spElement[6].substring(1, spElement[6].length() - 1);
+                spElement[7] = spElement[7].substring(1, spElement[7].length() - 1);
+                list_itemId.add(index, spElement[0]);
+                list_productImg.add(index, spElement[1]);
+                list_title.add(index, spElement[2]);
+                list_zipcode.add(index, spElement[3]);
+                list_shippingCost.add(index, spElement[4]);
+                list_condition.add(index, spElement[5]);
+                list_price.add(index, spElement[6]);
+                list_wish.add(index, spElement[7]);
+
+                wishItem.add(new item(spElement[0], spElement[1], spElement[2], spElement[3], spElement[4], spElement[5], spElement[6], spElement[7]));
+
                 if (spElement.length == 6)
                 {
                     address.add(index, spElement[3].substring(1, spElement[3].length()-1) + ", " + spElement[4].substring(1, spElement[4].length()-1));
@@ -137,6 +196,7 @@ public class favoritesFragment extends Fragment
 
                 index++;
             }
+
             setAdapterForFavoriteListView();
             mFavoriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
@@ -144,9 +204,11 @@ public class favoritesFragment extends Fragment
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id)
                 {
                     newIntent = new Intent(getActivity(), DetailsActivity.class);
-                    requestDetails(placeId.get(position));
+//                    requestDetails(placeId.get(position));
                 }
             });
+
+            // TODO : mRecyclerWishView listener
         }
     }
 
@@ -155,6 +217,12 @@ public class favoritesFragment extends Fragment
         favoritesListFragment favoritesListAdapter = new favoritesListFragment(this.getActivity(), placeId, icon, name, address, ifFavorite);
         mFavoriteListView.setAdapter(favoritesListAdapter);
         mFavoriteListView.deferNotifyDataSetChanged();
+
+        Log.v(TAG, "Rainie : setAdapterForFavoriteListView() : wishItem = " + wishItem.size());
+
+        RecycleViewAdapterWish myAdapter = new RecycleViewAdapterWish(this.getActivity(), wishItem);
+        mRecyclerWishView.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
+        mRecyclerWishView.setAdapter(myAdapter);
     }
 
     public void requestDetails(String mPlaceId)

@@ -144,7 +144,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        if (mData == null) {
+            return 0;
+        } else {
+            return mData.size();
+        }
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

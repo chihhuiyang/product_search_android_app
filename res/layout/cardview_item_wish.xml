@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_id_wish"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_width="200dp"
+    android:layout_height="300dp"
+    android:layout_margin="5dp"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    cardview:cardCornerRadius="4dp"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/item_img_id_wish"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
+
+
+        <TextView
+            android:id="@+id/item_title_id_wish"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="Book Title"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            />
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="140dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/item_zip_id_wish"
+                    android:layout_width="140dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text="Zip"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/item_ship_id_wish"
+                    android:layout_width="140dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:text="Ship"
+                    android:textColor="#474747"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/item_wish_id_wish"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:text="Wish"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/item_condition_id_wish"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="Condition"
+                android:layout_marginLeft="5dp"
+                android:textColor="#474747"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/item_price_id_wish"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:text="Price"
+                android:textColor="#6400FF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>
