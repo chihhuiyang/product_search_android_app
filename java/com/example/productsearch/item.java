@@ -11,8 +11,9 @@ public class item {
     private String condition;
     private String price;
     private String wish;
+    private String jsonObjItem_str;
 
-    public item(String _itemId, String _productImg, String _title, String _zipcode, String _shippingCost, String _condition, String _price, String _wish) {
+    public item(String _itemId, String _productImg, String _title, String _zipcode, String _shippingCost, String _condition, String _price, String _wish, String _jsonObjItem_str) {
         itemId = _itemId;
         productImg = _productImg;
         title = _title;
@@ -21,6 +22,7 @@ public class item {
         condition = _condition;
         price = _price;
         wish = _wish;
+        jsonObjItem_str = _jsonObjItem_str;
     }
 
     public String getItemId() {
@@ -55,6 +57,10 @@ public class item {
         return wish;
     }
 
+    public String getJsonObjItem_str() {
+        return jsonObjItem_str;
+    }
+
     public void setItemId(String itemId) {
         this.itemId = itemId;
     }
@@ -87,60 +93,8 @@ public class item {
         this.wish = wish;
     }
 
+    public void setJsonObjItem_str(String jsonObjItem_str) {
+        this.jsonObjItem_str = jsonObjItem_str;
+    }
 
-    //    private String PlaceId;
-//    private String Icon;
-//    private String Name;
-//    private String Address;
-//    private String Favorite;
-
-//    public item(String placeId, String icon, String name, String address, String favorite) {
-//        PlaceId = placeId;
-//        Icon = icon;
-//        Name = name;
-//        Address = address;
-//        Favorite = favorite;
-//    }
-
-
-//    public String getPlaceId() {
-//        return PlaceId;
-//    }
-//
-//    public String getIcon() {
-//        return Icon;
-//    }
-//
-//    public String getName() {
-//        return Name;
-//    }
-//
-//    public String getAddress() {
-//        return Address;
-//    }
-//
-//    public String getFavorite() {
-//        return Favorite;
-//    }
-//
-//
-//    public void setPlaceId(String placeId) {
-//        PlaceId = placeId;
-//    }
-//
-//    public void setIcon(String icon) {
-//        Icon = icon;
-//    }
-//
-//    public void setName(String name) {
-//        Name = name;
-//    }
-//
-//    public void setAddress(String address) {
-//        Address = address;
-//    }
-//
-//    public void setFavorite(String favorite) {
-//        Favorite = favorite;
-//    }
 }

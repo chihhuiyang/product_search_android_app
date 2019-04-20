@@ -56,6 +56,7 @@ public class favoritesFragment extends Fragment
     private List<String> list_condition;
     private List<String> list_wish;
     private List<String> list_price;
+    private List<String> list_jsonItem;
 
     public static TextView noFavoritesView;
     public ProgressDialog mProgressDialog;
@@ -138,14 +139,15 @@ public class favoritesFragment extends Fragment
             address = new ArrayList<>(numOfSP);
             ifFavorite = new ArrayList<>(numOfSP);
 
-            list_itemId = new ArrayList<>(numOfSP);;
-            list_productImg = new ArrayList<>(numOfSP);;
-            list_title = new ArrayList<>(numOfSP);;
-            list_zipcode = new ArrayList<>(numOfSP);;
-            list_shippingCost = new ArrayList<>(numOfSP);;
-            list_condition = new ArrayList<>(numOfSP);;
-            list_price = new ArrayList<>(numOfSP);;
-            list_wish = new ArrayList<>(numOfSP);;
+            list_itemId = new ArrayList<>(numOfSP);
+            list_productImg = new ArrayList<>(numOfSP);
+            list_title = new ArrayList<>(numOfSP);
+            list_zipcode = new ArrayList<>(numOfSP);
+            list_shippingCost = new ArrayList<>(numOfSP);
+            list_condition = new ArrayList<>(numOfSP);
+            list_price = new ArrayList<>(numOfSP);
+            list_wish = new ArrayList<>(numOfSP);
+            list_jsonItem = new ArrayList<>(numOfSP);
 
 
             Map<String,?> keys = mSharedPreferences.getAll();
@@ -181,10 +183,12 @@ public class favoritesFragment extends Fragment
                 list_shippingCost.add(index,spElement[4].substring(1, spElement[4].length() - 1));
                 list_condition.add(index,   spElement[5].substring(1, spElement[5].length() - 1));
                 list_price.add(index,       spElement[6].substring(1, spElement[6].length() - 1));
-                list_wish.add(index,        spElement[7].substring(1, spElement[7].length() - 2));
+                list_wish.add(index,        spElement[7].substring(1, spElement[7].length() - 1));
+                list_jsonItem.add(index,    spElement[8].substring(1, spElement[8].length() - 2));
 
 
-                wishItem.add(new item(list_itemId.get(index), list_productImg.get(index), list_title.get(index), list_zipcode.get(index), list_shippingCost.get(index), list_condition.get(index), list_price.get(index), list_wish.get(index)));
+                wishItem.add(new item(list_itemId.get(index), list_productImg.get(index), list_title.get(index), list_zipcode.get(index),
+                        list_shippingCost.get(index), list_condition.get(index), list_price.get(index), list_wish.get(index), list_jsonItem.get(index)));
 //                Log.v(TAG, "Rainie : wishItem = " + list_itemId.get(index));
 //                Log.v(TAG, "Rainie : wishItem = " + list_productImg.get(index));
 //                Log.v(TAG, "Rainie : wishItem = " + list_title.get(index));
@@ -199,6 +203,7 @@ public class favoritesFragment extends Fragment
             }
 
             setAdapterForFavoriteListView();
+
             mFavoriteListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
             {
                 @Override

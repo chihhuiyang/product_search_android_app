@@ -79,6 +79,13 @@ public class DetailsActivity extends AppCompatActivity
     public Bundle bundle = new Bundle();
     public JSONObject jsonObject;
     public JSONObject placeDetails;
+
+    public JSONObject jsonObject_detail;
+    private String itemId;
+    private String itemTitle;
+    private String jsonObjItem_str;
+
+
     public String[] saveStr;
     private String placeId;
     private String placeName;
@@ -134,7 +141,7 @@ public class DetailsActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
 
-        if (mSharedPreferences.contains(placeId))
+        if (mSharedPreferences.contains(itemId))
         {
             menu.getItem(1).setIcon(R.drawable.cart_remove);
         }
@@ -280,20 +287,91 @@ public class DetailsActivity extends AppCompatActivity
 //        placeDetails = jsonObject.getJSONObject("result");
 //        placeId = placeDetails.getString("place_id");
 
+//        requestDetails(receivedName, receivedPlace);
 
 
-        String receivedName = mIntent.getStringExtra("name");
-        String receivedPlace = mIntent.getStringExtra("place");
+        String receivedTitle = mIntent.getStringExtra("title");
+        String receivedItemId = mIntent.getStringExtra("itemId");
+        String receivedJsonObjItem_str = mIntent.getStringExtra("jsonObjItem_str");
+
+        itemId = receivedItemId;
+        itemTitle = receivedTitle;
+        jsonObjItem_str = receivedJsonObjItem_str;
 
         Log.v(TAG, "Rainie: mIntent : " + mIntent);
-        Log.v(TAG, "Rainie: receivedName : " + receivedName);
-        Log.v(TAG, "Rainie: receivedPlace : " + receivedPlace);
+        Log.v(TAG, "Rainie: receivedTitle : " + receivedTitle);
+        Log.v(TAG, "Rainie: receivedItemId : " + receivedItemId);
+        Log.v(TAG, "Rainie: receivedJsonObjItem_str : " + receivedJsonObjItem_str);
 
-        setTitle(receivedName);
+        setTitle(receivedTitle);
 
 
+        requestDetails2(receivedTitle, receivedItemId);
 
-        requestDetails(receivedName, receivedPlace);
+    }
+
+    // mTitle is short title
+    public void requestDetails2(String mTitle, String mItemId) {
+
+
+        String mUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?itemId_single=" + mItemId;
+
+        Log.v(TAG, "Rainie : single api : " + mUrl);
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                try
+                {
+
+                    mProgressBar.setVisibility(View.GONE);
+                    mProgressBarMsg.setVisibility(View.GONE);
+
+                    jsonObject_detail = new JSONObject(response);
+                    Log.v(TAG, "Rainie: Detail JSON : " + jsonObject_detail.toString());
+
+
+                    // TODO : transfer single jsonObjItem_str
+                    bundle.putString("jsonObjectItem", jsonObjItem_str);
+
+                    bundle.putString("jsonObject_detail", jsonObject_detail.toString());
+
+
+                    Log.v(TAG, "Rainie : Start setupViewPager()");
+                    setupViewPager(mViewPager);
+
+                    setupTabIcons();
+                }
+                catch (JSONException e)
+                {
+                    mProgressBar.setVisibility(View.GONE);
+                    mProgressBarMsg.setVisibility(View.GONE);
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+
+                        Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+
+                        System.out.println("Request error!");
+                        System.out.println(error);
+
+                        Log.v(TAG, "Rainie: VolleyError");
+                        mProgressBar.setVisibility(View.GONE);
+                        mProgressBarMsg.setVisibility(View.GONE);
+                    }
+                });
+        queue.add(stringRequest);
     }
 
 

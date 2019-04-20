@@ -96,6 +96,9 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
                 // passing data to the detail activity
                 intent.putExtra("title", mData.get(i).getTitle());
                 intent.putExtra("itemId", mData.get(i).getItemId());
+                intent.putExtra("jsonObjItem_str", mData.get(i).getJsonObjItem_str());
+
+                // TODO :
 
                 // equal to redirect()
 //                mContext.startActivity(intent);

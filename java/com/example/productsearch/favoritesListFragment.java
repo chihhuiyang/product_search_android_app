@@ -59,8 +59,8 @@ public class favoritesListFragment extends ArrayAdapter<String>
 
     public View getView(final int position, View view, ViewGroup parent)
     {
-        LayoutInflater inflater=context.getLayoutInflater();
-        View rowView=inflater.inflate(R.layout.fragment_favoriteslist, null,true);
+        LayoutInflater inflater = context.getLayoutInflater();
+        View rowView = inflater.inflate(R.layout.fragment_favoriteslist, null,true);
 
         ImageView iconView = (ImageView) rowView.findViewById(R.id.resultIcon_favorite);
         TextView textName = (TextView) rowView.findViewById(R.id.resultName_favorite);

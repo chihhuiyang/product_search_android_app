@@ -291,7 +291,6 @@ public class ResultsActivity extends AppCompatActivity
 //            copy_listItem.add(new item(rowData[currentPage][0][i], rowData[currentPage][1][i], rowData[currentPage][2][i], rowData[currentPage][3][i], rowData[currentPage][4][i]));
 //        }
 
-//        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, copy_listItem);
         RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(myAdapter);
@@ -321,14 +320,14 @@ public class ResultsActivity extends AppCompatActivity
 
                 // productImg
                 String productImg = jsonArray_items.getJSONObject(i).getJSONArray("galleryURL").getString(0);
-                Log.v(TAG, "Rainie : productImg[" + i + "] = " + productImg);
+//                Log.v(TAG, "Rainie : productImg[" + i + "] = " + productImg);
 
                 // short title
                 String title = jsonArray_items.getJSONObject(i).getJSONArray("title").getString(0);
                 if (title.length() > 35) {
                     title = title.substring(0,35) + "...";
                 }
-                Log.v(TAG, "Rainie : title[" + i + "] = " + title);
+//                Log.v(TAG, "Rainie : title[" + i + "] = " + title);
 
                 // zipcode (could be N/A)
                 String zipcode = "N/A";
@@ -357,9 +356,9 @@ public class ResultsActivity extends AppCompatActivity
                 // condition (could be N/A)
                 String condition = "N/A";
                 if (!jsonArray_items.getJSONObject(i).isNull("condition")) {
-                    Log.v(TAG, "Rainie : condition");
+//                    Log.v(TAG, "Rainie : condition");
                     if (!jsonArray_items.getJSONObject(i).getJSONArray("condition").getJSONObject(0).isNull("conditionDisplayName")) {
-                        Log.v(TAG, "Rainie : conditionDisplayName");
+//                        Log.v(TAG, "Rainie : conditionDisplayName");
                         condition = jsonArray_items.getJSONObject(i).getJSONArray("condition").getJSONObject(0).getJSONArray("conditionDisplayName").getString(0);
                     }
                 }
@@ -368,7 +367,7 @@ public class ResultsActivity extends AppCompatActivity
                 // price
                 String price = jsonArray_items.getJSONObject(i).getJSONArray("sellingStatus").getJSONObject(0).getJSONArray("currentPrice").getJSONObject(0).getString("__value__");
                 price = "$" + price;
-                Log.v(TAG, "Rainie : price[" + i + "] = " + price);
+//                Log.v(TAG, "Rainie : price[" + i + "] = " + price);
 
                 list_itemId[i] = itemId;
                 list_productImg[i] = productImg;
@@ -384,7 +383,9 @@ public class ResultsActivity extends AppCompatActivity
                     list_wish[i] = "no";
                 }
 
-                listItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i]));
+                // TODO : add _jsonObjItem_str variables
+
+                listItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i], jsonArray_items.getJSONObject(i).toString()));
 
             }
             RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);

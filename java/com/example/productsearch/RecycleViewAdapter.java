@@ -133,9 +133,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 // passing data to the detail activity
                 intent.putExtra("title", mData.get(i).getTitle());
                 intent.putExtra("itemId", mData.get(i).getItemId());
+                intent.putExtra("jsonObjItem_str", mData.get(i).getJsonObjItem_str());
 
                 // equal to redirect()
-//                mContext.startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
 
