@@ -118,7 +118,7 @@ public class favoritesFragment extends Fragment
 
 
         int numOfSP = mSharedPreferences.getAll().size();
-
+        Log.v(TAG, "Rainie : numOfSP = " + numOfSP);
         if (numOfSP == 0)
         {
             noFavoritesView.setVisibility(View.VISIBLE);
@@ -162,27 +162,6 @@ public class favoritesFragment extends Fragment
                 icon.add(index, spElement[1].substring(1, spElement[1].length()-1));
                 spElement[2] = spElement[2].replace("\\u0027", "'");
                 name.add(index, spElement[2].substring(1, spElement[2].length()-1));
-
-
-                spElement[0] = spElement[0].substring(1, spElement[0].length() - 1);
-                spElement[1] = spElement[1].substring(1, spElement[1].length() - 1);
-                spElement[2] = spElement[2].substring(1, spElement[2].length() - 1);
-                spElement[3] = spElement[3].substring(1, spElement[3].length() - 1);
-                spElement[4] = spElement[4].substring(1, spElement[4].length() - 1);
-                spElement[5] = spElement[5].substring(1, spElement[5].length() - 1);
-                spElement[6] = spElement[6].substring(1, spElement[6].length() - 1);
-                spElement[7] = spElement[7].substring(1, spElement[7].length() - 1);
-                list_itemId.add(index, spElement[0]);
-                list_productImg.add(index, spElement[1]);
-                list_title.add(index, spElement[2]);
-                list_zipcode.add(index, spElement[3]);
-                list_shippingCost.add(index, spElement[4]);
-                list_condition.add(index, spElement[5]);
-                list_price.add(index, spElement[6]);
-                list_wish.add(index, spElement[7]);
-
-                wishItem.add(new item(spElement[0], spElement[1], spElement[2], spElement[3], spElement[4], spElement[5], spElement[6], spElement[7]));
-
                 if (spElement.length == 6)
                 {
                     address.add(index, spElement[3].substring(1, spElement[3].length()-1) + ", " + spElement[4].substring(1, spElement[4].length()-1));
@@ -193,6 +172,28 @@ public class favoritesFragment extends Fragment
                     address.add(index, spElement[3].substring(1, spElement[3].length()-1));
                     ifFavorite.add(index, spElement[4].substring(1, spElement[4].length()-2));
                 }
+
+                // be careful the first and last []
+                list_itemId.add(index,      spElement[0].substring(2, spElement[0].length() - 1));
+                list_productImg.add(index,  spElement[1].substring(1, spElement[1].length() - 1));
+                list_title.add(index,       spElement[2].substring(1, spElement[2].length() - 1));
+                list_zipcode.add(index,     spElement[3].substring(1, spElement[3].length() - 1));
+                list_shippingCost.add(index,spElement[4].substring(1, spElement[4].length() - 1));
+                list_condition.add(index,   spElement[5].substring(1, spElement[5].length() - 1));
+                list_price.add(index,       spElement[6].substring(1, spElement[6].length() - 1));
+                list_wish.add(index,        spElement[7].substring(1, spElement[7].length() - 2));
+
+
+                wishItem.add(new item(list_itemId.get(index), list_productImg.get(index), list_title.get(index), list_zipcode.get(index), list_shippingCost.get(index), list_condition.get(index), list_price.get(index), list_wish.get(index)));
+//                Log.v(TAG, "Rainie : wishItem = " + list_itemId.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_productImg.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_title.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_zipcode.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_shippingCost.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_condition.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_price.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_wish.get(index));
+
 
                 index++;
             }

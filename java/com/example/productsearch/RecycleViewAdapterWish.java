@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
     public RecycleViewAdapterWish(Context mContext, List<item> mData) {
         mSharedPreferences = mContext.getSharedPreferences("mySP", Context.MODE_PRIVATE);
+        Log.v(TAG, "Rainie : RecycleViewAdapterWish() : mSharedPreferences.getAll().size() = " + mSharedPreferences.getAll().size());
         spEditor = mSharedPreferences.edit();
 
         this.mContext = mContext;
@@ -142,16 +144,21 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
     public void deleteFromFavorite(int position) {
         Toast.makeText(mContext, mData.get(position).getTitle() + " was removed from favorites", Toast.LENGTH_SHORT).show();
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getItemId());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getTitle());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getWish());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getPrice());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getCondition());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getShippingCost());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getZipcode());
+        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getProductImg());
+
         spEditor.remove(mData.get(position).getItemId());
         spEditor.apply();
 
+        Log.v(TAG, "Rainie : After deleteFromFavorite() : mSharedPreferences.getAll().size() = " + mSharedPreferences.getAll().size());
         mData.remove(position);
-//        itemPlaceId.remove(position);
-//        itemIcon.remove(position);
-//        itemName.remove(position);
-//        itemAddress.remove(position);
-//        itemFavorite.remove(position);
-
+        
         if (mData.size() == 0) {
             noFavoritesView.setVisibility(View.VISIBLE);
             mRecyclerWishView.setVisibility(View.GONE);

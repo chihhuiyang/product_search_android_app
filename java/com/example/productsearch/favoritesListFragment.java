@@ -89,6 +89,7 @@ public class favoritesListFragment extends ArrayAdapter<String>
     {
         Toast.makeText(context, itemName.get(position) + " was removed from favorites", Toast.LENGTH_SHORT).show();
         spEditor.remove(itemPlaceId.get(position));
+
         spEditor.apply();
 
         itemPlaceId.remove(position);
