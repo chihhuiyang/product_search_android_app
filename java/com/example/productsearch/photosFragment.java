@@ -71,8 +71,8 @@ public class photosFragment extends Fragment
         Bundle bundle;
         bundle = this.getArguments();
 //        jsonObject = bundle.getString("jsonObj");
-        jsonObject_detail_str = bundle.getString("jsonObject_detail");
-        jsonObjectItem_str = bundle.getString("jsonObjectItem");    // 1 item from 50 api
+//        jsonObject_detail_str = bundle.getString("jsonObject_detail");
+//        jsonObjectItem_str = bundle.getString("jsonObjectItem");    // 1 item from 50 api
         jsonObject_photo_str = bundle.getString("jsonObject_photo");
 
         Log.v(TAG, "Rainie: jsonObject_photo_str = " + jsonObject_photo_str);
@@ -94,7 +94,7 @@ public class photosFragment extends Fragment
                 } else {
                     for (int i = 0; i < count; i++) {
                         String link = jsonObject_photo_arr.getJSONObject(i).getString("link");
-                        Log.v(TAG, "Rainie : link = " + link);
+//                        Log.v(TAG, "Rainie : link = " + link);
 
 
                         View pic_view = minflater.inflate(R.layout.gallery_item, mPhotoBox, false);

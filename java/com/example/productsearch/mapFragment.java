@@ -15,7 +15,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.akexorcist.googledirection.DirectionCallback;
@@ -94,15 +96,20 @@ public class mapFragment extends Fragment implements GoogleApiClient.OnConnectio
     private Polyline mPolyline;
     private Marker mMarker;
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
 
+
         Log.v(TAG, "Rainie : onCreateView()");
 
-
         view = inflater.inflate(R.layout.fragment_map, container, false);
+
+
 //
 //        mSpinner = (Spinner)view.findViewById(R.id.modesSpinner);
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, travelModes);

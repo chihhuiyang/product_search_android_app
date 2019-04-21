@@ -231,9 +231,9 @@ public class DetailsActivity extends AppCompatActivity
         mInfoFragment.setArguments(bundle);
         adapter.addFrag(mInfoFragment, "PRODUCT");
 
-        infoFragment mInfoFragment3 = new infoFragment();
-        mInfoFragment3.setArguments(bundle);
-        adapter.addFrag(mInfoFragment3, "THREE");
+        shippingFragment mShippingFragment = new shippingFragment();
+        mShippingFragment.setArguments(bundle);
+        adapter.addFrag(mShippingFragment, "SHIPPING");
 
         photosFragment mPhotosFragment = new photosFragment();
         mPhotosFragment.setArguments(bundle);
