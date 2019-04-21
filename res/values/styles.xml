@@ -21,11 +21,11 @@
 
 
     <style name="spinnerItemStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="spinnerDropDownItemStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

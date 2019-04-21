@@ -252,7 +252,7 @@ public class infoFragment extends Fragment
             totalHeight += listItem.getMeasuredHeight();
         }
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height= totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + 500;
+        params.height= totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + 200;
         listView.setLayoutParams(params);
     }
 }

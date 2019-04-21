@@ -97,8 +97,8 @@ public class photosFragment extends Fragment
 //                        Log.v(TAG, "Rainie : link = " + link);
 
 
-                        View pic_view = minflater.inflate(R.layout.gallery_item, mPhotoBox, false);
-                        ImageView img = (ImageView) pic_view.findViewById(R.id.id_index_gallery_item_image);
+                        View pic_view = minflater.inflate(R.layout.photo_item, mPhotoBox, false);
+                        ImageView img = (ImageView) pic_view.findViewById(R.id.photo_item);
                         Picasso.get().load(link).into(img);
                         mPhotoBox.addView(pic_view);
 
