@@ -121,7 +121,7 @@ public class infoFragment extends Fragment
         try
         {
             JSONObject jsonObject_detail = new JSONObject(jsonObject_detail_str);
-            jsonObject_detail_item = jsonObject_detail.getJSONObject("Item");;
+            jsonObject_detail_item = jsonObject_detail.getJSONObject("Item");
 
             jsonObjectItem = new JSONObject(jsonObjectItem_str);    // 1 item from 50 api
 
@@ -148,7 +148,7 @@ public class infoFragment extends Fragment
             for (int i = 0; i < count; i++) {
                 pic_urls[i] = jsonObject_detail_item.getJSONArray("PictureURL").getString(i);
 
-                Log.v(TAG, "Rainie : pic_urls = " + pic_urls[i]);
+//                Log.v(TAG, "Rainie : pic_urls = " + pic_urls[i]);
 
                 View view = minflater.inflate(R.layout.gallery_item, mGallery, false);
                 ImageView img = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);

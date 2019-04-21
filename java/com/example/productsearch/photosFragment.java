@@ -24,6 +24,9 @@ import android.widget.TextView;
 //import com.google.android.gms.tasks.OnCompleteListener;
 //import com.google.android.gms.tasks.Task;
 
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,17 +34,31 @@ public class photosFragment extends Fragment
 {
     private static final String TAG = "photosFragment";
 
-    public String jsonObject;
-    public JSONObject placeDetails;
+
+    public String jsonObject_photo_str;
+    public JSONObject jsonObject_photo;
+
+    public String jsonObjectItem_str;   // from 50 api , and only 1 item
+    public JSONObject jsonObjectItem;   // from 50 api , and only 1 item
+
+    public String jsonObject_detail_str;
+    public JSONObject jsonObject_detail_item;
+
+//    public String jsonObject;
+//    public JSONObject placeDetails;
 //    public GeoDataClient mGeoDataClient;
     public LinearLayout mLinearLayout;
     public LinearLayout mPhotoBox;
     public TextView noPhotos;
 
+    public LayoutInflater minflater;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
+        minflater = inflater;
+
         Log.v(TAG, "Rainie : onCreateView()");
 
         View view = inflater.inflate(R.layout.fragment_photos, container, false);
@@ -53,14 +70,49 @@ public class photosFragment extends Fragment
 
         Bundle bundle;
         bundle = this.getArguments();
-        jsonObject = bundle.getString("jsonObj");
+//        jsonObject = bundle.getString("jsonObj");
+        jsonObject_detail_str = bundle.getString("jsonObject_detail");
+        jsonObjectItem_str = bundle.getString("jsonObjectItem");    // 1 item from 50 api
+        jsonObject_photo_str = bundle.getString("jsonObject_photo");
+
+        Log.v(TAG, "Rainie: jsonObject_photo_str = " + jsonObject_photo_str);
 
         try
         {
-            JSONObject myJsonObject = new JSONObject(jsonObject);
-            placeDetails = myJsonObject.getJSONObject("result");
-            String placeId = placeDetails.getString("place_id");
-            getPhotos(placeId);
+//            JSONObject myJsonObject = new JSONObject(jsonObject);
+//            placeDetails = myJsonObject.getJSONObject("result");
+//            String placeId = placeDetails.getString("place_id");
+//            getPhotos(placeId);
+
+            jsonObject_photo = new JSONObject(jsonObject_photo_str);
+            if (jsonObject_photo.has("items")) {
+                JSONArray jsonObject_photo_arr = jsonObject_photo.getJSONArray("items");
+                int count = jsonObject_photo_arr.length();
+                if (count == 0) {
+                    mLinearLayout.setVisibility(View.GONE);
+                    noPhotos.setVisibility(View.VISIBLE);
+                } else {
+                    for (int i = 0; i < count; i++) {
+                        String link = jsonObject_photo_arr.getJSONObject(i).getString("link");
+                        Log.v(TAG, "Rainie : link = " + link);
+
+
+                        View pic_view = minflater.inflate(R.layout.gallery_item, mPhotoBox, false);
+                        ImageView img = (ImageView) pic_view.findViewById(R.id.id_index_gallery_item_image);
+                        Picasso.get().load(link).into(img);
+                        mPhotoBox.addView(pic_view);
+
+
+//                                    ImageView mImageView = new ImageView(getActivity());
+//                                    mImageView.setImageBitmap(bitmap);
+//                                    mPhotoBox.addView(mImageView);
+                    }
+                }
+            } else {
+                mLinearLayout.setVisibility(View.GONE);
+                noPhotos.setVisibility(View.VISIBLE);
+            }
+
         }
         catch (JSONException e)
         {
@@ -70,12 +122,17 @@ public class photosFragment extends Fragment
         return view;
     }
 
+
+
+
+
+
     // Request photos and metadata for the specified place.
     private void getPhotos(String mPlaceId)
     {
-        Log.v(TAG, "Rainie : getPhotos()");
 
-        final String placeId = mPlaceId;
+
+//        final String placeId = mPlaceId;
 //        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
 //        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>()
 //        {

@@ -81,6 +81,7 @@ public class DetailsActivity extends AppCompatActivity
     public JSONObject placeDetails;
 
     public JSONObject jsonObject_detail;
+    public JSONObject jsonObject_photo;
     private String itemId;
     private String itemTitle;
     private String jsonObjItem_str;
@@ -90,10 +91,15 @@ public class DetailsActivity extends AppCompatActivity
     private String placeId;
     private String placeName;
 
+    Context mContext;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+        mContext = this;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
@@ -223,15 +229,15 @@ public class DetailsActivity extends AppCompatActivity
 
         infoFragment mInfoFragment = new infoFragment();
         mInfoFragment.setArguments(bundle);
-        adapter.addFrag(mInfoFragment, "ONE");
-
-        infoFragment mInfoFragment2 = new infoFragment();
-        mInfoFragment2.setArguments(bundle);
-        adapter.addFrag(mInfoFragment2, "TWO");
+        adapter.addFrag(mInfoFragment, "PRODUCT");
 
         infoFragment mInfoFragment3 = new infoFragment();
         mInfoFragment3.setArguments(bundle);
         adapter.addFrag(mInfoFragment3, "THREE");
+
+        photosFragment mPhotosFragment = new photosFragment();
+        mPhotosFragment.setArguments(bundle);
+        adapter.addFrag(mPhotosFragment, "PHOTO");
 
         infoFragment mInfoFragment4 = new infoFragment();
         mInfoFragment4.setArguments(bundle);
@@ -334,18 +340,79 @@ public class DetailsActivity extends AppCompatActivity
 
                     jsonObject_detail = new JSONObject(response);
                     Log.v(TAG, "Rainie: Detail JSON : " + jsonObject_detail.toString());
+                    String full_title = jsonObject_detail.getJSONObject("Item").getString("Title");
 
 
                     // TODO : transfer single jsonObjItem_str
                     bundle.putString("jsonObjectItem", jsonObjItem_str);
-
                     bundle.putString("jsonObject_detail", jsonObject_detail.toString());
 
 
-                    Log.v(TAG, "Rainie : Start setupViewPager()");
-                    setupViewPager(mViewPager);
 
-                    setupTabIcons();
+                        // TODO : request photo api
+                        // Instantiate the RequestQueue.
+                        String mPhotoUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?keyword_photo=" + full_title;
+                        RequestQueue queue2 = Volley.newRequestQueue(mContext);
+
+                        // Request a string response from the provided URL.
+                        StringRequest stringRequest2 = new StringRequest(Request.Method.GET, mPhotoUrl, new Response.Listener<String>()
+                        {
+                            @Override
+                            public void onResponse(String response)
+                            {
+                                try
+                                {
+                                    jsonObject_photo = new JSONObject(response);
+                                    Log.v(TAG, "Rainie: Photo JSON : " + jsonObject_photo.toString());
+
+                                    bundle.putString("jsonObject_photo", jsonObject_photo.toString());
+
+
+                                    // go to 4 TAB page
+                                    Log.v(TAG, "Rainie : Start setupViewPager()");
+                                    setupViewPager(mViewPager);
+                                    setupTabIcons();
+                                }
+                                catch (JSONException e)
+                                {
+                                    bundle.putString("jsonObject_photo", "");
+
+                                    // go to 4 TAB page
+                                    Log.v(TAG, "Rainie : Start setupViewPager()");
+                                    setupViewPager(mViewPager);
+                                    setupTabIcons();
+
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error)
+                                    {
+
+                                        Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                                        System.out.println("Request error!");
+                                        System.out.println(error);
+                                        Log.v(TAG, "Rainie: VolleyError");
+                                    }
+                                });
+                        queue2.add(stringRequest2);
+
+
+
+
+
+
+
+
+
+
+                    // go to 4 TAB page
+//                    Log.v(TAG, "Rainie : Start setupViewPager()");
+//                    setupViewPager(mViewPager);
+//                    setupTabIcons();
                 }
                 catch (JSONException e)
                 {
@@ -375,79 +442,6 @@ public class DetailsActivity extends AppCompatActivity
     }
 
 
-    public void requestDetails(String mName, String mPlaceId)
-    {
-//        mProgressDialog = new ProgressDialog(this);
-//        mProgressDialog.setMessage("Fetching details");
-//        mProgressDialog.show();
-
-        String mUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
-        mUrl += "placeid=" + mPlaceId;
-        mUrl += "&key=AIzaSyC9HBExGTftsTmeBjHXLucUi5NH2QXCQkY";
-        Log.v(TAG, "Rainie : mUrl = " + mUrl);
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-
-                    mProgressBar.setVisibility(View.GONE);
-                    mProgressBarMsg.setVisibility(View.GONE);
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    //System.out.println(jsonObject.toString());
-                    Log.v(TAG, "Rainie: JSON : " + jsonObject.toString());
-
-
-                        placeDetails = jsonObject.getJSONObject("result");
-                        placeId = placeDetails.getString("place_id");
-
-
-//                    newIntent.putExtra("jsonObj", jsonObject.toString());
-//                    redirect();
-//                    mProgressDialog.dismiss();
-
-                                placeName = placeDetails.getString("name");
-//                                setTitle(placeName);
-                                bundle.putString("jsonObj", jsonObject.toString());
-
-                                Log.v(TAG, "Rainie : Start setupViewPager()");
-                                setupViewPager(mViewPager);
-
-                                setupTabIcons();
-                }
-                catch (JSONException e)
-                {
-                    mProgressBar.setVisibility(View.GONE);
-                    mProgressBarMsg.setVisibility(View.GONE);
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-
-                        Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-
-                        System.out.println("Request error!");
-                        System.out.println(error);
-
-                        Log.v(TAG, "Rainie: VolleyError");
-                        mProgressBar.setVisibility(View.GONE);
-                        mProgressBarMsg.setVisibility(View.GONE);
-                    }
-                });
-        queue.add(stringRequest);
-    }
 
 
     /**
