@@ -37,6 +37,7 @@ public class shippingFragment extends Fragment {
     public LinearLayout pop;
     public TextView pop_val;
     public LinearLayout star;
+    public ImageView star_img;
     public TextView star_val;
 
     public View divider_ship;
@@ -89,6 +90,7 @@ public class shippingFragment extends Fragment {
         store = (LinearLayout)view.findViewById(R.id.store);
         store_val = (TextView)view.findViewById(R.id.store_val);
         score = (LinearLayout)view.findViewById(R.id.score);
+        star_img = (ImageView)view.findViewById(R.id.star_img);   // shooting stars
         score_val = (TextView)view.findViewById(R.id.score_val);
         pop = (LinearLayout)view.findViewById(R.id.pop);
         pop_val = (TextView)view.findViewById(R.id.pop_val);
@@ -181,11 +183,53 @@ public class shippingFragment extends Fragment {
         if (jsonObject_detail_item.has("Seller")) {
             if (jsonObject_detail_item.getJSONObject("Seller").has("FeedbackScore")) {
                 score.setVisibility(View.VISIBLE);
+                star.setVisibility(View.VISIBLE);
 //                double score_double = jsonObject_detail_item.getJSONObject("Seller").getDouble("FeedbackScore");
 //                String score_str = Double.toString(score_double);
 //                score_val.setText(score_str);
                 String score_str = jsonObject_detail_item.getJSONObject("Seller").getString("FeedbackScore");
                 score_val.setText(score_str);
+
+                // shooting star or border star
+                int score_int = Integer.parseInt(score_str);
+                if (score_int >= 0 && score_int < 10000) {
+                    star_img.setImageResource(R.drawable.star_circle_outline);
+
+                    if (score_int >= 0 && score_int <= 9) {
+                        star.setVisibility(View.GONE);
+                    } else if (score_int >= 10 && score_int < 50) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_yellow));
+                    } else if (score_int >= 50 && score_int < 100) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_blue));
+                    } else if (score_int >= 100 && score_int < 500) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_turquoise));
+                    } else if (score_int >= 500 && score_int < 1000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_purple));
+                    } else if (score_int >= 1000 && score_int < 5000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_red));
+                    } else if (score_int >= 5000 && score_int < 10000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_green));
+                    }
+                } else { // score_int >= 10000
+                    star_img.setImageResource(R.drawable.star_circle);
+
+                    if (score_int >= 10000 && score_int < 25000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_yellow));
+                    } else if (score_int >= 25000 && score_int < 50000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_turquoise));
+                    } else if (score_int >= 50000 && score_int < 100000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_purple));
+                    } else if (score_int >= 100000 && score_int < 500000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_red));
+                    } else if (score_int >= 500000 && score_int < 1000000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_green));
+                    } else if (score_int >= 1000000) {
+                        star_img.setColorFilter(getResources().getColor(R.color.color_silver));
+                    }
+                }
+
+
+
             }
             if (jsonObject_detail_item.getJSONObject("Seller").has("PositiveFeedbackPercent")) {
                 pop.setVisibility(View.VISIBLE);
@@ -194,7 +238,7 @@ public class shippingFragment extends Fragment {
                 pop_val.setText(pop_str);
             }
             if (jsonObject_detail_item.getJSONObject("Seller").has("FeedbackRatingStar")) {
-                star.setVisibility(View.VISIBLE);
+//                star.setVisibility(View.VISIBLE);
                 String star_str = jsonObject_detail_item.getJSONObject("Seller").getString("FeedbackRatingStar");
                 star_val.setText(star_str);
             }
