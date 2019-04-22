@@ -77,7 +77,7 @@ public class DetailsActivity extends AppCompatActivity
     private Menu menu;
 
     public Bundle bundle = new Bundle();
-    public JSONObject jsonObject;
+
     public JSONObject placeDetails;
 
     public JSONObject jsonObject_detail;
@@ -85,10 +85,13 @@ public class DetailsActivity extends AppCompatActivity
     public JSONObject jsonObject_similar;
     private String itemId;
     private String itemTitle;
+    private String price_item;
     private String jsonObjItem_str;
 
 
     public String[] saveStr;
+
+
     private String placeId;
     private String placeName;
 
@@ -169,7 +172,7 @@ public class DetailsActivity extends AppCompatActivity
             case R.id.share:
                 try
                 {
-                    shareToTwitter();
+                    shareToFacebook();
                 }
                 catch (JSONException e)
                 {
@@ -259,6 +262,7 @@ public class DetailsActivity extends AppCompatActivity
         String receivedItemId = mIntent.getStringExtra("itemId");
         String receivedJsonObjItem_str = mIntent.getStringExtra("jsonObjItem_str");
 
+
         itemId = receivedItemId;
         itemTitle = receivedTitle;
         jsonObjItem_str = receivedJsonObjItem_str;
@@ -303,6 +307,7 @@ public class DetailsActivity extends AppCompatActivity
                     Log.v(TAG, "Rainie: Detail JSON : " + jsonObject_detail.toString());
                     String full_title = jsonObject_detail.getJSONObject("Item").getString("Title");
 
+                    price_item = jsonObject_detail.getJSONObject("Item").getJSONObject("CurrentPrice").getString("Value");
 
                     // TODO : transfer single jsonObjItem_str
                     bundle.putString("jsonObjectItem", jsonObjItem_str);
@@ -519,48 +524,17 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
-    public void shareToTwitter() throws JSONException
+    public void shareToFacebook() throws JSONException
     {
-        String name = placeDetails.getString("name");
-        String address = placeDetails.getString("formatted_address");
-        String website = placeDetails.getString("website");
-        String myMessage = "Check out " + name + " located at " + address;
-        if (placeDetails.has("website"))
-        {
-            myMessage += '\n' + "Website: " + website;
-        }
 
-        Intent tweet = new Intent(Intent.ACTION_SEND);
-        tweet.putExtra(Intent.EXTRA_TEXT, "This is a new tweet.");
-        tweet.setType("text/plain");
+        String url = jsonObject_detail.getJSONObject("Item").getString("ViewItemURLForNaturalSearch");
+        String quote = "Buy " + itemTitle + " for $" + price_item + " from Ebay!";
+        String link = "https://www.facebook.com/dialog/share?app_id=412937185919670&display=popup&href=" + url + "&quote=" + urlEncode(quote) + "&hashtag=%23CSCI571Spring2019Ebay";
 
-        PackageManager packManager = getPackageManager();
-        List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweet, PackageManager.MATCH_DEFAULT_ONLY);
+        Uri uriUrl = Uri.parse(link);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        mContext.startActivity(launchBrowser);
 
-        boolean resolved = false;
-        for (ResolveInfo resolveInfo : resolvedInfoList)
-        {
-            if (resolveInfo.activityInfo.packageName.startsWith("com.twitter.android"))
-            {
-                tweet.setClassName(
-                        resolveInfo.activityInfo.packageName,
-                        resolveInfo.activityInfo.name);
-                resolved = true;
-                break;
-            }
-        }
-        if (resolved)
-        {
-            startActivity(tweet);
-        }
-        else
-        {
-            Intent i = new Intent();
-            i.putExtra(Intent.EXTRA_TEXT, myMessage);
-            i.setAction(Intent.ACTION_VIEW);
-            i.setData(Uri.parse("https://twitter.com/intent/tweet?text=" + urlEncode(myMessage)));
-            startActivity(i);
-        }
     }
 
     private String urlEncode(String s)
