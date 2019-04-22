@@ -146,7 +146,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
 
     public void deleteFromFavorite(int position) {
-        Toast.makeText(mContext, mData.get(position).getTitle() + " was removed from favorites", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, mData.get(position).getTitle() + " was removed from wish list", Toast.LENGTH_SHORT).show();
         Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getItemId());
         Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getTitle());
         Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getWish());

@@ -87,40 +87,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 }
         );
 
-//        if (itemPlaceId[position] != null)
-//        {
-//            Picasso.get().load(itemIcon[position]).into(iconView);
-//            textName.setText(itemName[position]);
-//            textAddress.setText(itemAddress[position]);
-//
-//            if (itemFavorite[position] == "no")
-//            {
-//                favoriteView.setImageResource(R.drawable.cart_plus);
-//            }
-//            else
-//            {
-//                favoriteView.setImageResource(R.drawable.cart_remove);
-//            }
-//        }
-//        else
-//        {
-//            resultLayout.setVisibility(View.GONE);
-//            iconView.setVisibility(View.GONE);
-//            favoriteView.setVisibility(View.GONE);
-//            textName.setVisibility(View.GONE);
-//            textAddress.setVisibility(View.GONE);
-//            rowView.setVisibility(View.GONE);
-//        }
-
-//        favoriteView.setOnClickListener(
-//                new View.OnClickListener()
-//                {
-//                    public void onClick(View view)
-//                    {
-//                        addToFavorite(position);
-//                    }
-//                }
-//        );
 
 
         // set click listener
@@ -189,7 +155,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             spEditor.apply();
 
             this.notifyDataSetChanged();
-            Toast.makeText(mContext, item_title + " was removed from favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, item_title + " was removed from wish list", Toast.LENGTH_SHORT).show();
         } else {
             mData.get(position).setWish("yes");
             saveStr = new String[8];
@@ -209,7 +175,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             spEditor.apply();
 
             this.notifyDataSetChanged();
-            Toast.makeText(mContext, item_title + " was added to favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, item_title + " was added to wish list", Toast.LENGTH_SHORT).show();
         }
     }
 

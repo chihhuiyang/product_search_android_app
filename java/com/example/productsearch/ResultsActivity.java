@@ -1,11 +1,9 @@
 package com.example.productsearch;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -16,9 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,7 +43,9 @@ public class ResultsActivity extends AppCompatActivity
     SharedPreferences.Editor spEditor;
     SharedPreferences mSharedPreferences;
 
-    public TextView mShowingResult;
+    public LinearLayout mShowingResult;
+    public TextView mNum_results;
+    public TextView mSearch_keyword;
 
     public RecyclerView mRecyclerView;
     public List<item> listItem;
@@ -61,15 +58,10 @@ public class ResultsActivity extends AppCompatActivity
     public String[] list_wish;
     public String[] list_price;
 
-
     public TextView noResultsView;
 
-    public JSONArray jsonArray;
     public JSONArray jsonArray_items;   // 50 items
 
-
-
-    public ProgressDialog mProgressDialog;
 
 
     private boolean ifFisrtTime;
@@ -95,7 +87,9 @@ public class ResultsActivity extends AppCompatActivity
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
 
 
-        mShowingResult = (TextView)findViewById(R.id.showingResult);
+        mShowingResult = (LinearLayout)findViewById(R.id.showingResult);
+        mNum_results = (TextView)findViewById(R.id.num_results);
+        mSearch_keyword = (TextView)findViewById(R.id.search_keyword);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.resultsList2);
 
@@ -155,8 +149,13 @@ public class ResultsActivity extends AppCompatActivity
 
 
         String receivedUrl = mIntent.getStringExtra("url");
-        Log.v(TAG, "Rainie: mIntent : " + mIntent);
+        String receivedKeyword = mIntent.getStringExtra("keyword");
         Log.v(TAG, "Rainie: receivedUrl : " + receivedUrl);
+        Log.v(TAG, "Rainie: receivedKeyword : " + receivedKeyword);
+
+
+        mSearch_keyword.setText(receivedKeyword);
+
 
 
             // Instantiate the RequestQueue.
@@ -246,6 +245,8 @@ public class ResultsActivity extends AppCompatActivity
             list_condition = new String[count_items];
             list_wish = new String[count_items];
             list_price = new String[count_items];
+
+            mNum_results.setText(String.valueOf(count_items));
 
             Log.v(TAG, "Rainie : count_items = " + count_items);
             for (int i = 0; i < count_items; i++) {

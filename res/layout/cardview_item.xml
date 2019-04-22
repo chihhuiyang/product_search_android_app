@@ -6,7 +6,7 @@
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:layout_width="200dp"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:layout_margin="5dp"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     cardview:cardCornerRadius="4dp"
@@ -19,8 +19,9 @@
 
         <ImageView
             android:id="@+id/item_img_id"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop" />
 
@@ -28,36 +29,37 @@
         <TextView
             android:id="@+id/item_title_id"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
+            android:layout_height="80dp"
+            android:gravity="top|center_horizontal"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="Book Title"
+            android:text="APPLE IPHONE X 256GB FACTORY UNLOCKED 4 ..."
             android:textColor="#000000"
-            android:textSize="14sp"
+            android:textSize="18sp"
            />
 
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="wrap_content">
 
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="140dp"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/item_zip_id"
                     android:layout_width="140dp"
                     android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:text="Zip"
-                    android:textColor="#474747"
-                    android:textSize="12sp" />
+                    android:gravity="bottom"
+                    android:text="Zip: 090007"
+                    android:textColor="#686868"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/item_ship_id"
@@ -65,20 +67,22 @@
                     android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
                     android:gravity="center_vertical"
-                    android:text="Ship"
-                    android:textColor="#474747"
-                    android:textSize="12sp" />
+                    android:text="Free Shipping"
+                    android:textColor="#686868"
+                    android:textSize="14sp" />
             </LinearLayout>
 
 
             <ImageView
                 android:id="@+id/item_wish_id"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:gravity="right"
-                android:text="Wish"
-                />
+                android:gravity="center_vertical"
+                android:text="Wish" />
 
         </LinearLayout>
 
@@ -86,28 +90,31 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            >
 
 
-            <TextView
+            NEW <TextView
                 android:id="@+id/item_condition_id"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Condition"
+                android:text="New with tags"
                 android:layout_marginLeft="5dp"
-                android:textColor="#474747"
-                android:textSize="14sp" />
+                android:textColor="#A8A8A8"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/item_price_id"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:gravity="right|center_vertical"
                 android:layout_marginRight="10dp"
-                android:text="Price"
+                android:text="$100.59"
                 android:textColor="#6400FF"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
 

@@ -471,6 +471,8 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
                     Log.v(TAG, "Rainie : (Before redirect()) getActivity() : " + getActivity());
                     mIntent.putExtra("url", url_params);
+                    mIntent.putExtra("keyword", keywordVal);
+
                     redirect();
                 }
                 catch (JSONException e)

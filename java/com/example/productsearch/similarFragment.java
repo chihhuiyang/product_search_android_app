@@ -202,9 +202,11 @@ public class similarFragment extends Fragment {
         if (mOption.equals("Default")) {
             setAdapterForListView(defaultArray);
 
+            mDirectionSpinner.setEnabled(false);
             // TODO : disable mDirection
 
         } else if (mOption.equals("Name")) {
+            mDirectionSpinner.setEnabled(true);
 
             if (mDirection.equals("Ascending")) {
                 Log.v(TAG, "Rainie: ^");
@@ -217,6 +219,7 @@ public class similarFragment extends Fragment {
             }
 
         } else if (mOption.equals("Price")) {
+            mDirectionSpinner.setEnabled(true);
 
             if (mDirection.equals("Ascending")) {
                 Log.v(TAG, "Rainie: ^");
@@ -229,6 +232,7 @@ public class similarFragment extends Fragment {
             }
 
         } else if (mOption.equals("Days")) {
+            mDirectionSpinner.setEnabled(true);
 
             if (mDirection.equals("Ascending")) {
                 Log.v(TAG, "Rainie: ^");
