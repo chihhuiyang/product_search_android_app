@@ -61,26 +61,17 @@ public class ResultsActivity extends AppCompatActivity
     public String[] list_wish;
     public String[] list_price;
 
-    public ListView mListView;
+
     public TextView noResultsView;
-    public String[] placeIdList;
-    public String[] iconList;
-    public String[] nameList;
-    public String[] addressList;
-    public String[] favoriteList;
 
     public JSONArray jsonArray;
     public JSONArray jsonArray_items;   // 50 items
 
-    public String[][][] rowData = new String[3][5][20];
 
 
     public ProgressDialog mProgressDialog;
-    public String nextPageToken;
-    public boolean[] ifHasNextPage = new boolean[3];
-    public Button mPrevButton;
-    public Button mNextButton;
-    public int currentPage = 0;
+
+
     private boolean ifFisrtTime;
 
     public Intent newIntent;
@@ -105,10 +96,7 @@ public class ResultsActivity extends AppCompatActivity
 
 
         mShowingResult = (TextView)findViewById(R.id.showingResult);
-        mNextButton = (Button)findViewById(R.id.nextButton);
-        mPrevButton = (Button)findViewById(R.id.previousButton);
 
-        mListView = (ListView)findViewById(R.id.resultsList);
         mRecyclerView = (RecyclerView) findViewById(R.id.resultsList2);
 
         listItem = new ArrayList<>();
@@ -129,36 +117,6 @@ public class ResultsActivity extends AppCompatActivity
         {
             e.printStackTrace();
         }
-
-        mNextButton.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        getNextPage();
-                    }
-                }
-        );
-
-        mPrevButton.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        getPreviousPage();
-                    }
-                }
-        );
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                newIntent = new Intent(ResultsActivity.this, DetailsActivity.class);
-                requestDetails(rowData[currentPage][2][position], rowData[currentPage][0][position]);
-            }
-        });
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -237,19 +195,6 @@ public class ResultsActivity extends AppCompatActivity
                             }
                         }
 
-
-
-//                                if (jsonObject.getString("status").equals("OK"))
-//                                {
-//                                    ifFisrtTime = true;
-//                                    Log.v(TAG, "Rainie: response OK");
-//                                    hasResults();
-//                                    generateTable(jsonObject);
-//                                }
-//                                else
-//                                {
-//                                    noResults();
-//                                }
                     }
                     catch (JSONException e)
                     {
@@ -281,18 +226,8 @@ public class ResultsActivity extends AppCompatActivity
 
     public void setAdapterForListView()
     {
-//        resultsListFragment resultsListAdapter = new resultsListFragment(this,rowData[currentPage][0], rowData[currentPage][1],
-//                rowData[currentPage][2], rowData[currentPage][3], rowData[currentPage][4]);
-//        mListView.setAdapter(resultsListAdapter);
-
-
-//        List<item> copy_listItem = new ArrayList<>();
-//        for (int i = 0; i < rowData[currentPage][0].length; i++) {
-//            copy_listItem.add(new item(rowData[currentPage][0][i], rowData[currentPage][1][i], rowData[currentPage][2][i], rowData[currentPage][3][i], rowData[currentPage][4][i]));
-//        }
-
         RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // for card view
         mRecyclerView.setAdapter(myAdapter);
     }
 
@@ -312,11 +247,11 @@ public class ResultsActivity extends AppCompatActivity
             list_wish = new String[count_items];
             list_price = new String[count_items];
 
-
+            Log.v(TAG, "Rainie : count_items = " + count_items);
             for (int i = 0; i < count_items; i++) {
                 // itemId
                 String itemId = jsonArray_items.getJSONObject(i).getJSONArray("itemId").getString(0);
-                Log.v(TAG, "Rainie : itemId[" + i + "] = " + itemId);
+//                Log.v(TAG, "Rainie : itemId[" + i + "] = " + itemId);
 
                 // productImg
                 String productImg = jsonArray_items.getJSONObject(i).getJSONArray("galleryURL").getString(0);
@@ -334,7 +269,7 @@ public class ResultsActivity extends AppCompatActivity
                 if (!jsonArray_items.getJSONObject(i).isNull("postalCode")) {
                     zipcode = "Zip: " + jsonArray_items.getJSONObject(i).getJSONArray("postalCode").getString(0);
                 }
-                Log.v(TAG, "Rainie : zipcode[" + i + "] = " + zipcode);
+//                Log.v(TAG, "Rainie : zipcode[" + i + "] = " + zipcode);
 
                 // free shipping (could be N/A)
                 String shippingCost = "N/A";
@@ -351,7 +286,7 @@ public class ResultsActivity extends AppCompatActivity
                         }
                     }
                 }
-                Log.v(TAG, "Rainie : shippingCost[" + i + "] = " + shippingCost);
+//                Log.v(TAG, "Rainie : shippingCost[" + i + "] = " + shippingCost);
 
                 // condition (could be N/A)
                 String condition = "N/A";
@@ -362,7 +297,7 @@ public class ResultsActivity extends AppCompatActivity
                         condition = jsonArray_items.getJSONObject(i).getJSONArray("condition").getJSONObject(0).getJSONArray("conditionDisplayName").getString(0);
                     }
                 }
-                Log.v(TAG, "Rainie : condition[" + i + "] = " + condition);
+//                Log.v(TAG, "Rainie : condition[" + i + "] = " + condition);
 
                 // price
                 String price = jsonArray_items.getJSONObject(i).getJSONArray("sellingStatus").getJSONObject(0).getJSONArray("currentPrice").getJSONObject(0).getString("__value__");
@@ -399,90 +334,8 @@ public class ResultsActivity extends AppCompatActivity
         }
     }
 
-
-    public void generateTable(JSONObject jsonObject) throws JSONException
-    {
-        try
-        {
-            if (jsonObject.has("next_page_token"))
-            {
-                ifHasNextPage[currentPage] = true;
-                mNextButton.setEnabled(true);
-                nextPageToken = jsonObject.getString("next_page_token");
-            }
-            else
-            {
-                ifHasNextPage[currentPage] = false;
-                mNextButton.setEnabled(false);
-            }
-
-            jsonArray = jsonObject.getJSONArray("results");
-            placeIdList = new String[jsonArray.length()];
-            iconList = new String[jsonArray.length()];
-            nameList = new String[jsonArray.length()];
-            addressList = new String[jsonArray.length()];
-            favoriteList = new String[jsonArray.length()];
-
-            for (int i = 0; i < jsonArray.length(); i++)
-            {
-                String place_id = jsonArray.getJSONObject(i).getString("place_id");
-                String icon = jsonArray.getJSONObject(i).getString("icon");
-                String name = jsonArray.getJSONObject(i).getString("name");
-                String address = jsonArray.getJSONObject(i).getString("vicinity");
-
-                placeIdList[i] = place_id;
-                iconList[i] = icon;
-                nameList[i] = name;
-                addressList[i] = address;
-                if (mSharedPreferences.contains(placeIdList[i]))
-                {
-                    favoriteList[i] = "yes";
-                }
-                else
-                {
-                    favoriteList[i] = "no";
-                }
-
-                rowData[currentPage][0][i] = placeIdList[i];
-                rowData[currentPage][1][i] = iconList[i];
-//                Log.v(TAG, "Rainie : iconList[" + i + "] = " + iconList[i]);
-                rowData[currentPage][2][i] = nameList[i];
-                rowData[currentPage][3][i] = addressList[i];
-                rowData[currentPage][4][i] = favoriteList[i];
-
-
-//                String placeId, String icon, String name, String address, String favorite
-//                listItem.add(new item(placeIdList[i], iconList[i], nameList[i], addressList[i], favoriteList[i]));
-            }
-            resultsListFragment resultsListAdapter = new resultsListFragment(this, placeIdList, iconList, nameList, addressList, favoriteList);
-            mListView.setAdapter(resultsListAdapter);
-
-
-            RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
-            mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            mRecyclerView.setAdapter(myAdapter);
-
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     public void checkIfFavorite()
     {
-//        for (int i = 0; i < rowData[currentPage][0].length; i++)
-//        {
-//            if (mSharedPreferences.contains(rowData[currentPage][0][i]))
-//            {
-//                rowData[currentPage][4][i] = "yes";
-//            }
-//            else
-//            {
-//                rowData[currentPage][4][i] = "no";
-//            }
-//        }
-
         if (list_itemId != null) {
             Log.v(TAG, "Rainie : list_itemId is not null");
             for (int i = 0; i < list_itemId.length; i++) {
@@ -495,212 +348,26 @@ public class ResultsActivity extends AppCompatActivity
         }
     }
 
-    public void getNextPage()
-    {
-        if (currentPage == 0)
-        {
-            if (rowData[currentPage+1][0][0] == null)
-            {
-                if (ifHasNextPage[currentPage])
-                {
-                    requestNextPage();
-                    currentPage++;
-                    mPrevButton.setEnabled(true);
-                }
-                else
-                {
-                    mNextButton.setEnabled(false);
-                }
-            }
-            else
-            {
-                currentPage++;
-                checkIfFavorite();
-                setAdapterForListView();
-                mPrevButton.setEnabled(true);
-                if (ifHasNextPage[currentPage])
-                {
-                    mNextButton.setEnabled(true);
-                }
-                else
-                {
-                    mNextButton.setEnabled(false);
-                }
-            }
-        }
-        else if (currentPage == 1)
-        {
-            if (rowData[currentPage+1][0][0] == null)
-            {
-                if (ifHasNextPage[currentPage] == true)
-                {
-                    requestNextPage();
-                    currentPage++;
-                    mPrevButton.setEnabled(true);
-                }
-                else
-                {
-                    mNextButton.setEnabled(false);
-                }
-            }
-            else
-            {
-                currentPage++;
-                checkIfFavorite();
-                setAdapterForListView();
-                mPrevButton.setEnabled(true);
-                mNextButton.setEnabled(false);
-            }
-        }
-        else
-        {
-            mPrevButton.setEnabled(true);
-            mNextButton.setEnabled(false);
-        }
 
-    }
 
-    public void requestNextPage()
-    {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Fetching next page");
-        mProgressDialog.show();
-
-        String mUrl = "http://cs571placesearch-env.us-east-2.elasticbeanstalk.com/?";
-        mUrl += "nextPageToken=" + nextPageToken;
-        System.out.println(mUrl);
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-                    JSONObject jsonObject = new JSONObject(response);
-                    generateTable(jsonObject);
-                    //System.out.println(jsonObject.toString());
-                    mProgressDialog.dismiss();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        },
-        new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                System.out.println("Request error!");
-                System.out.println(error);
-            }
-        });
-        queue.add(stringRequest);
-    }
-
-    public void getPreviousPage()
-    {
-        if (currentPage == 1)
-        {
-            currentPage--;
-            checkIfFavorite();
-            setAdapterForListView();
-            mPrevButton.setEnabled(false);
-            mNextButton.setEnabled(true);
-        }
-        else if (currentPage == 2)
-        {
-            currentPage--;
-            checkIfFavorite();
-            setAdapterForListView();
-            mPrevButton.setEnabled(true);
-            mNextButton.setEnabled(true);
-        }
-        else
-        {
-            mPrevButton.setEnabled(false);
-            mNextButton.setEnabled(true);
-        }
-    }
 
     public void redirect()
     {
         this.startActivity(newIntent);
     }
 
-    public void requestDetails(String mName, String mPlaceId)
-    {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Fetching details");
-        mProgressDialog.show();
-
-        String mUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
-        mUrl += "placeid=" + mPlaceId;
-        mUrl += "&key=AIzaSyC9HBExGTftsTmeBjHXLucUi5NH2QXCQkY";
-        System.out.println(mUrl);
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-                    JSONObject jsonObject = new JSONObject(response);
-                    //System.out.println(jsonObject.toString());
-                    newIntent.putExtra("jsonObj", jsonObject.toString());
-                    redirect();
-                    mProgressDialog.dismiss();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        System.out.println("Request error!");
-                        System.out.println(error);
-                    }
-                });
-        queue.add(stringRequest);
-    }
 
     public void hasResults()
     {
         mShowingResult.setVisibility(View.VISIBLE);
-
-        mListView.setVisibility(View.VISIBLE);
-
         mRecyclerView.setVisibility(View.VISIBLE);
-
-//        mNextButton.setVisibility(View.VISIBLE);
-//        mPrevButton.setVisibility(View.VISIBLE);
         noResultsView.setVisibility(View.GONE);
     }
 
     public void noResults()
     {
         mShowingResult.setVisibility(View.GONE);
-
-        mListView.setVisibility(View.GONE);
-
         mRecyclerView.setVisibility(View.GONE);
-
-        mNextButton.setVisibility(View.GONE);
-        mPrevButton.setVisibility(View.GONE);
         noResultsView.setVisibility(View.VISIBLE);
     }
 }

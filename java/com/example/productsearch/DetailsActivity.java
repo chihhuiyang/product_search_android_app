@@ -246,42 +246,6 @@ public class DetailsActivity extends AppCompatActivity
 
 
 
-//        infoFragment mInfoFragment = new infoFragment();
-//        mInfoFragment.setArguments(bundle);
-//        Spannable infoSpan = new SpannableString("   PRODUCT");
-//        Drawable infoImage = getBaseContext().getDrawable(R.drawable.information_variant);
-//        infoImage.setBounds(25, 25, 75, 75);
-//        ImageSpan infoImageSpan = new ImageSpan(infoImage, ImageSpan.ALIGN_BASELINE);
-//        infoSpan.setSpan(infoImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-//        adapter.addFragment(mInfoFragment, infoSpan);
-//
-//        photosFragment mPhotosFragment = new photosFragment();
-//        mPhotosFragment.setArguments(bundle);
-//        Spannable photosSpan = new SpannableString("   SHIPPING");
-//        Drawable photosImage = getBaseContext().getDrawable(R.drawable.truck_delivery);
-//        photosImage.setBounds(25, 25, 75, 75);
-//        ImageSpan photosImageSpan = new ImageSpan(photosImage, ImageSpan.ALIGN_BASELINE);
-//        photosSpan.setSpan(photosImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-//        adapter.addFragment(mPhotosFragment, photosSpan);
-//
-//        mapFragment mMapFragment = new mapFragment();
-//        mMapFragment.setArguments(bundle);
-//        Spannable mapSpan = new SpannableString("   PHOTOS");
-//        Drawable mapImage = getBaseContext().getDrawable(R.drawable.google);
-//        mapImage.setBounds(25, 25, 75, 75);
-//        ImageSpan mapImageSpan = new ImageSpan(mapImage, ImageSpan.ALIGN_BASELINE);
-//        mapSpan.setSpan(mapImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-//        adapter.addFragment(mMapFragment, mapSpan);
-//
-//        reviewsFragment mReviewsFragment = new reviewsFragment();
-//        mReviewsFragment.setArguments(bundle);
-//        Spannable reviewsSpan = new SpannableString("   SIMILAR");
-//        Drawable reviewsImage = getBaseContext().getDrawable(R.drawable.equal);
-//        reviewsImage.setBounds(25, 25, 75, 75);
-//        ImageSpan reviewsImageSpan = new ImageSpan(reviewsImage, ImageSpan.ALIGN_BASELINE);
-//        reviewsSpan.setSpan(reviewsImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-//        adapter.addFragment(mReviewsFragment, reviewsSpan);
-
         viewPager.setAdapter(adapter);
         Log.v(TAG, "Rainie : Finish setupViewPager()");
     }
@@ -289,12 +253,6 @@ public class DetailsActivity extends AppCompatActivity
     public void receiveData() throws JSONException
     {
         Intent mIntent = getIntent();
-//        String receivedData = mIntent.getStringExtra("jsonObj");
-//        jsonObject = new JSONObject(receivedData);
-//        placeDetails = jsonObject.getJSONObject("result");
-//        placeId = placeDetails.getString("place_id");
-
-//        requestDetails(receivedName, receivedPlace);
 
 
         String receivedTitle = mIntent.getStringExtra("title");

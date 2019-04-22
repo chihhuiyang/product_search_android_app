@@ -35,7 +35,7 @@ public class similarListFragment extends RecyclerView.Adapter<similarListFragmen
     @Override
     public similarListFragment.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        Log.v(TAG, "Rainie : similarListFragment");
+//        Log.v(TAG, "Rainie : similarListFragment");
 
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);

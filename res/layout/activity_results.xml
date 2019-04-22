@@ -40,47 +40,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="0dp" />
 
-            <ListView
-                android:id="@+id/resultsList"
-                android:layout_width="match_parent"
-                android:layout_height="77dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="8dp"
-                android:divider="@null"
-                android:visibility="visible"
-                app:layout_constraintTop_toBottomOf="@+id/showingResult"/>
-
-            <Button
-                android:id="@+id/previousButton"
-                android:layout_width="168dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:enabled="false"
-                android:text="PREVIOUS"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.035"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/resultsList" />
-
-            <Button
-                android:id="@+id/nextButton"
-                android:layout_width="168dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:enabled="false"
-                android:text="NEXT"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.813"
-                app:layout_constraintStart_toEndOf="@+id/previousButton"
-                app:layout_constraintTop_toBottomOf="@+id/resultsList" />
 
             <TextView
                 android:id="@+id/noResults"
@@ -104,9 +63,7 @@
                 android:id="@+id/resultsList2"
                 android:layout_width="413dp"
                 android:layout_height="591dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/resultsList"
-                tools:layout_editor_absoluteX="0dp" />
+                />
 
 
 </android.support.constraint.ConstraintLayout>
