@@ -3,6 +3,7 @@ package com.example.productsearch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ public class similarListFragment extends RecyclerView.Adapter<similarListFragmen
 
     private static final String TAG = "similarListFragment";
 
+
     private Context mContext;
     private String[][] mData;
 
@@ -32,6 +34,9 @@ public class similarListFragment extends RecyclerView.Adapter<similarListFragmen
     @NonNull
     @Override
     public similarListFragment.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
+        Log.v(TAG, "Rainie : similarListFragment");
+
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.similar_item, viewGroup, false);
@@ -46,9 +51,9 @@ public class similarListFragment extends RecyclerView.Adapter<similarListFragmen
 
         Picasso.get().load(mData[i][0]).into(myViewHolder.image);
         myViewHolder.title.setText(mData[i][1]);
-        myViewHolder.ship_cost.setText(mData[i][2]);
-        myViewHolder.left.setText(mData[i][3]);
-        myViewHolder.price.setText(mData[i][4]);
+        myViewHolder.ship_cost.setText(mData[i][6]);
+        myViewHolder.left.setText(mData[i][7]);
+        myViewHolder.price.setText(mData[i][8]);
 
         // set click listener
         myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +61,13 @@ public class similarListFragment extends RecyclerView.Adapter<similarListFragmen
             @Override
             public void onClick(View v) {
 
-                Log.v(TAG, "Rainie : click similar item");
+                Log.v(TAG, "Rainie : click similar item : " + mData[i][5]);
+
+                Uri uriUrl = Uri.parse(mData[i][5]);
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                mContext.startActivity(launchBrowser);
+
+
 //                Intent intent = new Intent(mContext, DetailsActivity.class);
 //
 //                // passing data to the detail activity

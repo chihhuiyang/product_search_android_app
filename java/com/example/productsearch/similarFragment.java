@@ -3,6 +3,7 @@ package com.example.productsearch;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,11 +50,6 @@ public class similarFragment extends Fragment {
     public String[][] defaultArray;
     public String[][] sortedArray;
 
-    public String[][] googleReviewsArr;
-    public String[][] originalGoogleReviewsArr;
-    public String[][] yelpReviewsArr;
-    public String[][] originalYelpReviewsArr;
-
 
     @Nullable
     @Override
@@ -65,12 +61,12 @@ public class similarFragment extends Fragment {
         mSimilarList = (RecyclerView)view.findViewById(R.id.similarList);
         noResultsView = (TextView)view.findViewById(R.id.noResults);
 
-        mOptionSpinner = (Spinner)view.findViewById(R.id.reviewSpinner);
+        mOptionSpinner = (Spinner)view.findViewById(R.id.optionSpinner);
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, sort_option);
         adapter1.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         mOptionSpinner.setAdapter(adapter1);
 
-        mDirectionSpinner = (Spinner)view.findViewById(R.id.orderSpinner);
+        mDirectionSpinner = (Spinner)view.findViewById(R.id.directionSpinner);
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, sort_direction);
         adapter2.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         mDirectionSpinner.setAdapter(adapter2);
@@ -122,17 +118,31 @@ public class similarFragment extends Fragment {
                             noResultsView.setVisibility(View.VISIBLE);
                         } else {
                             noResultsView.setVisibility(View.GONE);
-                            defaultArray = new String[count][6];
-                            sortedArray = new String[count][6];
+                            defaultArray = new String[count][9];
+                            sortedArray = new String[count][9];
                             for (int i = 0; i < count; i++) {
                                 defaultArray[i][0] = jsonObj_similar_array.getJSONObject(i).getString("imageURL");
                                 defaultArray[i][1] = jsonObj_similar_array.getJSONObject(i).getString("title");
                                 defaultArray[i][2] = jsonObj_similar_array.getJSONObject(i).getJSONObject("shippingCost").getString("__value__");
+
+                                String shippingCost = defaultArray[i][2];
+                                double shippingCost_double = Double.parseDouble(shippingCost);
+                                if (shippingCost_double == 0.0) {
+                                    shippingCost = "Free Shipping";
+                                } else {
+                                    shippingCost = "$" + shippingCost;
+                                }
+                                defaultArray[i][6] = shippingCost;
+
                                 String timeLeft_str = jsonObj_similar_array.getJSONObject(i).getString("timeLeft");
                                 int a = timeLeft_str.indexOf("P");
                                 int b = timeLeft_str.indexOf("D");
                                 defaultArray[i][3] = timeLeft_str.substring(a+1, b);
+                                defaultArray[i][7] = defaultArray[i][3] + " Days Left";
+
                                 defaultArray[i][4] = jsonObj_similar_array.getJSONObject(i).getJSONObject("buyItNowPrice").getString("__value__");
+                                defaultArray[i][8] = "$" + defaultArray[i][4];
+
                                 defaultArray[i][5] = jsonObj_similar_array.getJSONObject(i).getString("viewItemURL");
 
                                 // copy to sortedArray
@@ -142,6 +152,18 @@ public class similarFragment extends Fragment {
                                 sortedArray[i][3] = defaultArray[i][3];
                                 sortedArray[i][4] = defaultArray[i][4];
                                 sortedArray[i][5] = defaultArray[i][5];
+                                sortedArray[i][6] = defaultArray[i][6];
+                                sortedArray[i][7] = defaultArray[i][7];
+                                sortedArray[i][8] = defaultArray[i][8];
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][0]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][1]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][2]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][3]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][4]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][5]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][6]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][7]);
+//                                Log.v(TAG, "Rainie : " + sortedArray[i][8]);
                             }
                         }
                     } else {
@@ -168,7 +190,10 @@ public class similarFragment extends Fragment {
     public void setAdapterForListView(String[][] operateArr)
     {
         similarListFragment similarListAdapter = new similarListFragment(this.getActivity(), operateArr);
+        mSimilarList.setLayoutManager(new GridLayoutManager(this.getActivity(), 1));    // card view
         mSimilarList.setAdapter(similarListAdapter);
+
+
     }
 
 
@@ -195,11 +220,11 @@ public class similarFragment extends Fragment {
 
             if (mDirection.equals("Ascending")) {
                 Log.v(TAG, "Rainie: ^");
-                sortAscending(sortedArray, 4);
+                sortDoubleAscending(sortedArray, 4);
                 setAdapterForListView(sortedArray);
             } else {
                 Log.v(TAG, "Rainie: v");
-                sortDescending(sortedArray, 4);
+                sortDoubleDescending(sortedArray, 4);
                 setAdapterForListView(sortedArray);
             }
 
@@ -207,17 +232,74 @@ public class similarFragment extends Fragment {
 
             if (mDirection.equals("Ascending")) {
                 Log.v(TAG, "Rainie: ^");
-                sortAscending(sortedArray, 3);
+                sortIntegerAscending(sortedArray, 3);
                 setAdapterForListView(sortedArray);
             } else {
                 Log.v(TAG, "Rainie: v");
-                sortDescending(sortedArray, 3);
+                sortIntegerDescending(sortedArray, 3);
                 setAdapterForListView(sortedArray);
             }
 
         }
     }
 
+    public void sortDoubleAscending(String[][] data, final int index)
+    {
+        Arrays.sort(data, new Comparator<String[]>()
+        {
+            @Override
+            public int compare(final String[] a, final String[] b)
+            {
+                double x = Double.parseDouble(a[index]);
+                double y = Double.parseDouble(b[index]);
+                return Double.compare(x, y);
+            }
+        });
+    }
+
+    public void sortDoubleDescending(String[][] data, final int index)
+    {
+        Arrays.sort(data, new Comparator<String[]>()
+        {
+            @Override
+            public int compare(final String[] a, final String[] b)
+            {
+                double x = Double.parseDouble(a[index]);
+                double y = Double.parseDouble(b[index]);
+                return Double.compare(y, x);
+            }
+        });
+    }
+
+
+
+    public void sortIntegerAscending(String[][] data, final int index)
+    {
+        Arrays.sort(data, new Comparator<String[]>()
+        {
+            @Override
+            public int compare(final String[] a, final String[] b)
+            {
+                int x = Integer.parseInt(a[index]);
+                int y = Integer.parseInt(b[index]);
+                return x - y;
+            }
+        });
+    }
+
+    public void sortIntegerDescending(String[][] data, final int index)
+    {
+        Arrays.sort(data, new Comparator<String[]>()
+        {
+            @Override
+            public int compare(final String[] a, final String[] b)
+            {
+                int x = Integer.parseInt(a[index]);
+                int y = Integer.parseInt(b[index]);
+                return y - x;
+            }
+        });
+    }
 
 
     public void sortAscending(String[][] data, final int index)
@@ -225,11 +307,9 @@ public class similarFragment extends Fragment {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override
-            public int compare(final String[] entry1, final String[] entry2)
+            public int compare(final String[] a, final String[] b)
             {
-                final String time1 = entry1[index];
-                final String time2 = entry2[index];
-                return time1.compareTo(time2);
+                return a[index].compareTo(b[index]);
             }
         });
     }
@@ -239,11 +319,9 @@ public class similarFragment extends Fragment {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override
-            public int compare(final String[] entry1, final String[] entry2)
+            public int compare(final String[] a, final String[] b)
             {
-                final String time1 = entry1[index];
-                final String time2 = entry2[index];
-                return time2.compareTo(time1);
+                return b[index].compareTo(a[index]);
             }
         });
     }

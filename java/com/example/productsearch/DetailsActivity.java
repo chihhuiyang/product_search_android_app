@@ -240,9 +240,9 @@ public class DetailsActivity extends AppCompatActivity
         mPhotosFragment.setArguments(bundle);
         adapter.addFrag(mPhotosFragment, "PHOTO");
 
-        infoFragment mInfoFragment4 = new infoFragment();
-        mInfoFragment4.setArguments(bundle);
-        adapter.addFrag(mInfoFragment4, "FOUR");
+        similarFragment mSimilarFragment = new similarFragment();
+        mSimilarFragment.setArguments(bundle);
+        adapter.addFrag(mSimilarFragment, "SIMILAR");
 
 
 
@@ -549,13 +549,13 @@ public class DetailsActivity extends AppCompatActivity
         @Override
         public CharSequence getPageTitle(int position)
         {
-            Log.v(TAG, "Rainie : getPageTitle() = " + position);
+//            Log.v(TAG, "Rainie : getPageTitle() = " + position);
             return mFragmentTitleList.get(position);
         }
 
         @Override
         public int getCount() {
-            Log.v(TAG, "Rainie : getCount() = " + mFragmentList.size());
+//            Log.v(TAG, "Rainie : getCount() = " + mFragmentList.size());
             // Show 2 total pages.
             return mFragmentList.size();
         }
