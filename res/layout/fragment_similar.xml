@@ -14,13 +14,13 @@
         android:orientation="horizontal">
 
        <Spinner
-            android:id="@+id/defaltSpinner"
+            android:id="@+id/optionSpinner"
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:textSize="@style/spinnerDropDownItemStyle" />
 
         <Spinner
-            android:id="@+id/orderSpinner"
+            android:id="@+id/directionSpinner"
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -35,6 +35,26 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
     />
+
+
+
+    <TextView
+        android:id="@+id/noResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="No results"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </LinearLayout>

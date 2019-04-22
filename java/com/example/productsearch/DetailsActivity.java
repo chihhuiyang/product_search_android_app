@@ -82,6 +82,7 @@ public class DetailsActivity extends AppCompatActivity
 
     public JSONObject jsonObject_detail;
     public JSONObject jsonObject_photo;
+    public JSONObject jsonObject_similar;
     private String itemId;
     private String itemTitle;
     private String jsonObjItem_str;
@@ -316,6 +317,8 @@ public class DetailsActivity extends AppCompatActivity
 
     }
 
+
+
     // mTitle is short title
     public void requestDetails2(String mTitle, String mItemId) {
 
@@ -352,6 +355,9 @@ public class DetailsActivity extends AppCompatActivity
                         // TODO : request photo api
                         // Instantiate the RequestQueue.
                         String mPhotoUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?keyword_photo=" + full_title;
+
+                        Log.v(TAG, "Rainie : mPhotoUrl = " + mPhotoUrl);
+
                         RequestQueue queue2 = Volley.newRequestQueue(mContext);
 
                         // Request a string response from the provided URL.
@@ -368,14 +374,68 @@ public class DetailsActivity extends AppCompatActivity
                                     bundle.putString("jsonObject_photo", jsonObject_photo.toString());
 
 
-                                    // go to 4 TAB page
-                                    Log.v(TAG, "Rainie : Start setupViewPager()");
-                                    setupViewPager(mViewPager);
-                                    setupTabIcons();
+
+
+                                    // TODO : request similar api
+                                    String mSimilarUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?similar=true&itemId_similar=" + itemId;
+
+                                    Log.v(TAG, "Rainie : mSimilarUrl = " + mSimilarUrl);
+
+                                    RequestQueue queue3 = Volley.newRequestQueue(mContext);
+
+                                    // Request a string response from the provided URL.
+                                    StringRequest stringRequest3 = new StringRequest(Request.Method.GET, mSimilarUrl, new Response.Listener<String>()
+                                    {
+                                        @Override
+                                        public void onResponse(String response)
+                                        {
+                                            try
+                                            {
+                                                jsonObject_similar = new JSONObject(response);
+                                                Log.v(TAG, "Rainie: Similar JSON : " + jsonObject_similar.toString());
+
+                                                bundle.putString("jsonObject_similar", jsonObject_similar.toString());
+
+
+                                                // go to 4 TAB page
+                                                Log.v(TAG, "Rainie : Start setupViewPager()");
+                                                setupViewPager(mViewPager);
+                                                setupTabIcons();
+                                            }
+                                            catch (JSONException e)
+                                            {
+                                                bundle.putString("jsonObject_similar", "");
+
+                                                // go to 4 TAB page
+                                                Log.v(TAG, "Rainie : Start setupViewPager()");
+                                                setupViewPager(mViewPager);
+                                                setupTabIcons();
+
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    },
+                                            new Response.ErrorListener()
+                                            {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error)
+                                                {
+
+                                                    Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                                                    System.out.println("Request error!");
+                                                    System.out.println(error);
+                                                    Log.v(TAG, "Rainie: VolleyError");
+                                                }
+                                            });
+                                    queue3.add(stringRequest3);
+
+
+
                                 }
                                 catch (JSONException e)
                                 {
                                     bundle.putString("jsonObject_photo", "");
+                                    bundle.putString("jsonObject_similar", "");
 
                                     // go to 4 TAB page
                                     Log.v(TAG, "Rainie : Start setupViewPager()");

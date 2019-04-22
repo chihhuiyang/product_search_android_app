@@ -123,7 +123,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 //        );
 
 
-//        // set click listener
+        // set click listener
         myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
             @Override
