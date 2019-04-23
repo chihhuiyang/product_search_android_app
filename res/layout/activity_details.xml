@@ -20,6 +20,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <Button
+        android:id="@+id/wish_button"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="620dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/circle_wish_remove"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <android.support.v4.view.ViewPager
         android:id="@+id/detailsContainer"
         android:layout_width="match_parent"

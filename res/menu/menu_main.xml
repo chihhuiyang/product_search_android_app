@@ -1,19 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.weifei.placessearch.MainActivity">
+    tools:context="com.example.productsearch.MainActivity">
 
 
     <item android:id="@+id/share"
         android:icon="@drawable/facebook"
-        android:title="@string/twitter"
         app:showAsAction="always"/>
 
 
     <item android:id="@+id/like"
         android:icon="@drawable/cart_plus"
-        android:title="@string/favorite"
         app:showAsAction="always"/>
-
 
 </menu>

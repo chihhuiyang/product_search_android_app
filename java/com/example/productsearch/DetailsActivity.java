@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,14 +123,18 @@ public class DetailsActivity extends AppCompatActivity
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.detailsContainer);
 
-        mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message_detail);;
+        mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message_detail);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar_detail);
+
+
 
         tabLayout = (TabLayout) findViewById(R.id.detailsTabs);
         tabLayout.setupWithViewPager(mViewPager);
 //        tabLayout.setTabMode(MODE_SCROLLABLE);
 
 //        setupTabIcons();
+
+
 
         try
         {
@@ -196,40 +202,14 @@ public class DetailsActivity extends AppCompatActivity
 
 
     private void setupTabIcons() {
-//        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-//        tabOne.setText("PRODUCT");
-//        tabOne.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        tabOne.setGravity(Gravity.CENTER_HORIZONTAL);
-//        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.information_variant, 0, 0);
-//        tabLayout.getTabAt(0).setCustomView(tabOne);
-
         tabLayout.getTabAt(0).setIcon(R.drawable.information_variant);
         tabLayout.getTabAt(0).setText("PRODUCT");
-
-//        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-//        tabTwo.setText("SHIPPING");
-//        tabTwo.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        tabTwo.setGravity(Gravity.CENTER_HORIZONTAL);
-//        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.truck_delivery, 0, 0);
-//        tabLayout.getTabAt(1).setCustomView(tabTwo);
 
         tabLayout.getTabAt(1).setIcon(R.drawable.truck_delivery);
         tabLayout.getTabAt(1).setText("SHIPPING");
 
-//        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-//        tabThree.setText("PHOTOS");
-//        tabThree.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.google, 0, 0);
-//        tabLayout.getTabAt(2).setCustomView(tabThree);
-
         tabLayout.getTabAt(2).setIcon(R.drawable.google);
         tabLayout.getTabAt(2).setText("PHOTOS");
-
-//        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-//        tabFour.setText("SIMILAR");
-//        tabFour.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-//        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.equal, 0, 0);
-//        tabLayout.getTabAt(3).setCustomView(tabFour);
 
         tabLayout.getTabAt(3).setIcon(R.drawable.equal);
         tabLayout.getTabAt(3).setText("SIMILAR");
@@ -251,13 +231,13 @@ public class DetailsActivity extends AppCompatActivity
         mShippingFragment.setArguments(bundle);
         adapter.addFrag(mShippingFragment, "SHIPPING");
 
-//        shippingFragment mShippingFragment2 = new shippingFragment();
-//        mShippingFragment2.setArguments(bundle);
-//        adapter.addFrag(mShippingFragment2, "SHIPPING");
+        shippingFragment mShippingFragment2 = new shippingFragment();
+        mShippingFragment2.setArguments(bundle);
+        adapter.addFrag(mShippingFragment2, "SHIPPING");
 
-        photosFragment mPhotosFragment = new photosFragment();
-        mPhotosFragment.setArguments(bundle);
-        adapter.addFrag(mPhotosFragment, "PHOTOS");
+//        photosFragment mPhotosFragment = new photosFragment();
+//        mPhotosFragment.setArguments(bundle);
+//        adapter.addFrag(mPhotosFragment, "PHOTOS");
 
         similarFragment mSimilarFragment = new similarFragment();
         mSimilarFragment.setArguments(bundle);

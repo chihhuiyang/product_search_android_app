@@ -116,8 +116,13 @@ public class similarFragment extends Fragment {
                         int count = jsonObj_similar_array.length();
                         if (count == 0) {
                             noResultsView.setVisibility(View.VISIBLE);
+                            mOptionSpinner.setEnabled(false);
+                            mDirectionSpinner.setEnabled(false);
                         } else {
                             noResultsView.setVisibility(View.GONE);
+                            mOptionSpinner.setEnabled(true);
+                            mDirectionSpinner.setEnabled(true);
+
                             defaultArray = new String[count][9];
                             sortedArray = new String[count][9];
                             for (int i = 0; i < count; i++) {
@@ -168,12 +173,18 @@ public class similarFragment extends Fragment {
                         }
                     } else {
                         noResultsView.setVisibility(View.VISIBLE);
+                        mOptionSpinner.setEnabled(false);
+                        mDirectionSpinner.setEnabled(false);
                     }
                 } else {
                     noResultsView.setVisibility(View.VISIBLE);
+                    mOptionSpinner.setEnabled(false);
+                    mDirectionSpinner.setEnabled(false);
                 }
             } else {
                 noResultsView.setVisibility(View.VISIBLE);
+                mOptionSpinner.setEnabled(false);
+                mDirectionSpinner.setEnabled(false);
             }
 
 
