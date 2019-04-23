@@ -130,7 +130,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         mIntent = new Intent(this.getActivity(), ResultsActivity.class);
-        Log.v(TAG, "Rainie: onCreateView() , mIntent : " + mIntent + " , this.getActivity() : " + this.getActivity());
+        Log.v(TAG, "Rainie: onCreateView()");
 
         //set spinner for categories
         mSpinner = (Spinner)view.findViewById(R.id.spinner);

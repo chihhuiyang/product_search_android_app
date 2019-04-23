@@ -18,9 +18,13 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.example.productsearch.favoritesFragment.mRecyclerWishView;
 import static com.example.productsearch.favoritesFragment.noFavoritesView;
+import static com.example.productsearch.favoritesFragment.num_wishlist;
+import static com.example.productsearch.favoritesFragment.total_cost;
+
 
 public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdapterWish.MyViewHolder> {
 
@@ -33,6 +37,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
     public SharedPreferences mSharedPreferences;
     public SharedPreferences.Editor spEditor;
     private String[] saveStr;
+    public double total_shopping_cost;
 
 
     public RecycleViewAdapterWish(Context mContext, List<item> mData) {
@@ -147,19 +152,47 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
     public void deleteFromFavorite(int position) {
         Toast.makeText(mContext, mData.get(position).getTitle() + " was removed from wish list", Toast.LENGTH_SHORT).show();
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getItemId());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getTitle());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getWish());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getItemId());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getTitle());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getWish());
         Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getPrice());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getCondition());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getShippingCost());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getZipcode());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getProductImg());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getCondition());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getShippingCost());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getZipcode());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getProductImg());
+
+
 
         spEditor.remove(mData.get(position).getItemId());
         spEditor.apply();
 
-        Log.v(TAG, "Rainie : After deleteFromFavorite() : mSharedPreferences.getAll().size() = " + mSharedPreferences.getAll().size());
+
+        // update total_shopping_cost
+        int numOfSP = mSharedPreferences.getAll().size();
+        Log.v(TAG, "Rainie : After deleteFromFavorite() : numOfSP = " + numOfSP);
+        Map<String,?> keys = mSharedPreferences.getAll();
+
+        int total_wishlist_cost = 0;
+        String[] spElement;
+        for(Map.Entry<String,?> entry : keys.entrySet())
+        {
+            Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
+            spElement = entry.getValue().toString().split(",");
+
+            double wish_cost = Double.parseDouble(spElement[6].substring(2, spElement[6].length() - 1)) * 100;
+            int wish_cost_int = (int) wish_cost;
+            Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
+            total_wishlist_cost += wish_cost_int;
+        }
+        total_shopping_cost = new Double(total_wishlist_cost) / 100.0;
+        total_cost.setText("$" + Double.toString(total_shopping_cost));
+
+
+        // update total number
+        num_wishlist.setText(String.valueOf(numOfSP));
+
+
+
         mData.remove(position);
         
         if (mData.size() == 0) {

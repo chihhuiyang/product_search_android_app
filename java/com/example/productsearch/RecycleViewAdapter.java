@@ -158,7 +158,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             Toast.makeText(mContext, item_title + " was removed from wish list", Toast.LENGTH_SHORT).show();
         } else {
             mData.get(position).setWish("yes");
-            saveStr = new String[8];
+            saveStr = new String[9];
             saveStr[0] = mData.get(position).getItemId();
             saveStr[1] = mData.get(position).getProductImg();
             saveStr[2] = mData.get(position).getTitle();
@@ -167,6 +167,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             saveStr[5] = mData.get(position).getCondition();
             saveStr[6] = mData.get(position).getPrice();
             saveStr[7] = mData.get(position).getWish();
+            saveStr[8] = mData.get(position).getJsonObjItem_str();
 
             Gson gson = new Gson();
             String myStr = gson.toJson(saveStr);
