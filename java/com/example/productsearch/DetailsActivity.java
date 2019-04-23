@@ -196,31 +196,43 @@ public class DetailsActivity extends AppCompatActivity
 
 
     private void setupTabIcons() {
-        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabOne.setText("PRODUCT");
-        tabOne.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+//        tabOne.setText("PRODUCT");
+//        tabOne.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 //        tabOne.setGravity(Gravity.CENTER_HORIZONTAL);
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.information_variant, 0, 0);
-        tabLayout.getTabAt(0).setCustomView(tabOne);
+//        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.information_variant, 0, 0);
+//        tabLayout.getTabAt(0).setCustomView(tabOne);
 
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabTwo.setText("SHIPPING");
-        tabTwo.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tabTwo.setGravity(Gravity.CENTER_HORIZONTAL);
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.truck_delivery, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
+        tabLayout.getTabAt(0).setIcon(R.drawable.information_variant);
+        tabLayout.getTabAt(0).setText("PRODUCT");
 
-        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabThree.setText("PHOTOS");
-        tabThree.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.google, 0, 0);
-        tabLayout.getTabAt(2).setCustomView(tabThree);
+//        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+//        tabTwo.setText("SHIPPING");
+//        tabTwo.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        tabTwo.setGravity(Gravity.CENTER_HORIZONTAL);
+//        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.truck_delivery, 0, 0);
+//        tabLayout.getTabAt(1).setCustomView(tabTwo);
 
-        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabFour.setText("SIMILAR");
-        tabFour.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.equal, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabFour);
+        tabLayout.getTabAt(1).setIcon(R.drawable.truck_delivery);
+        tabLayout.getTabAt(1).setText("SHIPPING");
+
+//        TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+//        tabThree.setText("PHOTOS");
+//        tabThree.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.google, 0, 0);
+//        tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        tabLayout.getTabAt(2).setIcon(R.drawable.google);
+        tabLayout.getTabAt(2).setText("PHOTOS");
+
+//        TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+//        tabFour.setText("SIMILAR");
+//        tabFour.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+//        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.equal, 0, 0);
+//        tabLayout.getTabAt(3).setCustomView(tabFour);
+
+        tabLayout.getTabAt(3).setIcon(R.drawable.equal);
+        tabLayout.getTabAt(3).setText("SIMILAR");
     }
 
 
@@ -239,13 +251,13 @@ public class DetailsActivity extends AppCompatActivity
         mShippingFragment.setArguments(bundle);
         adapter.addFrag(mShippingFragment, "SHIPPING");
 
-        shippingFragment mShippingFragment2 = new shippingFragment();
-        mShippingFragment2.setArguments(bundle);
-        adapter.addFrag(mShippingFragment2, "SHIPPING");
+//        shippingFragment mShippingFragment2 = new shippingFragment();
+//        mShippingFragment2.setArguments(bundle);
+//        adapter.addFrag(mShippingFragment2, "SHIPPING");
 
-//        photosFragment mPhotosFragment = new photosFragment();
-//        mPhotosFragment.setArguments(bundle);
-//        adapter.addFrag(mPhotosFragment, "PHOTO");
+        photosFragment mPhotosFragment = new photosFragment();
+        mPhotosFragment.setArguments(bundle);
+        adapter.addFrag(mPhotosFragment, "PHOTOS");
 
         similarFragment mSimilarFragment = new similarFragment();
         mSimilarFragment.setArguments(bundle);
@@ -367,6 +379,7 @@ public class DetailsActivity extends AppCompatActivity
                                                 // go to 4 TAB page
                                                 Log.v(TAG, "Rainie : Start setupViewPager()");
                                                 setupViewPager(mViewPager);
+//                                                tabLayout.setupWithViewPager(mViewPager);
                                                 setupTabIcons();
                                             }
                                             catch (JSONException e)
@@ -501,7 +514,13 @@ public class DetailsActivity extends AppCompatActivity
             mFragmentTitleList.add(title);
         }
 
+        public void addTitleOnly(String title) {
+            mFragmentTitleList.add(title);
+        }
 
+        public void addFragmentOnly(Fragment fragment) {
+            mFragmentList.add(fragment);
+        }
 
         @Override
         public Fragment getItem(int position)

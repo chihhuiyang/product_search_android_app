@@ -157,7 +157,7 @@ public class favoritesFragment extends Fragment
             int index = 0;
             for(Map.Entry<String,?> entry : keys.entrySet())
             {
-                Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
+//                Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
                 spElement = entry.getValue().toString().split(",");
 
 
@@ -175,7 +175,7 @@ public class favoritesFragment extends Fragment
 
                 double wish_cost = Double.parseDouble(spElement[6].substring(2, spElement[6].length() - 1)) * 100;
                 int wish_cost_int = (int) wish_cost;
-                Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
+//                Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
                 total_wishlist_cost += wish_cost_int;
 
 

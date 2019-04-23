@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        //setTabIcons();
 
         checkLocationPermission();
     }
@@ -87,10 +86,11 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         Spannable searchSpan = new SpannableString("  SEARCH");
-//        Drawable searchImage = getBaseContext().getDrawable(R.drawable.search);
+//        Drawable searchImage = getBaseContext().getDrawable(R.drawable.google);
 //        searchImage.setBounds(25, 25, 75, 75);
 //        ImageSpan searchImageSpan = new ImageSpan(searchImage, ImageSpan.ALIGN_BASELINE);
 //        searchSpan.setSpan(searchImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        Log.v(TAG, "Rainie : before new searchFragment()");
         adapter.addFragment(new searchFragment(), searchSpan);
 
         Spannable favoriteSpan = new SpannableString("  WISH LIST");
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 //        favoriteImage.setBounds(25, 25, 75, 75);
 //        ImageSpan favoriteImageSpan = new ImageSpan(favoriteImage, ImageSpan.ALIGN_BASELINE);
 //        favoriteSpan.setSpan(favoriteImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        Log.v(TAG, "Rainie : before new favoritesFragment()");
         adapter.addFragment(new favoritesFragment(), favoriteSpan);
         viewPager.setAdapter(adapter);
     }
