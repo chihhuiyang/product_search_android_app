@@ -97,16 +97,20 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 Intent intent = new Intent(mContext, DetailsActivity.class);
 
                 // passing data to the detail activity
-                intent.putExtra("title", mData.get(i).getTitle());
-                intent.putExtra("itemId", mData.get(i).getItemId());
                 intent.putExtra("jsonObjItem_str", mData.get(i).getJsonObjItem_str());
+                intent.putExtra("itemId", mData.get(i).getItemId());
+                intent.putExtra("title", mData.get(i).getTitle());
+                intent.putExtra("card_product_img", mData.get(i).getProductImg());
+                intent.putExtra("card_zipcode", mData.get(i).getZipcode());
+                intent.putExtra("card_shipping_cost", mData.get(i).getShippingCost());
+                intent.putExtra("card_condition", mData.get(i).getCondition());
+                intent.putExtra("card_price", mData.get(i).getPrice());
+                intent.putExtra("card_wish", mData.get(i).getWish());
 
                 // equal to redirect()
                 mContext.startActivity(intent);
             }
         });
-
-
     }
 
     @Override

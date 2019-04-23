@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -74,28 +75,38 @@ public class DetailsActivity extends AppCompatActivity
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor spEditor;
 
+    private Button wish_button;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private Menu menu;
 
     public Bundle bundle = new Bundle();
 
-    public JSONObject placeDetails;
+//    public JSONObject placeDetails;
 
     public JSONObject jsonObject_detail;
     public JSONObject jsonObject_photo;
     public JSONObject jsonObject_similar;
+
+
+    private String price_item;
+
+    private String jsonObjItem_str;
     private String itemId;
     private String itemTitle;
-    private String price_item;
-    private String jsonObjItem_str;
+    private String card_product_img;
+    private String card_zipcode;
+    private String card_shipping_cost;
+    private String card_condition;
+    private String card_price;
+    private String card_wish;
 
 
     public String[] saveStr;
 
 
-    private String placeId;
-    private String placeName;
+//    private String placeId;
+//    private String placeName;
 
     Context mContext;
 
@@ -120,11 +131,17 @@ public class DetailsActivity extends AppCompatActivity
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
         spEditor = mSharedPreferences.edit();
 
+
+
+
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.detailsContainer);
 
         mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message_detail);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar_detail);
+
+        wish_button = (Button) findViewById(R.id.wish_button);
+
 
 
 
@@ -133,7 +150,6 @@ public class DetailsActivity extends AppCompatActivity
 //        tabLayout.setTabMode(MODE_SCROLLABLE);
 
 //        setupTabIcons();
-
 
 
         try
@@ -149,6 +165,16 @@ public class DetailsActivity extends AppCompatActivity
             e.printStackTrace();
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+        wish_button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                addToFavorite();    // TODO :
+            }
+        });
     }
 
     @Override
@@ -187,14 +213,14 @@ public class DetailsActivity extends AppCompatActivity
                 return true;
 
             case R.id.like:
-                try
-                {
+//                try
+//                {
                     addToFavorite();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
+//                }
+//                catch (JSONException e)
+//                {
+//                    e.printStackTrace();
+//                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -222,7 +248,6 @@ public class DetailsActivity extends AppCompatActivity
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
         Log.v(TAG, "Rainie : bundle = " + bundle);
 
-
         infoFragment mInfoFragment = new infoFragment();
         mInfoFragment.setArguments(bundle);
         adapter.addFrag(mInfoFragment, "PRODUCT");
@@ -244,7 +269,6 @@ public class DetailsActivity extends AppCompatActivity
         adapter.addFrag(mSimilarFragment, "SIMILAR");
 
 
-
         viewPager.setAdapter(adapter);
         Log.v(TAG, "Rainie : Finish setupViewPager()");
     }
@@ -254,11 +278,23 @@ public class DetailsActivity extends AppCompatActivity
         Intent mIntent = getIntent();
 
 
-        String receivedTitle = mIntent.getStringExtra("title");
-        String receivedItemId = mIntent.getStringExtra("itemId");
         String receivedJsonObjItem_str = mIntent.getStringExtra("jsonObjItem_str");
+        String receivedItemId = mIntent.getStringExtra("itemId");
+        String receivedTitle = mIntent.getStringExtra("title");
+        String receivedCard_product_img = mIntent.getStringExtra("card_product_img");
+        String receivedCard_zipcode = mIntent.getStringExtra("card_zipcode");
+        String receivedCard_shipping_cost = mIntent.getStringExtra("card_shipping_cost");
+        String receivedCard_condition = mIntent.getStringExtra("card_condition");
+        String receivedCard_price = mIntent.getStringExtra("card_price");
+        String receivedCard_wish = mIntent.getStringExtra("card_wish");
 
 
+        card_product_img = receivedCard_product_img;
+        card_zipcode = receivedCard_zipcode;
+        card_shipping_cost = receivedCard_shipping_cost;
+        card_condition = receivedCard_condition;
+        card_price = receivedCard_price;
+        card_wish = receivedCard_wish;
         itemId = receivedItemId;
         itemTitle = receivedTitle;
         jsonObjItem_str = receivedJsonObjItem_str;
@@ -271,6 +307,12 @@ public class DetailsActivity extends AppCompatActivity
         setTitle(receivedTitle);
 
 
+        if (mSharedPreferences.contains(itemId)) {
+            wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_remove));
+        } else {
+            wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_add));
+        }
+
         requestDetails2(receivedTitle, receivedItemId);
 
     }
@@ -279,7 +321,6 @@ public class DetailsActivity extends AppCompatActivity
 
     // mTitle is short title
     public void requestDetails2(String mTitle, String mItemId) {
-
 
         String mUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?itemId_single=" + mItemId;
 
@@ -552,33 +593,40 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
-    public void addToFavorite() throws JSONException
+    public void addToFavorite()
     {
-        if (mSharedPreferences.contains(placeId))
+        if (mSharedPreferences.contains(itemId))
         {
-            spEditor.remove(placeId);
+            spEditor.remove(itemId);
             spEditor.apply();
-
+            Log.v(TAG, "Rainie : remove wish size = " + mSharedPreferences.getAll().size());
+            wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_add));
             menu.getItem(1).setIcon(R.drawable.cart_plus);
-            Toast.makeText(this, placeName + " was removed from favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, itemTitle + " was removed from wish list", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            saveStr = new String[5];
-            saveStr[0] = placeId;
-            saveStr[1] = placeDetails.getString("icon");
-            saveStr[2] = placeDetails.getString("name");
-            saveStr[3] = placeDetails.getString("vicinity");
-            saveStr[4] = "yes";
+            saveStr = new String[9];
+            saveStr[0] = itemId;
+            saveStr[1] = card_product_img;
+            saveStr[2] = itemTitle;
+            saveStr[3] = card_zipcode;
+            saveStr[4] = card_shipping_cost;
+            saveStr[5] = card_condition;
+            saveStr[6] = card_price;
+            saveStr[7] = card_wish;
+            saveStr[8] = jsonObjItem_str;
 
             Gson gson = new Gson();
             String myStr = gson.toJson(saveStr);
 
-            spEditor.putString(placeId, myStr);
+            spEditor.putString(itemId, myStr);
             spEditor.apply();
+            Log.v(TAG, "Rainie : add wish size = " + mSharedPreferences.getAll().size());
 
+            wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_remove));
             menu.getItem(1).setIcon(R.drawable.cart_remove);
-            Toast.makeText(this, placeName + " was added to favorites", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, itemTitle + " was added to wish list", Toast.LENGTH_SHORT).show();
         }
     }
 }

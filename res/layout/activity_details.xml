@@ -27,7 +27,7 @@
         android:layout_height="55dp"
         android:layout_marginTop="620dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/circle_wish_remove"
+        android:background="@drawable/circle_wish_add"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
