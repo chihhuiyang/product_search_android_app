@@ -108,10 +108,11 @@
         </LinearLayout>
 
 
+        <!--android:visibility="gone"-->
         <!--pop-->
         <LinearLayout
             android:id="@+id/pop"
-            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
@@ -120,7 +121,7 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_width="140dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
                 android:text="Popularity"
@@ -128,10 +129,21 @@
                 android:textSize="16sp"
                 />
 
+            <com.wssholmes.stark.circular_score.CircularScoreView
+                android:id="@+id/pop_circle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:score="50"
+                app:setPrimaryColor="@color/color_orange"
+                app:setSecondaryColor="@color/color_red"
+                app:setBackgroundColor="@color/color_whitee"
+                app:setTextColor="@color/color_black"/>
+
             <TextView
                 android:id="@+id/pop_val"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:layout_marginRight="10dp"
                 android:text="val"
                 android:textColor="#858585"
@@ -143,7 +155,7 @@
         <!--star-->
         <LinearLayout
             android:id="@+id/star"
-            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"

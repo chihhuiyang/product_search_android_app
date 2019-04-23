@@ -10,4 +10,8 @@
     <color name="color_red">#FF0000</color>
     <color name="color_green">#008000</color>
     <color name="color_silver">#C0C0C0</color>
+
+    <color name="color_orange">#ff5400</color>
+    <color name="color_whitee">#FFFFFF</color>
+    <color name="color_black">#000000</color>
 </resources>

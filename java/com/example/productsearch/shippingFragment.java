@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.wssholmes.stark.circular_score.CircularScoreView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +37,7 @@ public class shippingFragment extends Fragment {
     public LinearLayout score;
     public TextView score_val;
     public LinearLayout pop;
+    public CircularScoreView pop_circle;
     public TextView pop_val;
     public LinearLayout star;
     public ImageView star_img;
@@ -93,6 +96,7 @@ public class shippingFragment extends Fragment {
         star_img = (ImageView)view.findViewById(R.id.star_img);   // shooting stars
         score_val = (TextView)view.findViewById(R.id.score_val);
         pop = (LinearLayout)view.findViewById(R.id.pop);
+        pop_circle = (CircularScoreView) view.findViewById(R.id.pop_circle);
         pop_val = (TextView)view.findViewById(R.id.pop_val);
         star = (LinearLayout)view.findViewById(R.id.star);
         star_val = (TextView)view.findViewById(R.id.star_val);
@@ -183,7 +187,6 @@ public class shippingFragment extends Fragment {
         if (jsonObject_detail_item.has("Seller")) {
             if (jsonObject_detail_item.getJSONObject("Seller").has("FeedbackScore")) {
                 score.setVisibility(View.VISIBLE);
-                star.setVisibility(View.VISIBLE);
 //                double score_double = jsonObject_detail_item.getJSONObject("Seller").getDouble("FeedbackScore");
 //                String score_str = Double.toString(score_double);
 //                score_val.setText(score_str);
@@ -196,7 +199,7 @@ public class shippingFragment extends Fragment {
                     star_img.setImageResource(R.drawable.star_circle_outline);
 
                     if (score_int >= 0 && score_int <= 9) {
-                        star.setVisibility(View.GONE);
+//                        star.setVisibility(View.GONE);
                     } else if (score_int >= 10 && score_int < 50) {
                         star_img.setColorFilter(getResources().getColor(R.color.color_yellow));
                     } else if (score_int >= 50 && score_int < 100) {
@@ -234,11 +237,15 @@ public class shippingFragment extends Fragment {
             if (jsonObject_detail_item.getJSONObject("Seller").has("PositiveFeedbackPercent")) {
                 pop.setVisibility(View.VISIBLE);
                 double pop_double = jsonObject_detail_item.getJSONObject("Seller").getDouble("PositiveFeedbackPercent");
+
+                int pop_int = (int) Math.round(pop_double);
+                pop_circle.setScore(pop_int);
+
                 String pop_str = Double.toString(pop_double);
                 pop_val.setText(pop_str);
             }
             if (jsonObject_detail_item.getJSONObject("Seller").has("FeedbackRatingStar")) {
-//                star.setVisibility(View.VISIBLE);
+                star.setVisibility(View.VISIBLE);
                 String star_str = jsonObject_detail_item.getJSONObject("Seller").getString("FeedbackRatingStar");
                 star_val.setText(star_str);
             }
