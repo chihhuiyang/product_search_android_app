@@ -202,14 +202,26 @@ public class infoFragment extends Fragment
 
                 specList_value = new String[jsonArray_specs.length()];
 
+
+                boolean hasBrand = false;
+                int idxBrand = 0;
                 for (int i = 0; i < jsonArray_specs.length(); i++) {
                     String name = jsonArray_specs.getJSONObject(i).getString("Name");
                     String val = jsonArray_specs.getJSONObject(i).getJSONArray("Value").getString(0);
-                    specList_value[i] = "・" + val;
+                    specList_value[i] = "・" + val.substring(0,1).toUpperCase() + val.substring(1);;
                     if (name.equals("Brand")) {
+                        hasBrand = true;
+                        idxBrand = i;
                         product_highlight_brand.setVisibility(View.VISIBLE);
                         setVisible(product_highlight_brand_name, product_highlight_brand_value, val);
                     }
+                }
+
+                // swap location
+                if (hasBrand) {
+                    String tmp = specList_value[idxBrand];
+                    specList_value[idxBrand] = specList_value[0];
+                    specList_value[0] = tmp;
                 }
 
                 product_spec_img.setImageResource(R.drawable.wrench);
