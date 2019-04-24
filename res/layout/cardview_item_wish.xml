@@ -100,7 +100,7 @@
 
 
             <TextView
-                android:id="@+id/item_condition_id"
+                android:id="@+id/item_condition_id_wish"
                 android:layout_width= "wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -112,7 +112,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/item_price_id"
+                android:id="@+id/item_price_id_wish"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"

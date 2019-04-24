@@ -26,12 +26,6 @@ public class photosFragment extends Fragment
     public String jsonObject_photo_str;
     public JSONObject jsonObject_photo;
 
-    public String jsonObjectItem_str;   // from 50 api , and only 1 item
-    public JSONObject jsonObjectItem;   // from 50 api , and only 1 item
-
-    public String jsonObject_detail_str;
-    public JSONObject jsonObject_detail_item;
-
     public LinearLayout mLinearLayout;
     public LinearLayout mPhotoBox;
     public TextView noPhotos;
@@ -54,9 +48,6 @@ public class photosFragment extends Fragment
 
         Bundle bundle;
         bundle = this.getArguments();
-//        jsonObject = bundle.getString("jsonObj");
-//        jsonObject_detail_str = bundle.getString("jsonObject_detail");
-//        jsonObjectItem_str = bundle.getString("jsonObjectItem");    // 1 item from 50 api
         jsonObject_photo_str = bundle.getString("jsonObject_photo");
 
         Log.v(TAG, "Rainie: jsonObject_photo_str = " + jsonObject_photo_str);

@@ -68,7 +68,7 @@ public class infoFragment extends Fragment
 
 
     public String[] specList_value;
-    public ListView specListView;
+    public LinearLayout specListView;
 
     public LayoutInflater minflater;
 
@@ -107,7 +107,7 @@ public class infoFragment extends Fragment
         product_spec_img = (ImageView)view.findViewById(R.id.product_spec_img);
         product_spec_txt = (TextView)view.findViewById(R.id.product_spec_txt);
 
-        specListView = (ListView)view.findViewById(R.id.specList);
+        specListView = (LinearLayout)view.findViewById(R.id.specList);
 
 
         Bundle bundle;
@@ -229,11 +229,13 @@ public class infoFragment extends Fragment
                 product_spec_img.setVisibility(View.VISIBLE);
                 product_spec_txt.setVisibility(View.VISIBLE);
 
-                // setAdapterForListView();
-                spec_item spec_itemAdapter = new spec_item(this.getActivity(), specList_value);
-                specListView.setAdapter(spec_itemAdapter);
 
-                voidsetListViewHeightBasedOnChildren(specListView); // adjust listView height
+                for (int i = 0; i < jsonArray_specs.length(); i++) {
+                    View spec_view = minflater.inflate(R.layout.spec_item, specListView, false);
+                    TextView txt = (TextView) spec_view.findViewById(R.id.spec);
+                    txt.setText(specList_value[i]);
+                    specListView.addView(spec_view);
+                }
 
             }
 
@@ -252,19 +254,4 @@ public class infoFragment extends Fragment
     }
 
 
-    // adjust listview height
-    public void voidsetListViewHeightBasedOnChildren(ListView listView)
-    {
-        ListAdapter listAdapter = listView.getAdapter();
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++)
-        {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height= totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + 200;
-        listView.setLayoutParams(params);
-    }
 }
