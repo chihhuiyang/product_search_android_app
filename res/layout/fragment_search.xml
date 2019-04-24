@@ -300,7 +300,6 @@
 
     <AutoCompleteTextView
         android:id="@+id/inputLocation"
-        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
         android:layout_width="172dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -317,15 +316,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_from"
         app:layout_constraintVertical_bias="0.002" />
-
-    <TextView
-        android:id="@+id/selected_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/inputLocation"
-        android:layout_marginTop="50dp"
-        android:padding="20dp"/>
-
 
 
 

@@ -62,11 +62,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         setupViewPager(mViewPager);
 
@@ -88,20 +86,11 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         Spannable searchSpan = new SpannableString("  SEARCH");
-//        Drawable searchImage = getBaseContext().getDrawable(R.drawable.google);
-//        searchImage.setBounds(25, 25, 75, 75);
-//        ImageSpan searchImageSpan = new ImageSpan(searchImage, ImageSpan.ALIGN_BASELINE);
-//        searchSpan.setSpan(searchImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        Log.v(TAG, "Rainie : before new searchFragment()");
         adapter.addFragment(new searchFragment(), searchSpan);
 
         Spannable favoriteSpan = new SpannableString("  WISH LIST");
-//        Drawable favoriteImage = getBaseContext().getDrawable(R.drawable.cart_remove);
-//        favoriteImage.setBounds(25, 25, 75, 75);
-//        ImageSpan favoriteImageSpan = new ImageSpan(favoriteImage, ImageSpan.ALIGN_BASELINE);
-//        favoriteSpan.setSpan(favoriteImageSpan, 0,1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        Log.v(TAG, "Rainie : before new favoritesFragment()");
         adapter.addFragment(new favoritesFragment(), favoriteSpan);
+
         viewPager.setAdapter(adapter);
     }
 
@@ -166,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position)
         {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return mFragmentList.get(position);
         }
 

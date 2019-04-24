@@ -1,29 +1,29 @@
 package com.example.productsearch;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,8 +31,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -46,30 +44,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-//import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-//import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -117,11 +101,12 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     public TextView mKeywordError;
     public TextView mLocationError;
 
-//    public ProgressDialog mProgressDialog;
-
     public Intent mIntent;
-//    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
-    private GoogleApiClient mGoogleApiClient;
+
+    private static final int TRIGGER_AUTO_COMPLETE = 100;
+    private static final long AUTO_COMPLETE_DELAY = 300;
+    private Handler handler;
+    private AutoSuggestAdapter autoSuggestAdapter;
 
 
     @Nullable
@@ -165,13 +150,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         mKeywordError = (TextView)view.findViewById(R.id.keywordError);
         mLocationError = (TextView)view.findViewById(R.id.locationError);
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this.getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this.getActivity(), this)
-                .build();
-
 
 
         // enable nearby search
@@ -186,9 +164,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         );
 
 
-
-//        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this.getActivity(), mGoogleApiClient, LAT_LNG_BOUNDS, null);
-//        mInputLocation.setAdapter(mPlaceAutocompleteAdapter);
         mInputLocation.setOnItemClickListener(mAutocompleteClickListener);
         mInputLocation.setEnabled(false);
 
@@ -243,6 +218,94 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+
+
+
+        final AppCompatAutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.inputLocation);
+
+        //Setting up the adapter for AutoSuggest
+        autoSuggestAdapter = new AutoSuggestAdapter(this.getActivity(), android.R.layout.simple_dropdown_item_1line);
+        autoCompleteTextView.setThreshold(2);
+        autoCompleteTextView.setAdapter(autoSuggestAdapter);
+        autoCompleteTextView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        // do nothing
+                    }
+                });
+
+        autoCompleteTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int
+                    count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+                handler.removeMessages(TRIGGER_AUTO_COMPLETE);
+                handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE,
+                        AUTO_COMPLETE_DELAY);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                if (msg.what == TRIGGER_AUTO_COMPLETE) {
+                    if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
+
+
+                        String autoUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?postalcode_startsWith=" + autoCompleteTextView.getText();
+                        // Instantiate the RequestQueue.
+                        RequestQueue queue = Volley.newRequestQueue(getActivity());
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, autoUrl, new Response.Listener<String>()
+                        {
+                            @Override
+                            public void onResponse(String response) {
+                                try
+                                {
+                                    JSONObject jsonObj_auto = new JSONObject(response);
+                                    JSONArray array = jsonObj_auto.getJSONArray("postalCodes");
+                                    List<String> stringList = new ArrayList<>();
+                                    for (int i = 0; i < array.length(); i++) {
+                                        String postal = array.getJSONObject(i).getString("postalCode");
+                                        stringList.add(postal);
+                                    }
+                                    // set data here and notify
+                                    autoSuggestAdapter.setData(stringList);
+                                    autoSuggestAdapter.notifyDataSetChanged();
+
+                                }
+                                catch (JSONException e)
+                                {
+                                    Toast.makeText(getActivity(), "JSONException", Toast.LENGTH_SHORT).show();
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error)
+                                    {
+                                        Toast.makeText(getActivity(), "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        queue.add(stringRequest);
+                    }
+                }
+                return false;
+            }
+        });
 
         return view;
     }
@@ -377,12 +440,8 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                     String currentZip = jsonObject.getString("zip");
                     Log.v(TAG, "Rainie : currentZip = " + currentZip);
 
-
-
-
                     String keywordVal = mKeyword.getText().toString();
                     String categoryVal = mSpinner.getSelectedItem().toString();
-
 
                     if (categoryVal.equals("Default")) {
                         categoryVal = "default";
@@ -474,7 +533,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                     Log.v(TAG, "Rainie : url_params=" + url_params);
                     mIntent.putExtra("url", url_params);
                     mIntent.putExtra("keyword", keywordVal);
-
                     redirect();
                 }
                 catch (JSONException e)
