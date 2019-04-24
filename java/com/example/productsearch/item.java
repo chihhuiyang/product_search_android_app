@@ -1,7 +1,10 @@
 package com.example.productsearch;
 
+import android.util.Log;
+
 public class item {
 
+    public String TAG = "item";
 
     private String itemId;
     private String productImg;
@@ -58,6 +61,7 @@ public class item {
     }
 
     public String getJsonObjItem_str() {
+        Log.v(TAG, "Rainie : getJsonObjItem_str() = " + jsonObjItem_str);
         return jsonObjItem_str;
     }
 

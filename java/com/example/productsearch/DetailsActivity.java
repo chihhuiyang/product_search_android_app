@@ -300,12 +300,17 @@ public class DetailsActivity extends AppCompatActivity
         jsonObjItem_str = receivedJsonObjItem_str;
 
         Log.v(TAG, "Rainie: mIntent : " + mIntent);
-        Log.v(TAG, "Rainie: receivedTitle : " + receivedTitle);
-        Log.v(TAG, "Rainie: receivedItemId : " + receivedItemId);
         Log.v(TAG, "Rainie: receivedJsonObjItem_str : " + receivedJsonObjItem_str);
+        Log.v(TAG, "Rainie: receivedItemId : " + receivedItemId);
+        Log.v(TAG, "Rainie: receivedTitle : " + receivedTitle);
+        Log.v(TAG, "Rainie: receivedImg : " + receivedCard_product_img);
+        Log.v(TAG, "Rainie: receivedZipcode : " + receivedCard_zipcode);
+        Log.v(TAG, "Rainie: receivedCost : " + receivedCard_shipping_cost);
+        Log.v(TAG, "Rainie: receivedCondition : " + receivedCard_condition);
+        Log.v(TAG, "Rainie: receivedPrice : " + receivedCard_price);
+        Log.v(TAG, "Rainie: receivedWish : " + receivedCard_wish);
 
         setTitle(receivedTitle);
-
 
         if (mSharedPreferences.contains(itemId)) {
             wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_remove));
@@ -348,9 +353,9 @@ public class DetailsActivity extends AppCompatActivity
 
                     // TODO : transfer single jsonObjItem_str
                     bundle.putString("jsonObjectItem", jsonObjItem_str);
+                    Log.v(TAG, "Rainie : bundle jsonObjectItem = " + jsonObjItem_str);
                     bundle.putString("jsonObject_detail", jsonObject_detail.toString());
-
-
+                    Log.v(TAG, "Rainie : bundle jsonObject_detail = " + jsonObject_detail.toString());
 
                         // TODO : request photo api
                         // Instantiate the RequestQueue.
@@ -372,7 +377,7 @@ public class DetailsActivity extends AppCompatActivity
                                     Log.v(TAG, "Rainie: Photo JSON : " + jsonObject_photo.toString());
 
                                     bundle.putString("jsonObject_photo", jsonObject_photo.toString());
-
+                                    Log.v(TAG, "Rainie : bundle jsonObject_photo = " + jsonObject_photo.toString());
 
 
 
@@ -395,7 +400,7 @@ public class DetailsActivity extends AppCompatActivity
                                                 Log.v(TAG, "Rainie: Similar JSON : " + jsonObject_similar.toString());
 
                                                 bundle.putString("jsonObject_similar", jsonObject_similar.toString());
-
+                                                Log.v(TAG, "Rainie : bundle jsonObject_similar = " + jsonObject_similar.toString());
 
                                                 // go to 4 TAB page
                                                 Log.v(TAG, "Rainie : Start setupViewPager()");

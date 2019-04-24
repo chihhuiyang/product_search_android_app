@@ -62,9 +62,16 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapterWish.MyViewHolder myViewHolder, final int i) {
+        Log.v(TAG, "Rainie : onBindViewHolder() : " );
+        Log.v(TAG, "Rainie : getProductImg() : " +  mData.get(i).getProductImg());
+        Log.v(TAG, "Rainie : tv_item_title() : " + mData.get(i).getTitle().toUpperCase());
+        Log.v(TAG, "Rainie : tv_item_zip() : " + mData.get(i).getZipcode());
+        Log.v(TAG, "Rainie : tv_item_ship() : " + mData.get(i).getShippingCost());
+        Log.v(TAG, "Rainie : tv_item_condition() : " + mData.get(i).getCondition());
+        Log.v(TAG, "Rainie : tv_item_price() : " + mData.get(i).getPrice());
 
         Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
-        myViewHolder.tv_item_title.setText(mData.get(i).getTitle());
+        myViewHolder.tv_item_title.setText(mData.get(i).getTitle().toUpperCase());
         myViewHolder.tv_item_zip.setText(mData.get(i).getZipcode());
         myViewHolder.tv_item_ship.setText(mData.get(i).getShippingCost());
         myViewHolder.tv_item_condition.setText(mData.get(i).getCondition());
@@ -99,14 +106,30 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
                 Intent intent = new Intent(mContext, DetailsActivity.class);
 
                 // passing data to the detail activity
-                intent.putExtra("title", mData.get(i).getTitle());
                 intent.putExtra("itemId", mData.get(i).getItemId());
+                intent.putExtra("title", mData.get(i).getTitle());
+                intent.putExtra("card_product_img", mData.get(i).getProductImg());
+                intent.putExtra("card_zipcode", mData.get(i).getZipcode());
+                intent.putExtra("card_shipping_cost", mData.get(i).getShippingCost());
+                intent.putExtra("card_condition", mData.get(i).getCondition());
+                intent.putExtra("card_price", mData.get(i).getPrice());
+                intent.putExtra("card_wish", mData.get(i).getWish());
                 intent.putExtra("jsonObjItem_str", mData.get(i).getJsonObjItem_str());
+
+                Log.v(TAG, "Rainie : itemId = " + mData.get(i).getItemId());
+                Log.v(TAG, "Rainie : title = " + mData.get(i).getTitle());
+                Log.v(TAG, "Rainie : card_product_img = " + mData.get(i).getProductImg());
+                Log.v(TAG, "Rainie : card_zipcode = " + mData.get(i).getZipcode());
+                Log.v(TAG, "Rainie : card_shipping_cost = " + mData.get(i).getShippingCost());
+                Log.v(TAG, "Rainie : card_condition = " + mData.get(i).getCondition());
+                Log.v(TAG, "Rainie : card_price = " + mData.get(i).getPrice());
+                Log.v(TAG, "Rainie : card_wish = " + mData.get(i).getWish());
+                Log.v(TAG, "Rainie : jsonObjItem_str = " + mData.get(i).getJsonObjItem_str());
 
                 // TODO :
 
                 // equal to redirect()
-//                mContext.startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
 
@@ -155,7 +178,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getItemId());
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getTitle());
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getWish());
-        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getPrice());
+//        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getPrice());
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getCondition());
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getShippingCost());
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getZipcode());
@@ -173,15 +196,23 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
         Map<String,?> keys = mSharedPreferences.getAll();
 
         int total_wishlist_cost = 0;
-        String[] spElement;
+//        String[] spElement;
+        String[] part;
         for(Map.Entry<String,?> entry : keys.entrySet())
         {
             Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
-            spElement = entry.getValue().toString().split(",");
+//            spElement = entry.getValue().toString().split(",");
 
-            double wish_cost = Double.parseDouble(spElement[6].substring(2, spElement[6].length() - 1)) * 100;
+            Gson gson = new Gson();
+            String array = entry.getValue().toString();
+            part = gson.fromJson(array, String[].class);
+
+//            double wish_cost = Double.parseDouble(spElement[6].substring(2, spElement[6].length() - 1)) * 100;
+            double wish_cost = Double.parseDouble(part[6].substring(1)) * 100;
+
+
             int wish_cost_int = (int) wish_cost;
-            Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
+//            Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
             total_wishlist_cost += wish_cost_int;
         }
         total_shopping_cost = new Double(total_wishlist_cost) / 100.0;

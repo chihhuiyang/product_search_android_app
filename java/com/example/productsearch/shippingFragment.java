@@ -137,8 +137,8 @@ public class shippingFragment extends Fragment {
         jsonObject_detail_str = bundle.getString("jsonObject_detail");
         jsonObjectItem_str = bundle.getString("jsonObjectItem");    // 1 item from 50 api
 
-//        Log.v(TAG, "Rainie: jsonObject_detail_str = " + jsonObject_detail_str);
-//        Log.v(TAG, "Rainie: jsonObjectItem_str = " + jsonObjectItem_str);
+        Log.v(TAG, "Rainie: jsonObject_detail_str = " + jsonObject_detail_str);
+        Log.v(TAG, "Rainie: jsonObjectItem_str = " + jsonObjectItem_str);
 
 
         try

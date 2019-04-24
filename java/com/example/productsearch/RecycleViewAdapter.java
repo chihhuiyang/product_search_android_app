@@ -61,7 +61,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
 
         Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
-        myViewHolder.tv_item_title.setText(mData.get(i).getTitle());
+        myViewHolder.tv_item_title.setText(mData.get(i).getTitle().toUpperCase());
         myViewHolder.tv_item_zip.setText(mData.get(i).getZipcode());
         myViewHolder.tv_item_ship.setText(mData.get(i).getShippingCost());
         myViewHolder.tv_item_condition.setText(mData.get(i).getCondition());

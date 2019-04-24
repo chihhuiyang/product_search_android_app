@@ -87,7 +87,6 @@ public class favoritesFragment extends Fragment
         mSharedPreferences = this.getActivity().getSharedPreferences("mySP", Context.MODE_PRIVATE);
         spEditor = mSharedPreferences.edit();
 
-//        mFavoriteListView = (ListView)view.findViewById(R.id.favoriteList);
         mRecyclerWishView = (RecyclerView) view.findViewById(R.id.wishList2);
         num_wishlist = (TextView) view.findViewById(R.id.num_wishlist);
         total_cost = (TextView) view.findViewById(R.id.total_cost);
@@ -153,27 +152,45 @@ public class favoritesFragment extends Fragment
             Map<String,?> keys = mSharedPreferences.getAll();
 
             int total_wishlist_cost = 0;
-            String[] spElement;
+//            String[] spElement;
+            String[] part;
             int index = 0;
             for(Map.Entry<String,?> entry : keys.entrySet())
             {
 //                Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
-                spElement = entry.getValue().toString().split(",");
 
+                Gson gson = new Gson();
+                String array = entry.getValue().toString();
+                part = gson.fromJson(array, String[].class);
+//
+//                for (int i = 0; i < part.length; i++) {
+//                    Log.v(TAG, "Rainie : part[" + i + "] : " + part[i]);
+//                }
 
+                list_itemId.add(index,      part[0]);
+                list_productImg.add(index,  part[1]);
+                list_title.add(index,       part[2]);
+                list_zipcode.add(index,     part[3]);
+                list_shippingCost.add(index,part[4]);
+                list_condition.add(index,   part[5]);
+                list_price.add(index,       part[6]);
+                list_wish.add(index,        part[7]);
+                list_jsonItem.add(index,    part[8]);
+
+//                spElement = entry.getValue().toString().split(",");
                 // be careful the first and last []
-                list_itemId.add(index,      spElement[0].substring(2, spElement[0].length() - 1));
-                list_productImg.add(index,  spElement[1].substring(1, spElement[1].length() - 1));
-                list_title.add(index,       spElement[2].substring(1, spElement[2].length() - 1));
-                list_zipcode.add(index,     spElement[3].substring(1, spElement[3].length() - 1));
-                list_shippingCost.add(index,spElement[4].substring(1, spElement[4].length() - 1));
-                list_condition.add(index,   spElement[5].substring(1, spElement[5].length() - 1));
-                list_price.add(index,       spElement[6].substring(1, spElement[6].length() - 1));
-                list_wish.add(index,        spElement[7].substring(1, spElement[7].length() - 1));
-                list_jsonItem.add(index,    spElement[8].substring(1, spElement[8].length() - 2));
+//                list_itemId.add(index,      spElement[0].substring(2, spElement[0].length() - 1));
+//                list_productImg.add(index,  spElement[1].substring(1, spElement[1].length() - 1));
+//                list_title.add(index,       spElement[2].substring(1, spElement[2].length() - 1));
+//                list_zipcode.add(index,     spElement[3].substring(1, spElement[3].length() - 1));
+//                list_shippingCost.add(index,spElement[4].substring(1, spElement[4].length() - 1));
+//                list_condition.add(index,   spElement[5].substring(1, spElement[5].length() - 1));
+//                list_price.add(index,       spElement[6].substring(1, spElement[6].length() - 1));
+//                list_wish.add(index,        spElement[7].substring(1, spElement[7].length() - 1));
+//                list_jsonItem.add(index,    spElement[8].substring(1, spElement[8].length() - 2));
 
 
-                double wish_cost = Double.parseDouble(spElement[6].substring(2, spElement[6].length() - 1)) * 100;
+                double wish_cost = Double.parseDouble(part[6].substring(1)) * 100;
                 int wish_cost_int = (int) wish_cost;
 //                Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
                 total_wishlist_cost += wish_cost_int;
@@ -189,12 +206,13 @@ public class favoritesFragment extends Fragment
 //                Log.v(TAG, "Rainie : wishItem = " + list_condition.get(index));
 //                Log.v(TAG, "Rainie : wishItem = " + list_price.get(index));
 //                Log.v(TAG, "Rainie : wishItem = " + list_wish.get(index));
+//                Log.v(TAG, "Rainie : wishItem = " + list_jsonItem.get(index));
 
 
                 index++;
             }
 
-            Log.v(TAG, "Rainie : total_wishlist_cost = " + total_wishlist_cost);
+//            Log.v(TAG, "Rainie : total_wishlist_cost = " + total_wishlist_cost);
             total_shopping_cost = new Double(total_wishlist_cost) / 100.0;
             total_cost.setText("$" + Double.toString(total_shopping_cost));
 
@@ -217,55 +235,11 @@ public class favoritesFragment extends Fragment
 
     public void setAdapterForFavoriteListView()
     {
-        Log.v(TAG, "Rainie : setAdapterForFavoriteListView() : wishItem = " + wishItem.size());
+//        Log.v(TAG, "Rainie : setAdapterForFavoriteListView() : wishItem = " + wishItem.size());
 
         RecycleViewAdapterWish myAdapter = new RecycleViewAdapterWish(this.getActivity(), wishItem);
         mRecyclerWishView.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
         mRecyclerWishView.setAdapter(myAdapter);
     }
 
-    public void requestDetails(String mPlaceId)
-    {
-        mProgressDialog = new ProgressDialog(this.getActivity());
-        mProgressDialog.setMessage("Fetching details");
-        mProgressDialog.show();
-
-        String mUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
-        mUrl += "placeid=" + mPlaceId;
-        mUrl += "&key=AIzaSyC9HBExGTftsTmeBjHXLucUi5NH2QXCQkY";
-        System.out.println(mUrl);
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-                    JSONObject jsonObject = new JSONObject(response);
-                    newIntent.putExtra("jsonObj", jsonObject.toString());
-                    getActivity().startActivity(newIntent);
-                    mProgressDialog.dismiss();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        Toast.makeText(getActivity(), "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-                        System.out.println("Request error!");
-                        System.out.println(error);
-                    }
-                });
-        queue.add(stringRequest);
-    }
 }
