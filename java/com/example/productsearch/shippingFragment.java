@@ -38,10 +38,10 @@ public class shippingFragment extends Fragment {
     public TextView score_val;
     public LinearLayout pop;
     public CircularScoreView pop_circle;
-    public TextView pop_val;
+//    public TextView pop_val;
     public LinearLayout star;
     public ImageView star_img;
-    public TextView star_val;
+//    public TextView star_val;
 
     public View divider_ship;
 
@@ -97,9 +97,9 @@ public class shippingFragment extends Fragment {
         score_val = (TextView)view.findViewById(R.id.score_val);
         pop = (LinearLayout)view.findViewById(R.id.pop);
         pop_circle = (CircularScoreView) view.findViewById(R.id.pop_circle);
-        pop_val = (TextView)view.findViewById(R.id.pop_val);
+//        pop_val = (TextView)view.findViewById(R.id.pop_val);
         star = (LinearLayout)view.findViewById(R.id.star);
-        star_val = (TextView)view.findViewById(R.id.star_val);
+//        star_val = (TextView)view.findViewById(R.id.star_val);
 
         divider_ship = (View)view.findViewById(R.id.divider_ship);
 
@@ -242,12 +242,12 @@ public class shippingFragment extends Fragment {
                 pop_circle.setScore(pop_int);
 
                 String pop_str = Double.toString(pop_double);
-                pop_val.setText(pop_str);
+//                pop_val.setText(pop_str);
             }
             if (jsonObject_detail_item.getJSONObject("Seller").has("FeedbackRatingStar")) {
                 star.setVisibility(View.VISIBLE);
                 String star_str = jsonObject_detail_item.getJSONObject("Seller").getString("FeedbackRatingStar");
-                star_val.setText(star_str);
+//                star_val.setText(star_str);
             }
         }
 

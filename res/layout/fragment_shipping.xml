@@ -139,16 +139,16 @@
                 app:setBackgroundColor="@color/color_whitee"
                 app:setTextColor="@color/color_black"/>
 
-            <TextView
-                android:id="@+id/pop_val"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginRight="10dp"
-                android:text="val"
-                android:textColor="#858585"
-                android:textSize="16sp"
-                />
+            <!--<TextView-->
+                <!--android:id="@+id/pop_val"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:text="val"-->
+                <!--android:textColor="#858585"-->
+                <!--android:textSize="16sp"-->
+                <!--/>-->
         </LinearLayout>
 
 
@@ -179,15 +179,15 @@
                 android:layout_marginRight="10dp"
                 />
 
-            <TextView
-                android:id="@+id/star_val"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="val"
-                android:textColor="#858585"
-                android:textSize="16sp"
-                />
+            <!--<TextView-->
+                <!--android:id="@+id/star_val"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:text="val"-->
+                <!--android:textColor="#858585"-->
+                <!--android:textSize="16sp"-->
+                <!--/>-->
         </LinearLayout>
 
 

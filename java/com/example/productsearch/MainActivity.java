@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     {
         Log.v(TAG, "Rainie : onCreate()");
 
+        setTheme(R.style.AppTheme_NoActionBar);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

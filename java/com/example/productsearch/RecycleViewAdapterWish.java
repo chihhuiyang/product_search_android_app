@@ -63,12 +63,12 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapterWish.MyViewHolder myViewHolder, final int i) {
         Log.v(TAG, "Rainie : onBindViewHolder() : " );
-        Log.v(TAG, "Rainie : getProductImg() : " +  mData.get(i).getProductImg());
-        Log.v(TAG, "Rainie : tv_item_title() : " + mData.get(i).getTitle().toUpperCase());
-        Log.v(TAG, "Rainie : tv_item_zip() : " + mData.get(i).getZipcode());
-        Log.v(TAG, "Rainie : tv_item_ship() : " + mData.get(i).getShippingCost());
-        Log.v(TAG, "Rainie : tv_item_condition() : " + mData.get(i).getCondition());
-        Log.v(TAG, "Rainie : tv_item_price() : " + mData.get(i).getPrice());
+//        Log.v(TAG, "Rainie : getProductImg() : " +  mData.get(i).getProductImg());
+//        Log.v(TAG, "Rainie : tv_item_title() : " + mData.get(i).getTitle().toUpperCase());
+//        Log.v(TAG, "Rainie : tv_item_zip() : " + mData.get(i).getZipcode());
+//        Log.v(TAG, "Rainie : tv_item_ship() : " + mData.get(i).getShippingCost());
+//        Log.v(TAG, "Rainie : tv_item_condition() : " + mData.get(i).getCondition());
+//        Log.v(TAG, "Rainie : tv_item_price() : " + mData.get(i).getPrice());
 
         Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
         myViewHolder.tv_item_title.setText(mData.get(i).getTitle().toUpperCase());
@@ -116,15 +116,15 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
                 intent.putExtra("card_wish", mData.get(i).getWish());
                 intent.putExtra("jsonObjItem_str", mData.get(i).getJsonObjItem_str());
 
-                Log.v(TAG, "Rainie : itemId = " + mData.get(i).getItemId());
-                Log.v(TAG, "Rainie : title = " + mData.get(i).getTitle());
-                Log.v(TAG, "Rainie : card_product_img = " + mData.get(i).getProductImg());
-                Log.v(TAG, "Rainie : card_zipcode = " + mData.get(i).getZipcode());
-                Log.v(TAG, "Rainie : card_shipping_cost = " + mData.get(i).getShippingCost());
-                Log.v(TAG, "Rainie : card_condition = " + mData.get(i).getCondition());
-                Log.v(TAG, "Rainie : card_price = " + mData.get(i).getPrice());
-                Log.v(TAG, "Rainie : card_wish = " + mData.get(i).getWish());
-                Log.v(TAG, "Rainie : jsonObjItem_str = " + mData.get(i).getJsonObjItem_str());
+//                Log.v(TAG, "Rainie : itemId = " + mData.get(i).getItemId());
+//                Log.v(TAG, "Rainie : title = " + mData.get(i).getTitle());
+//                Log.v(TAG, "Rainie : card_product_img = " + mData.get(i).getProductImg());
+//                Log.v(TAG, "Rainie : card_zipcode = " + mData.get(i).getZipcode());
+//                Log.v(TAG, "Rainie : card_shipping_cost = " + mData.get(i).getShippingCost());
+//                Log.v(TAG, "Rainie : card_condition = " + mData.get(i).getCondition());
+//                Log.v(TAG, "Rainie : card_price = " + mData.get(i).getPrice());
+//                Log.v(TAG, "Rainie : card_wish = " + mData.get(i).getWish());
+//                Log.v(TAG, "Rainie : jsonObjItem_str = " + mData.get(i).getJsonObjItem_str());
 
                 // TODO :
 
