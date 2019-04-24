@@ -49,6 +49,7 @@ public class ResultsActivity extends AppCompatActivity
 
     public RecyclerView mRecyclerView;
     public List<item> listItem;
+    public List<item> copylistItem; // for details go back to result (update wish icon)
     public String[] list_itemId;
     public String[] list_productImg;
     public String[] list_title;
@@ -57,6 +58,7 @@ public class ResultsActivity extends AppCompatActivity
     public String[] list_condition;
     public String[] list_wish;
     public String[] list_price;
+    public String[] list_jsonArray_item;
 
     public TextView noResultsView;
 
@@ -93,13 +95,14 @@ public class ResultsActivity extends AppCompatActivity
 
         mRecyclerView = (RecyclerView) findViewById(R.id.resultsList2);
 
-        listItem = new ArrayList<>();
+
 
         noResultsView = (TextView) findViewById(R.id.noResults);
 
         mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message);;
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        ifFisrtTime = true;
 
         newIntent = new Intent(this, DetailsActivity.class);
 
@@ -127,7 +130,7 @@ public class ResultsActivity extends AppCompatActivity
             checkIfFavorite();
             setAdapterForListView();
         }
-        ifFisrtTime = false;
+//        ifFisrtTime = false;
     }
 
     @Override
@@ -187,8 +190,7 @@ public class ResultsActivity extends AppCompatActivity
                             if (count_items == 0) {
                                 noResults();
                             } else {
-                                ifFisrtTime = true;
-                                Log.v(TAG, "Rainie: count_items = " + count_items);
+                                Log.v(TAG, "Rainie: Before generateTable() !!!");
                                 hasResults();
                                 generateTable2(jsonObject);
                             }
@@ -225,7 +227,12 @@ public class ResultsActivity extends AppCompatActivity
 
     public void setAdapterForListView()
     {
-        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
+        copylistItem = new ArrayList<>();
+        for (int i = 0; i < listItem.size(); i++) {
+            copylistItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i], list_jsonArray_item[i]));
+        }
+
+        RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, copylistItem);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // for card view
         mRecyclerView.setAdapter(myAdapter);
     }
@@ -234,6 +241,7 @@ public class ResultsActivity extends AppCompatActivity
     public void generateTable2(JSONObject jsonObject) throws JSONException {
         try
         {
+
             jsonArray_items = jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0).getJSONArray("searchResult").getJSONObject(0).getJSONArray("item");
             int count_items = jsonArray_items.length();
 
@@ -245,10 +253,12 @@ public class ResultsActivity extends AppCompatActivity
             list_condition = new String[count_items];
             list_wish = new String[count_items];
             list_price = new String[count_items];
+            list_jsonArray_item = new String[count_items];
 
             mNum_results.setText(String.valueOf(count_items));
 
             Log.v(TAG, "Rainie : count_items = " + count_items);
+            listItem = new ArrayList<>();
             for (int i = 0; i < count_items; i++) {
                 // itemId
                 String itemId = jsonArray_items.getJSONObject(i).getJSONArray("itemId").getString(0);
@@ -312,6 +322,7 @@ public class ResultsActivity extends AppCompatActivity
                 list_shippingCost[i] = shippingCost;
                 list_condition[i] = condition;
                 list_price[i] = price;
+                list_jsonArray_item[i] = jsonArray_items.getJSONObject(i).toString();
 
                 if (mSharedPreferences.contains(list_itemId[i])) {
                     list_wish[i] = "yes";
@@ -321,12 +332,14 @@ public class ResultsActivity extends AppCompatActivity
 
                 // TODO : add _jsonObjItem_str variables
 
-                listItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i], jsonArray_items.getJSONObject(i).toString()));
+                listItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i], list_jsonArray_item[i]));
 
             }
             RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, listItem);
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             mRecyclerView.setAdapter(myAdapter);
+
+            ifFisrtTime = false;
 
         }
         catch (JSONException e)
@@ -341,6 +354,7 @@ public class ResultsActivity extends AppCompatActivity
             Log.v(TAG, "Rainie : list_itemId is not null");
             for (int i = 0; i < list_itemId.length; i++) {
                 if (mSharedPreferences.contains(list_itemId[i])) {
+                    Log.v(TAG, "Rainie : yes = " + list_itemId[i]);
                     list_wish[i] = "yes";
                 } else {
                     list_wish[i] = "no";
