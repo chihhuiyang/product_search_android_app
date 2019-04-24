@@ -126,8 +126,6 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 //                Log.v(TAG, "Rainie : card_wish = " + mData.get(i).getWish());
 //                Log.v(TAG, "Rainie : jsonObjItem_str = " + mData.get(i).getJsonObjItem_str());
 
-                // TODO :
-
                 // equal to redirect()
                 mContext.startActivity(intent);
             }
@@ -196,18 +194,15 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
         Map<String,?> keys = mSharedPreferences.getAll();
 
         int total_wishlist_cost = 0;
-//        String[] spElement;
         String[] part;
         for(Map.Entry<String,?> entry : keys.entrySet())
         {
             Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
-//            spElement = entry.getValue().toString().split(",");
 
             Gson gson = new Gson();
             String array = entry.getValue().toString();
             part = gson.fromJson(array, String[].class);
 
-//            double wish_cost = Double.parseDouble(spElement[6].substring(2, spElement[6].length() - 1)) * 100;
             double wish_cost = Double.parseDouble(part[6].substring(1)) * 100;
 
 
@@ -233,9 +228,5 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
         this.notifyDataSetChanged();
     }
-
-    //    itemFavorite[position] == mData.get(i).getFavorite()
-
-
 
 }

@@ -9,8 +9,4 @@
         app:showAsAction="always"/>
 
 
-    <item android:id="@+id/like"
-        android:icon="@drawable/cart_plus"
-        app:showAsAction="always"/>
-
 </menu>

@@ -1,14 +1,8 @@
 package com.example.productsearch;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,17 +15,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,15 +70,11 @@ public class DetailsActivity extends AppCompatActivity
 
     public Bundle bundle = new Bundle();
 
-//    public JSONObject placeDetails;
-
     public JSONObject jsonObject_detail;
     public JSONObject jsonObject_photo;
     public JSONObject jsonObject_similar;
 
-
     private String price_item;
-
     private String jsonObjItem_str;
     private String itemId;
     private String itemTitle;
@@ -101,13 +85,7 @@ public class DetailsActivity extends AppCompatActivity
     private String card_price;
     private String card_wish;
 
-
     public String[] saveStr;
-
-
-//    private String placeId;
-//    private String placeName;
-
     Context mContext;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -124,14 +102,10 @@ public class DetailsActivity extends AppCompatActivity
 
         setProgressBarVisibility(true);
         setProgressBarIndeterminateVisibility(true);
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
         spEditor = mSharedPreferences.edit();
-
-
 
 
         // Set up the ViewPager with the sections adapter.
@@ -142,9 +116,6 @@ public class DetailsActivity extends AppCompatActivity
 
         wish_button = (Button) findViewById(R.id.wish_button);
 
-
-
-
         tabLayout = (TabLayout) findViewById(R.id.detailsTabs);
         tabLayout.setupWithViewPager(mViewPager);
 //        tabLayout.setTabMode(MODE_SCROLLABLE);
@@ -152,18 +123,8 @@ public class DetailsActivity extends AppCompatActivity
 //        setupTabIcons();
 
 
-        try
-        {
-            receiveData();
-//            placeName = placeDetails.getString("name");
-//            setTitle(placeName);
-//            bundle.putString("jsonObj", jsonObject.toString());
-//            setupViewPager(mViewPager);
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
+        receiveData();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -196,7 +157,6 @@ public class DetailsActivity extends AppCompatActivity
     {
         switch (item.getItemId())
         {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -210,17 +170,6 @@ public class DetailsActivity extends AppCompatActivity
                 {
                     e.printStackTrace();
                 }
-                return true;
-
-            case R.id.like:
-//                try
-//                {
-                    addToFavorite();
-//                }
-//                catch (JSONException e)
-//                {
-//                    e.printStackTrace();
-//                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -273,7 +222,7 @@ public class DetailsActivity extends AppCompatActivity
         Log.v(TAG, "Rainie : Finish setupViewPager()");
     }
 
-    public void receiveData() throws JSONException
+    public void receiveData()
     {
         Intent mIntent = getIntent();
 
@@ -331,9 +280,8 @@ public class DetailsActivity extends AppCompatActivity
 
         Log.v(TAG, "Rainie : single api : " + mUrl);
 
-        // Instantiate the RequestQueue.
+
         RequestQueue queue = Volley.newRequestQueue(this);
-        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
         {
             @Override
@@ -387,8 +335,6 @@ public class DetailsActivity extends AppCompatActivity
                                     Log.v(TAG, "Rainie : mSimilarUrl = " + mSimilarUrl);
 
                                     RequestQueue queue3 = Volley.newRequestQueue(mContext);
-
-                                    // Request a string response from the provided URL.
                                     StringRequest stringRequest3 = new StringRequest(Request.Method.GET, mSimilarUrl, new Response.Listener<String>()
                                     {
                                         @Override
@@ -469,12 +415,6 @@ public class DetailsActivity extends AppCompatActivity
 
 
 
-
-
-
-
-
-
                     // go to 4 TAB page
 //                    Log.v(TAG, "Rainie : Start setupViewPager()");
 //                    setupViewPager(mViewPager);
@@ -517,7 +457,6 @@ public class DetailsActivity extends AppCompatActivity
     public class SectionsPagerAdapter extends FragmentPagerAdapter
     {
         private final List<Fragment> mFragmentList = new ArrayList<>();
-//        private final List<Spannable> mFragmentTitleList = new ArrayList<>();
 
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -526,12 +465,6 @@ public class DetailsActivity extends AppCompatActivity
         {
             super(fm);
         }
-
-//        public void addFragment(Fragment fragment, Spannable title)
-//        {
-//            mFragmentList.add(fragment);
-//            mFragmentTitleList.add(title);
-//        }
 
 
         public void addFrag(Fragment fragment, String title) {
@@ -552,8 +485,6 @@ public class DetailsActivity extends AppCompatActivity
         public Fragment getItem(int position)
         {
             Log.v(TAG, "Rainie : getItem() = " + position);
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return mFragmentList.get(position);
         }
 
@@ -568,7 +499,6 @@ public class DetailsActivity extends AppCompatActivity
         @Override
         public int getCount() {
 //            Log.v(TAG, "Rainie : getCount() = " + mFragmentList.size());
-            // Show 2 total pages.
             return mFragmentList.size();
         }
     }

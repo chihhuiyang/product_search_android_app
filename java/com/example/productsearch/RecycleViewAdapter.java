@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,12 +53,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
-//        Picasso.get().load(itemIcon[position]).into(iconView);
-//        textName.setText(itemName[position]);
-//        Log.v(TAG, "Rainie : Picasso : getIcon()" + mData.get(i).getIcon() );
-//        myViewHolder.img_item_icon.setImage
-
-
         Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
         myViewHolder.tv_item_title.setText(mData.get(i).getTitle().toUpperCase());
         myViewHolder.tv_item_zip.setText(mData.get(i).getZipcode());
@@ -68,8 +61,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         myViewHolder.tv_item_price.setText(mData.get(i).getPrice());
 
         // add wish list
-        // itemFavorite[position] == mData.get(i).getFavorite()
-        // favoriteView == myViewHolder.img_item_wish
         Picasso.get().load(mData.get(i).getWish()).into(myViewHolder.img_item_wish);
         if (mData.get(i).getWish() == "no") {
             myViewHolder.img_item_wish.setImageResource(R.drawable.cart_plus);
