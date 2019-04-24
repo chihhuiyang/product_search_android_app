@@ -190,11 +190,14 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 //        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this.getActivity(), mGoogleApiClient, LAT_LNG_BOUNDS, null);
 //        mInputLocation.setAdapter(mPlaceAutocompleteAdapter);
         mInputLocation.setOnItemClickListener(mAutocompleteClickListener);
+        mInputLocation.setEnabled(false);
+
 
         //validation
         //mKeyword.requestFocus();
         mCurrentLocation.setChecked(true);
-        mInputLocation.setEnabled(false);
+
+
         mCurrentLocation.setOnClickListener(
                 new View.OnClickListener()
                 {
@@ -295,6 +298,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     {
         if (mCurrentLocation.isChecked())
         {
+            // nearby search : current location
             if (keyword.isEmpty() || keyword.trim().matches(""))
             {
                 mKeywordError.setVisibility(View.VISIBLE);
@@ -307,7 +311,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
             }
         }
         else
-        {
+        {   // nearby search : input location
             if (keyword.isEmpty() || keyword.trim().matches("")
                     || inputLocation.isEmpty() || inputLocation.trim().matches(""))
             {
@@ -356,10 +360,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
     public void getInputs()
     {
-//        mProgressDialog = new ProgressDialog(this.getActivity());
-//        mProgressDialog.setMessage("Searching Products...");
-//        mProgressDialog.show();
-
 
         String ipUrl = "http://ip-api.com/json";
         // Instantiate the RequestQueue.
@@ -411,7 +411,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
                     // enable nearby : hw8 server.js
                     if (mInput_nearby.isChecked()) {
-                        Log.v(TAG, "Rainie : url_params=" + url_params);
 
                         int distanceVal;
                         if (mDistance.getText().toString().isEmpty()) {
@@ -472,6 +471,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
 
                     Log.v(TAG, "Rainie : (Before redirect()) getActivity() : " + getActivity());
+                    Log.v(TAG, "Rainie : url_params=" + url_params);
                     mIntent.putExtra("url", url_params);
                     mIntent.putExtra("keyword", keywordVal);
 

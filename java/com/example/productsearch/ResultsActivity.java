@@ -323,7 +323,7 @@ public class ResultsActivity extends AppCompatActivity
                 list_condition[i] = condition;
                 list_price[i] = price;
                 list_jsonArray_item[i] = jsonArray_items.getJSONObject(i).toString();
-                Log.v(TAG, "Rainie : list_jsonArray_item[" + i + "] = " + list_jsonArray_item[i]);
+//                Log.v(TAG, "Rainie : list_jsonArray_item[" + i + "] = " + list_jsonArray_item[i]);
 
                 if (mSharedPreferences.contains(list_itemId[i])) {
                     list_wish[i] = "yes";
