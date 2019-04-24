@@ -327,7 +327,7 @@ public class DetailsActivity extends AppCompatActivity
     // mTitle is short title
     public void requestDetails2(String mTitle, String mItemId) {
 
-        String mUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?itemId_single=" + mItemId;
+        String mUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?itemId_single=" + mItemId;
 
         Log.v(TAG, "Rainie : single api : " + mUrl);
 
@@ -359,7 +359,7 @@ public class DetailsActivity extends AppCompatActivity
 
                         // TODO : request photo api
                         // Instantiate the RequestQueue.
-                        String mPhotoUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?keyword_photo=" + full_title;
+                        String mPhotoUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?keyword_photo=" + full_title;
 
                         Log.v(TAG, "Rainie : mPhotoUrl = " + mPhotoUrl);
 
@@ -382,7 +382,7 @@ public class DetailsActivity extends AppCompatActivity
 
 
                                     // TODO : request similar api
-                                    String mSimilarUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?similar=true&itemId_similar=" + itemId;
+                                    String mSimilarUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?similar=true&itemId_similar=" + itemId;
 
                                     Log.v(TAG, "Rainie : mSimilarUrl = " + mSimilarUrl);
 

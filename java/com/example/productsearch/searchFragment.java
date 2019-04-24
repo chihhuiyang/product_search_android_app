@@ -264,7 +264,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                     if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
 
 
-                        String autoUrl = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?postalcode_startsWith=" + autoCompleteTextView.getText();
+                        String autoUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?postalcode_startsWith=" + autoCompleteTextView.getText();
                         // Instantiate the RequestQueue.
                         RequestQueue queue = Volley.newRequestQueue(getActivity());
                         StringRequest stringRequest = new StringRequest(Request.Method.GET, autoUrl, new Response.Listener<String>()
@@ -464,7 +464,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                     }
 
 
-                    String url_params = "http://chihhuiy-nodejs.us-east-2.elasticbeanstalk.com/?";
+                    String url_params = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?";
                     url_params += "category=" + categoryVal + "&keyword=" + keywordVal;
 
 
@@ -491,11 +491,10 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                         }
 
                     } else {    // disable nearby : hw9 (new server.js)
-                        Log.v(TAG, "Rainie : url_params=" + url_params);
-
                         // TODO : fix server.js
+                        url_params += "&disable_nearby=true";
 
-
+                        Log.v(TAG, "Rainie : url_params=" + url_params);
                     }
 
 
@@ -537,7 +536,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                 }
                 catch (JSONException e)
                 {
-                    Toast.makeText(getActivity(), "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "JSONException", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }

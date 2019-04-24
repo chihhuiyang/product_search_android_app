@@ -27,17 +27,20 @@
 
 
         <TextView
-            android:id="@+id/item_title_id"
+            android:id="@+id/item_title_id_wish"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:gravity="top|center_horizontal"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:minLines="3"
+            android:maxLines="3"
             android:text="APPLE IPHONE X 256GB FACTORY UNLOCKED 4 ..."
             android:textColor="#000000"
             android:textSize="18sp"
-           />
+            />
 
 
         <LinearLayout
@@ -57,7 +60,7 @@
                     android:layout_height="25dp"
                     android:layout_marginLeft="10dp"
                     android:gravity="bottom"
-                    android:text="Zip: 090007"
+                    android:text="Zip: 90007"
                     android:textColor="#686868"
                     android:textSize="14sp" />
 
@@ -98,21 +101,23 @@
 
             <TextView
                 android:id="@+id/item_condition_id"
-                android:layout_width="wrap_content"
+                android:layout_width= "wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="New with tags"
                 android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:maxWidth="105dp"
+                android:maxLines="1"
+                android:text="New with tags other (see details)"
                 android:textColor="#A8A8A8"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/item_price_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
                 android:layout_marginRight="10dp"
-                android:text="$100.59"
+                android:text="$1000.59"
                 android:textColor="#6400FF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
