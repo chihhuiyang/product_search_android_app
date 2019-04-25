@@ -66,7 +66,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
     private static final String TAG = "searchFragment";
     public final String[] categories = {
-            "Default",
+            "All",
             "Art",
             "Baby",
             "Books",
@@ -442,7 +442,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                     String keywordVal = mKeyword.getText().toString();
                     String categoryVal = mSpinner.getSelectedItem().toString();
 
-                    if (categoryVal.equals("Default")) {
+                    if (categoryVal.equals("All")) {
                         categoryVal = "default";
                     } else if (categoryVal.equals("Art")) {
                         categoryVal = "550";
