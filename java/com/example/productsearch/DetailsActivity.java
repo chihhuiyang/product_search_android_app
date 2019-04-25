@@ -168,13 +168,13 @@ public class DetailsActivity extends AppCompatActivity {
         mShippingFragment.setArguments(bundle);
         adapter.addFrag(mShippingFragment, "SHIPPING");
 
-        shippingFragment mShippingFragment2 = new shippingFragment();
-        mShippingFragment2.setArguments(bundle);
-        adapter.addFrag(mShippingFragment2, "SHIPPING");
+//        shippingFragment mShippingFragment2 = new shippingFragment();
+//        mShippingFragment2.setArguments(bundle);
+//        adapter.addFrag(mShippingFragment2, "SHIPPING");
 
-//        photosFragment mPhotosFragment = new photosFragment();
-//        mPhotosFragment.setArguments(bundle);
-//        adapter.addFrag(mPhotosFragment, "PHOTOS");
+        photosFragment mPhotosFragment = new photosFragment();
+        mPhotosFragment.setArguments(bundle);
+        adapter.addFrag(mPhotosFragment, "PHOTOS");
 
         similarFragment mSimilarFragment = new similarFragment();
         mSimilarFragment.setArguments(bundle);

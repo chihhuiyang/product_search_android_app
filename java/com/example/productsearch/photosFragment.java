@@ -3,6 +3,8 @@ package com.example.productsearch;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,8 @@ import org.json.JSONObject;
 public class photosFragment extends Fragment {
     private static final String TAG = "photosFragment";
 
+    public RecyclerView mPhotoList;
+
     public String jsonObject_photo_str;
     public JSONObject jsonObject_photo;
     public LinearLayout mLinearLayout;
@@ -38,7 +42,8 @@ public class photosFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photos, container, false);
 
         mLinearLayout = (LinearLayout)view.findViewById(R.id.imageLayout);
-        mPhotoBox = (LinearLayout)view.findViewById(R.id.photoBox);
+        mPhotoList = (RecyclerView)view.findViewById(R.id.photoList);
+//        mPhotoBox = (LinearLayout)view.findViewById(R.id.photoBox);
         noPhotos = (TextView) view.findViewById(R.id.noPhotos);
 
         Bundle bundle;
@@ -57,16 +62,20 @@ public class photosFragment extends Fragment {
                     mLinearLayout.setVisibility(View.GONE);
                     noPhotos.setVisibility(View.VISIBLE);
                 } else {
+
+                    String[][] arr = new String[count][1];
                     for (int i = 0; i < count; i++) {
                         String link = jsonObject_photo_arr.getJSONObject(i).getString("link");
 //                        Log.v(TAG, "Rainie : link = " + link);
 
-                        View pic_view = minflater.inflate(R.layout.photo_item, mPhotoBox, false);
-                        ImageView img = (ImageView) pic_view.findViewById(R.id.photo_item);
-                        Picasso.get().load(link).into(img);
-                        mPhotoBox.addView(pic_view);
+//                        View pic_view = minflater.inflate(R.layout.photo_item, mPhotoBox, false);
+//                        ImageView img = (ImageView) pic_view.findViewById(R.id.photo_item);
+//                        Picasso.get().load(link).into(img);
+//                        mPhotoBox.addView(pic_view);
 
+                        arr[i][0] = link;
                     }
+                    setAdapterForListView(arr);
                 }
             } else {
                 mLinearLayout.setVisibility(View.GONE);
@@ -81,4 +90,9 @@ public class photosFragment extends Fragment {
         return view;
     }
 
+    public void setAdapterForListView(String[][] operateArr) {
+        photoListFragment photoListAdapter = new photoListFragment(this.getActivity(), operateArr);
+        mPhotoList.setLayoutManager(new GridLayoutManager(this.getActivity(), 1));    // card view
+        mPhotoList.setAdapter(photoListAdapter);
+    }
 }

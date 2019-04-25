@@ -13,21 +13,26 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/photosView"
-            android:layout_width="match_parent"
-            android:layout_height="600dp"
-            android:layout_marginTop="10dp"
-            android:fitsSystemWindows="true">
+        <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:id="@+id/photosView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="600dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:fitsSystemWindows="true">-->
 
-            <LinearLayout
-                android:id="@+id/photoBox"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/photoList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical" />
-        </ScrollView>
+                android:layout_height="610dp"
+                />
+            <!--<LinearLayout-->
+                <!--android:id="@+id/photoBox"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:orientation="vertical" />-->
+        <!--</ScrollView>-->
 
     </LinearLayout>
 
