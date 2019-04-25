@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class favoritesFragment extends Fragment {
-    private static final String TAG = "favoriteFragment";
+public class wishesFragment extends Fragment {
+    private static final String TAG = "wishesFragment";
 
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor spEditor;
@@ -43,14 +43,14 @@ public class favoritesFragment extends Fragment {
     private List<String> list_price;
     private List<String> list_jsonItem;
 
-    public static TextView noFavoritesView;
+    public static TextView noWishesView;
     public Intent newIntent;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.v(TAG, "Rainie: onCreateView()");
-        View view = inflater.inflate(R.layout.fragment_favorites, container, false);
+        View view = inflater.inflate(R.layout.fragment_wishlist, container, false);
         //setUserVisibleHint(true);
 
         if (view != null) {
@@ -65,8 +65,8 @@ public class favoritesFragment extends Fragment {
         num_wishlist = (TextView) view.findViewById(R.id.num_wishlist);
         total_cost = (TextView) view.findViewById(R.id.total_cost);
 
-        noFavoritesView = (TextView)view.findViewById(R.id.noFavorites);
-        newIntent = new Intent(this.getActivity(), favoritesFragment.class);
+        noWishesView = (TextView)view.findViewById(R.id.noWishes);
+        newIntent = new Intent(this.getActivity(), wishesFragment.class);
 
         getWishList();
         return view;
@@ -91,12 +91,12 @@ public class favoritesFragment extends Fragment {
         Log.v(TAG, "Rainie : count_sp = " + count_sp);
 
         if (count_sp == 0) {
-            noFavoritesView.setVisibility(View.VISIBLE);
+            noWishesView.setVisibility(View.VISIBLE);
 //            mFavoriteListView.setVisibility(View.GONE);
             mRecyclerWishView.setVisibility(View.GONE);
 
         } else {
-            noFavoritesView.setVisibility(View.GONE);
+            noWishesView.setVisibility(View.GONE);
 //            mFavoriteListView.setVisibility(View.VISIBLE);
             mRecyclerWishView.setVisibility(View.VISIBLE);
 
@@ -163,13 +163,13 @@ public class favoritesFragment extends Fragment {
             total_cost.setText("$" + Double.toString(total_shopping_cost));
 
 
-            setAdapterForFavoriteListView();
+            setAdapterForWishesView();
 
         }
     }
 
-    public void setAdapterForFavoriteListView() {
-//        Log.v(TAG, "Rainie : setAdapterForFavoriteListView() : wishItem = " + wishItem.size());
+    public void setAdapterForWishesView() {
+//        Log.v(TAG, "Rainie : setAdapterForWishesView() : wishItem = " + wishItem.size());
         RecycleViewAdapterWish myAdapter = new RecycleViewAdapterWish(this.getActivity(), wishItem);
         mRecyclerWishView.setLayoutManager(new GridLayoutManager(this.getActivity(), 2));
         mRecyclerWishView.setAdapter(myAdapter);

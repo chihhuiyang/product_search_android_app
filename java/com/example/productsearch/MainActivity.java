@@ -3,18 +3,13 @@ package com.example.productsearch;
 import android.support.design.widget.TabLayout;
 
 import android.Manifest;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -28,7 +23,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -50,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(mViewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        checkLocationPermission();
     }
 
     public void onResume()
@@ -64,42 +57,14 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         Spannable searchSpan = new SpannableString("  SEARCH");
-        adapter.addFragment(new searchFragment(), searchSpan);
+        adapter.addFrag(new searchFragment(), searchSpan);
 
         Spannable favoriteSpan = new SpannableString("  WISH LIST");
-        adapter.addFragment(new favoritesFragment(), favoriteSpan);
+        adapter.addFrag(new wishesFragment(), favoriteSpan);
 
         viewPager.setAdapter(adapter);
     }
 
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Access Location Reuqest")
-                        .setMessage("Allow Places Search to access this device's location?")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i)
-                            {
-                                ActivityCompat.requestPermissions(MainActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -109,13 +74,14 @@ public class MainActivity extends AppCompatActivity {
             super(fm);
         }
 
-        public void addFragment(Fragment fragment, Spannable title) {
+        public void addFrag(Fragment fragment, Spannable title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
 
         @Override
         public Fragment getItem(int position) {
+//            Log.v(TAG, "Rainie : getItem()");
             return mFragmentList.get(position);
         }
 

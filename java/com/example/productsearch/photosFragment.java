@@ -50,7 +50,7 @@ public class photosFragment extends Fragment {
         bundle = this.getArguments();
         jsonObject_photo_str = bundle.getString("jsonObject_photo");
 
-        Log.v(TAG, "Rainie: jsonObject_photo_str = " + jsonObject_photo_str);
+//        Log.v(TAG, "Rainie: jsonObject_photo_str = " + jsonObject_photo_str);
 
         try {
 

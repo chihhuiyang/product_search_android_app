@@ -20,10 +20,10 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.productsearch.favoritesFragment.mRecyclerWishView;
-import static com.example.productsearch.favoritesFragment.noFavoritesView;
-import static com.example.productsearch.favoritesFragment.num_wishlist;
-import static com.example.productsearch.favoritesFragment.total_cost;
+import static com.example.productsearch.wishesFragment.mRecyclerWishView;
+import static com.example.productsearch.wishesFragment.noWishesView;
+import static com.example.productsearch.wishesFragment.num_wishlist;
+import static com.example.productsearch.wishesFragment.total_cost;
 
 
 public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdapterWish.MyViewHolder> {
@@ -39,7 +39,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
     public RecycleViewAdapterWish(Context mContext, List<item> mData) {
         mSharedPreferences = mContext.getSharedPreferences("mySP", Context.MODE_PRIVATE);
-        Log.v(TAG, "Rainie : RecycleViewAdapterWish() : mSharedPreferences.getAll().size() = " + mSharedPreferences.getAll().size());
+//        Log.v(TAG, "Rainie : RecycleViewAdapterWish() : mSharedPreferences.getAll().size() = " + mSharedPreferences.getAll().size());
         spEditor = mSharedPreferences.edit();
 
         this.mContext = mContext;
@@ -57,7 +57,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapterWish.MyViewHolder myViewHolder, final int i) {
-        Log.v(TAG, "Rainie : onBindViewHolder() : " );
+//        Log.v(TAG, "Rainie : onBindViewHolder() : " );
 
         Picasso.get().load(mData.get(i).getProductImg()).error(mContext.getDrawable(R.drawable.image_outline)).into(myViewHolder.img_item_img);
 //        Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
@@ -197,7 +197,7 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
         mData.remove(position);
         
         if (mData.size() == 0) {
-            noFavoritesView.setVisibility(View.VISIBLE);
+            noWishesView.setVisibility(View.VISIBLE);
             mRecyclerWishView.setVisibility(View.GONE);
         }
 
