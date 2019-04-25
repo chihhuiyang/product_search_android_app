@@ -27,8 +27,6 @@ import static com.example.productsearch.favoritesFragment.total_cost;
 
 
 public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdapterWish.MyViewHolder> {
-
-
     private static final String TAG = "RecycleViewAdapterWish";
 
     private Context mContext;
@@ -38,7 +36,6 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
     public SharedPreferences.Editor spEditor;
     private String[] saveStr;
     public double total_shopping_cost;
-
 
     public RecycleViewAdapterWish(Context mContext, List<item> mData) {
         mSharedPreferences = mContext.getSharedPreferences("mySP", Context.MODE_PRIVATE);
@@ -52,25 +49,18 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
     @NonNull
     @Override
     public RecycleViewAdapterWish.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.cardview_item_wish, viewGroup, false);
-
         return new RecycleViewAdapterWish.MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewAdapterWish.MyViewHolder myViewHolder, final int i) {
         Log.v(TAG, "Rainie : onBindViewHolder() : " );
-//        Log.v(TAG, "Rainie : getProductImg() : " +  mData.get(i).getProductImg());
-//        Log.v(TAG, "Rainie : tv_item_title() : " + mData.get(i).getTitle().toUpperCase());
-//        Log.v(TAG, "Rainie : tv_item_zip() : " + mData.get(i).getZipcode());
-//        Log.v(TAG, "Rainie : tv_item_ship() : " + mData.get(i).getShippingCost());
-//        Log.v(TAG, "Rainie : tv_item_condition() : " + mData.get(i).getCondition());
-//        Log.v(TAG, "Rainie : tv_item_price() : " + mData.get(i).getPrice());
 
-        Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
+        Picasso.get().load(mData.get(i).getProductImg()).error(mContext.getDrawable(R.drawable.image_outline)).into(myViewHolder.img_item_img);
+//        Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
         myViewHolder.tv_item_title.setText(mData.get(i).getTitle().toUpperCase());
         myViewHolder.tv_item_zip.setText(mData.get(i).getZipcode());
         myViewHolder.tv_item_ship.setText(mData.get(i).getShippingCost());
@@ -78,15 +68,12 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
         myViewHolder.tv_item_price.setText(mData.get(i).getPrice());
 
         // add wish list
-        // itemFavorite[position] == mData.get(i).getFavorite()
-        // favoriteView == myViewHolder.img_item_wish
         Picasso.get().load(mData.get(i).getWish()).into(myViewHolder.img_item_wish);
         if (mData.get(i).getWish() == "no") {
             myViewHolder.img_item_wish.setImageResource(R.drawable.cart_plus);
         } else {
             myViewHolder.img_item_wish.setImageResource(R.drawable.cart_remove);
         }
-
         myViewHolder.img_item_wish.setOnClickListener(
                 new View.OnClickListener()
                 {
@@ -98,14 +85,12 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
         );
 
 
-//        // set click listener
         myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
 
-                // passing data to the detail activity
                 intent.putExtra("itemId", mData.get(i).getItemId());
                 intent.putExtra("title", mData.get(i).getTitle());
                 intent.putExtra("card_product_img", mData.get(i).getProductImg());
@@ -126,7 +111,6 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 //                Log.v(TAG, "Rainie : card_wish = " + mData.get(i).getWish());
 //                Log.v(TAG, "Rainie : jsonObjItem_str = " + mData.get(i).getJsonObjItem_str());
 
-                // equal to redirect()
                 mContext.startActivity(intent);
             }
         });
@@ -144,7 +128,6 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-
         CardView cardView;
 
         ImageView img_item_img;
@@ -182,21 +165,17 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getZipcode());
 //        Log.v(TAG, "Rainie : mData.get(position) = " + mData.get(position).getProductImg());
 
-
-
         spEditor.remove(mData.get(position).getItemId());
         spEditor.apply();
 
-
         // update total_shopping_cost
-        int numOfSP = mSharedPreferences.getAll().size();
-        Log.v(TAG, "Rainie : After deleteFromFavorite() : numOfSP = " + numOfSP);
+        int count_sp = mSharedPreferences.getAll().size();
+        Log.v(TAG, "Rainie : After deleteFromFavorite() : count_sp = " + count_sp);
         Map<String,?> keys = mSharedPreferences.getAll();
 
         int total_wishlist_cost = 0;
         String[] part;
-        for(Map.Entry<String,?> entry : keys.entrySet())
-        {
+        for(Map.Entry<String,?> entry : keys.entrySet()) {
             Log.v(TAG, "Rainie : map values = " + entry.getKey() + " : " + entry.getValue());
 
             Gson gson = new Gson();
@@ -205,7 +184,6 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
 
             double wish_cost = Double.parseDouble(part[6].substring(1)) * 100;
 
-
             int wish_cost_int = (int) wish_cost;
 //            Log.v(TAG, "Rainie : wish_cost_int = " + wish_cost_int);
             total_wishlist_cost += wish_cost_int;
@@ -213,11 +191,8 @@ public class RecycleViewAdapterWish extends RecyclerView.Adapter<RecycleViewAdap
         total_shopping_cost = new Double(total_wishlist_cost) / 100.0;
         total_cost.setText("$" + Double.toString(total_shopping_cost));
 
-
         // update total number
-        num_wishlist.setText(String.valueOf(numOfSP));
-
-
+        num_wishlist.setText(String.valueOf(count_sp));
 
         mData.remove(position);
         

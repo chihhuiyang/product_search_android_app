@@ -10,28 +10,14 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
-
-import static java.lang.Float.parseFloat;
-import static java.lang.Integer.parseInt;
-
-public class infoFragment extends Fragment
-{
+public class infoFragment extends Fragment {
     private static final String TAG = "infoFragment";
-
-//    product_img_gallery
 
     public String jsonObjectItem_str;   // from 50 api , and only 1 item
     public JSONObject jsonObjectItem;   // from 50 api , and only 1 item
@@ -39,10 +25,8 @@ public class infoFragment extends Fragment
     public String jsonObject_detail_str;
     public JSONObject jsonObject_detail_item;
 
-
     public HorizontalScrollView horizontalScrollView;
     public LinearLayout mGallery;
-
 
     public TextView product_title;
     public TextView product_price;
@@ -66,7 +50,6 @@ public class infoFragment extends Fragment
     public ImageView product_spec_img;
     public TextView product_spec_txt;
 
-
     public String[] specList_value;
     public LinearLayout specListView;
 
@@ -75,8 +58,7 @@ public class infoFragment extends Fragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         minflater = inflater;
 
         View view = inflater.inflate(R.layout.fragment_info, container, false);
@@ -109,7 +91,6 @@ public class infoFragment extends Fragment
 
         specListView = (LinearLayout)view.findViewById(R.id.specList);
 
-
         Bundle bundle;
         bundle = this.getArguments();
         jsonObject_detail_str = bundle.getString("jsonObject_detail");
@@ -118,18 +99,14 @@ public class infoFragment extends Fragment
         Log.v(TAG, "Rainie: jsonObject_detail_str = " + jsonObject_detail_str);
         Log.v(TAG, "Rainie: jsonObjectItem_str = " + jsonObjectItem_str);
 
-        try
-        {
+        try {
             JSONObject jsonObject_detail = new JSONObject(jsonObject_detail_str);
             jsonObject_detail_item = jsonObject_detail.getJSONObject("Item");
 
             jsonObjectItem = new JSONObject(jsonObjectItem_str);    // 1 item from 50 api
 
-
-            generateDetails();
-        }
-        catch (JSONException e)
-        {
+            processDetail();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return view;
@@ -137,24 +114,39 @@ public class infoFragment extends Fragment
 
 
 
-    public void generateDetails() throws JSONException
-    {
-        Log.v(TAG, "Rainie : generateDetails()");
-
+    public void processDetail() throws JSONException {
+        Log.v(TAG, "Rainie : processDetail()");
 
         if (jsonObject_detail_item.has("PictureURL")) {
             int count = jsonObject_detail_item.getJSONArray("PictureURL").length();
-            String[] pic_urls = new String[count];
-            for (int i = 0; i < count; i++) {
-                pic_urls[i] = jsonObject_detail_item.getJSONArray("PictureURL").getString(i);
-
-//                Log.v(TAG, "Rainie : pic_urls = " + pic_urls[i]);
-
+            if (count == 0) {
+                Log.v(TAG, "0 PictureURL");
                 View view = minflater.inflate(R.layout.gallery_item, mGallery, false);
                 ImageView img = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
-                Picasso.get().load(pic_urls[i]).into(img);
+
+                Picasso.get().load("N/A").error(this.getContext().getDrawable(R.drawable.image_outline)).into(img);
                 mGallery.addView(view);
+                horizontalScrollView.setVisibility(View.VISIBLE);
+            } else {
+                String[] pic_urls = new String[count];
+                for (int i = 0; i < count; i++) {
+                    pic_urls[i] = jsonObject_detail_item.getJSONArray("PictureURL").getString(i);
+                    Log.v(TAG, "Rainie : pic_urls = " + pic_urls[i]);
+                    View view = minflater.inflate(R.layout.gallery_item, mGallery, false);
+                    ImageView img = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
+
+                    Picasso.get().load(pic_urls[i]).error(this.getContext().getDrawable(R.drawable.image_outline)).into(img);
+                    mGallery.addView(view);
+                }
+                horizontalScrollView.setVisibility(View.VISIBLE);
             }
+        } else {
+            Log.v(TAG, "NO PictureURL");
+            View view = minflater.inflate(R.layout.gallery_item, mGallery, false);
+            ImageView img = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
+
+            Picasso.get().load(R.drawable.image_outline).into(img);
+            mGallery.addView(view);
             horizontalScrollView.setVisibility(View.VISIBLE);
         }
 
@@ -202,7 +194,6 @@ public class infoFragment extends Fragment
 
                 specList_value = new String[jsonArray_specs.length()];
 
-
                 boolean hasBrand = false;
                 int idxBrand = 0;
                 for (int i = 0; i < jsonArray_specs.length(); i++) {
@@ -229,29 +220,22 @@ public class infoFragment extends Fragment
                 product_spec_img.setVisibility(View.VISIBLE);
                 product_spec_txt.setVisibility(View.VISIBLE);
 
-
                 for (int i = 0; i < jsonArray_specs.length(); i++) {
                     View spec_view = minflater.inflate(R.layout.spec_item, specListView, false);
                     TextView txt = (TextView) spec_view.findViewById(R.id.spec);
                     txt.setText(specList_value[i]);
                     specListView.addView(spec_view);
                 }
-
             }
-
         }
-
-
     }
 
-    public void setVisible(TextView title, TextView content, String text)
-    {
-        Log.v(TAG, "Rainie : setVisible()");
 
+    public void setVisible(TextView title, TextView content, String text) {
+        Log.v(TAG, "Rainie : setVisible()");
         title.setVisibility(View.VISIBLE);
         content.setVisibility(View.VISIBLE);
         content.setText(text);
     }
-
 
 }

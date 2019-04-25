@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -111,8 +110,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         mIntent = new Intent(this.getActivity(), ResultsActivity.class);
         Log.v(TAG, "Rainie: onCreateView()");
@@ -135,7 +133,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
         mInput_nearby = (CheckBox) view.findViewById(R.id.input_nearby);
 
-
         // invisible
         mDistance = (EditText)view.findViewById(R.id.distance);
         mFrom = (TextView) view.findViewById(R.id.textView_from);
@@ -144,13 +141,10 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         mOtherLocation = (RadioButton) view.findViewById(R.id.otherLocation);
         mInputLocation = (AutoCompleteTextView) view.findViewById(R.id.inputLocation);
 
-
         mSearchButton = (Button)view.findViewById(R.id.searchButton);
         mClearButton = (Button)view.findViewById(R.id.clearButton);
         mKeywordError = (TextView)view.findViewById(R.id.keywordError);
         mLocationError = (TextView)view.findViewById(R.id.locationError);
-
-
 
         // enable nearby search
         mInput_nearby.setOnClickListener(
@@ -163,15 +157,11 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                 }
         );
 
-
         mInputLocation.setOnItemClickListener(mAutocompleteClickListener);
         mInputLocation.setEnabled(false);
 
-
-        //validation
         //mKeyword.requestFocus();
         mCurrentLocation.setChecked(true);
-
 
         mCurrentLocation.setOnClickListener(
                 new View.OnClickListener()
@@ -213,17 +203,13 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                 }
         );
 
-        if (view != null)
-        {
+        if (view != null) {
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-
-
         final AppCompatAutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.inputLocation);
 
-        //Setting up the adapter for AutoSuggest
         autoSuggestAdapter = new AutoSuggestAdapter(this.getActivity(), android.R.layout.simple_dropdown_item_1line);
         autoCompleteTextView.setThreshold(2);
         autoCompleteTextView.setAdapter(autoSuggestAdapter);
@@ -238,17 +224,14 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
 
         autoCompleteTextView.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int
-                    count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 handler.removeMessages(TRIGGER_AUTO_COMPLETE);
-                handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE,
-                        AUTO_COMPLETE_DELAY);
+                handler.sendEmptyMessageDelayed(TRIGGER_AUTO_COMPLETE, AUTO_COMPLETE_DELAY);
             }
 
             @Override
@@ -263,9 +246,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                 if (msg.what == TRIGGER_AUTO_COMPLETE) {
                     if (!TextUtils.isEmpty(autoCompleteTextView.getText())) {
 
-
                         String autoUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?postalcode_startsWith=" + autoCompleteTextView.getText();
-                        // Instantiate the RequestQueue.
                         RequestQueue queue = Volley.newRequestQueue(getActivity());
                         StringRequest stringRequest = new StringRequest(Request.Method.GET, autoUrl, new Response.Listener<String>()
                         {
@@ -306,7 +287,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                 return false;
             }
         });
-
         return view;
     }
 
@@ -315,7 +295,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            //hide the keyboard
+            // hide the keyboard
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
@@ -334,7 +314,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
             mRadioGroup.setVisibility(View.GONE);
             mInputLocation.setVisibility(View.GONE);
 
-            // clear
             mDistance.setText("");
             mCurrentLocation.setChecked(true);
             mInputLocation.setText("");
@@ -344,73 +323,48 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     }
 
 
-    public void formValidation()
-    {
-        if (mCurrentLocation.isChecked())
-        {
+    public void formValidation() {
+        if (mCurrentLocation.isChecked()) {
             mInputLocation.setText("");
             mInputLocation.setEnabled(false);
-        }
-        else
-        {
+        } else {
             mInputLocation.setEnabled(true);
         }
     }
 
-    public void searchValidation(String keyword, String inputLocation)
-    {
-        if (mCurrentLocation.isChecked())
-        {
+    public void searchValidation(String keyword, String inputLocation) {
+        if (mCurrentLocation.isChecked()) {
             // nearby search : current location
-            if (keyword.isEmpty() || keyword.trim().matches(""))
-            {
+            if (keyword.isEmpty() || keyword.trim().matches("")) {
                 mKeywordError.setVisibility(View.VISIBLE);
                 Toast.makeText(this.getActivity(), "Please fix all fields with errors", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
+            } else {
                 mKeywordError.setVisibility(View.GONE);
                 getInputs();
             }
-        }
-        else
-        {   // nearby search : input location
-            if (keyword.isEmpty() || keyword.trim().matches("")
-                    || inputLocation.isEmpty() || inputLocation.trim().matches(""))
-            {
-                if (keyword.isEmpty() || keyword.trim().matches(""))
-                {
+        } else {   // nearby search : input location
+            if (keyword.isEmpty() || keyword.trim().matches("") || inputLocation.isEmpty() || inputLocation.trim().matches("")) {
+                if (keyword.isEmpty() || keyword.trim().matches("")) {
                     mKeywordError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     mKeywordError.setVisibility(View.GONE);
                 }
-                if (inputLocation.isEmpty() || inputLocation.trim().matches(""))
-                {
+                if (inputLocation.isEmpty() || inputLocation.trim().matches("")) {
                     mLocationError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     mLocationError.setVisibility(View.GONE);
                 }
                 Toast.makeText(this.getActivity(), "Please fix all fields with errors", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
+            } else {
                 mKeywordError.setVisibility(View.GONE);
                 mLocationError.setVisibility(View.GONE);
                 getInputs();
             }
         }
 
-
-
-
     }
 
-    public void clearInputs()
-    {
+    public void clearInputs() {
         mKeywordError.setVisibility(View.GONE);
         mLocationError.setVisibility(View.GONE);
         mKeyword.setText("");
@@ -421,9 +375,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         mInputLocation.setEnabled(false);
     }
 
-    public void getInputs()
-    {
-
+    public void getInputs() {
         String ipUrl = "http://ip-api.com/json";
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         StringRequest stringRequest = new StringRequest(Request.Method.GET, ipUrl, new Response.Listener<String>()
@@ -550,8 +502,7 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     }
 
 
-    public void redirect()
-    {
+    public void redirect() {
         this.getActivity().startActivity(mIntent);
     }
 

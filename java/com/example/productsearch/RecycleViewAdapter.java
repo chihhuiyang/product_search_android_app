@@ -21,7 +21,6 @@ import java.util.List;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
 
-
     private static final String TAG = "RecycleViewAdapter";
 
     private Context mContext;
@@ -29,8 +28,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     public SharedPreferences mSharedPreferences;
     public SharedPreferences.Editor spEditor;
-    private String[] saveStr;
-
+    private String[] packetDetail;
 
     public RecycleViewAdapter(Context mContext, List<item> mData) {
         mSharedPreferences = mContext.getSharedPreferences("mySP", Context.MODE_PRIVATE);
@@ -43,17 +41,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-
         View view;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.cardview_item, viewGroup, false);
-
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
-        Picasso.get().load(mData.get(i).getProductImg()).into(myViewHolder.img_item_img);
+        Picasso.get().load(mData.get(i).getProductImg()).error(mContext.getDrawable(R.drawable.image_outline)).into(myViewHolder.img_item_img);
+
         myViewHolder.tv_item_title.setText(mData.get(i).getTitle().toUpperCase());
         myViewHolder.tv_item_zip.setText(mData.get(i).getZipcode());
         myViewHolder.tv_item_ship.setText(mData.get(i).getShippingCost());
@@ -69,25 +66,19 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
 
         myViewHolder.img_item_wish.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    public void onClick(View view)
-                    {
-                        addToFavorite(i);
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        addToWishList(i);
                     }
                 }
         );
 
 
-
-        // set click listener
         myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
 
-                // passing data to the detail activity
                 intent.putExtra("jsonObjItem_str", mData.get(i).getJsonObjItem_str());
                 intent.putExtra("itemId", mData.get(i).getItemId());
                 intent.putExtra("title", mData.get(i).getTitle());
@@ -98,7 +89,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                 intent.putExtra("card_price", mData.get(i).getPrice());
                 intent.putExtra("card_wish", mData.get(i).getWish());
 
-                // equal to redirect()
                 mContext.startActivity(intent);
             }
         });
@@ -114,7 +104,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-
         CardView cardView;
 
         ImageView img_item_img;
@@ -141,8 +130,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
 
-//    itemFavorite[position] == mData.get(i).getFavorite()
-    public void addToFavorite(int position) {
+    public void addToWishList(int position) {
         String item_title = mData.get(position).getTitle();
         if (mData.get(position).getWish() == "yes") {
             mData.get(position).setWish("no");
@@ -153,19 +141,19 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             Toast.makeText(mContext, item_title + " was removed from wish list", Toast.LENGTH_SHORT).show();
         } else {
             mData.get(position).setWish("yes");
-            saveStr = new String[9];
-            saveStr[0] = mData.get(position).getItemId();
-            saveStr[1] = mData.get(position).getProductImg();
-            saveStr[2] = mData.get(position).getTitle();
-            saveStr[3] = mData.get(position).getZipcode();
-            saveStr[4] = mData.get(position).getShippingCost();
-            saveStr[5] = mData.get(position).getCondition();
-            saveStr[6] = mData.get(position).getPrice();
-            saveStr[7] = mData.get(position).getWish();
-            saveStr[8] = mData.get(position).getJsonObjItem_str();
+            packetDetail = new String[9];
+            packetDetail[0] = mData.get(position).getItemId();
+            packetDetail[1] = mData.get(position).getProductImg();
+            packetDetail[2] = mData.get(position).getTitle();
+            packetDetail[3] = mData.get(position).getZipcode();
+            packetDetail[4] = mData.get(position).getShippingCost();
+            packetDetail[5] = mData.get(position).getCondition();
+            packetDetail[6] = mData.get(position).getPrice();
+            packetDetail[7] = mData.get(position).getWish();
+            packetDetail[8] = mData.get(position).getJsonObjItem_str();
 
             Gson gson = new Gson();
-            String myStr = gson.toJson(saveStr);
+            String myStr = gson.toJson(packetDetail);
 
             spEditor.putString(mData.get(position).getItemId(), myStr);
             spEditor.apply();

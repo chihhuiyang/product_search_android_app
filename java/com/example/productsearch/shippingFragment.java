@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wssholmes.stark.circular_score.CircularScoreView;
 
@@ -145,13 +146,12 @@ public class shippingFragment extends Fragment {
         {
             JSONObject jsonObject_detail = new JSONObject(jsonObject_detail_str);
             jsonObject_detail_item = jsonObject_detail.getJSONObject("Item");
-
             jsonObjectItem = new JSONObject(jsonObjectItem_str);    // 1 item from 50 api
-
             generateShipping();
         }
         catch (JSONException e)
         {
+            Toast.makeText(this.getContext(), "JSONException", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -160,21 +160,16 @@ public class shippingFragment extends Fragment {
 
 
     public void generateShipping() throws JSONException {
-
         Log.v(TAG, "Rainie : generateShipping()");
-
         sold_img.setImageResource(R.drawable.truck);
         ship_img.setImageResource(R.drawable.ferry);
         return_img.setImageResource(R.drawable.dump_truck);
 
-
         if (jsonObject_detail_item.has("Storefront")) {
             if (jsonObject_detail_item.getJSONObject("Storefront").has("StoreName") && jsonObject_detail_item.getJSONObject("Storefront").has("StoreURL")) {
                 store.setVisibility(View.VISIBLE);
-
                 String store_name = jsonObject_detail_item.getJSONObject("Storefront").getString("StoreName");
                 String store_url = jsonObject_detail_item.getJSONObject("Storefront").getString("StoreURL");
-
 //                String text = "<a href=\"http://hello.com\">hello</a>";
                 String text = "<a href=\"" + store_url +  "\">" + store_name + "</a>";
                 Log.v(TAG, "Rainie : store url : " + text);
@@ -231,8 +226,6 @@ public class shippingFragment extends Fragment {
                     }
                 }
 
-
-
             }
             if (jsonObject_detail_item.getJSONObject("Seller").has("PositiveFeedbackPercent")) {
                 pop.setVisibility(View.VISIBLE);
@@ -250,8 +243,6 @@ public class shippingFragment extends Fragment {
 //                star_val.setText(star_str);
             }
         }
-
-
 
         int count_shipping = 0;
 
@@ -311,7 +302,6 @@ public class shippingFragment extends Fragment {
             ship.setVisibility(View.VISIBLE);
         }
 
-
         if (jsonObject_detail_item.has("ReturnPolicy")) {
             divider_return.setVisibility(View.VISIBLE);
             return_policy.setVisibility(View.VISIBLE);
@@ -341,9 +331,6 @@ public class shippingFragment extends Fragment {
             }
         }
 
-
-
     }
-
 
 }

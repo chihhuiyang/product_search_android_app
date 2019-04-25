@@ -1,6 +1,5 @@
 package com.example.productsearch;
 
-
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -18,24 +18,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class photosFragment extends Fragment
-{
+public class photosFragment extends Fragment {
     private static final String TAG = "photosFragment";
-
 
     public String jsonObject_photo_str;
     public JSONObject jsonObject_photo;
-
     public LinearLayout mLinearLayout;
     public LinearLayout mPhotoBox;
     public TextView noPhotos;
-
     public LayoutInflater minflater;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         minflater = inflater;
 
         Log.v(TAG, "Rainie : onCreateView()");
@@ -52,8 +47,7 @@ public class photosFragment extends Fragment
 
         Log.v(TAG, "Rainie: jsonObject_photo_str = " + jsonObject_photo_str);
 
-        try
-        {
+        try {
 
             jsonObject_photo = new JSONObject(jsonObject_photo_str);
             if (jsonObject_photo.has("items")) {
@@ -66,7 +60,6 @@ public class photosFragment extends Fragment
                     for (int i = 0; i < count; i++) {
                         String link = jsonObject_photo_arr.getJSONObject(i).getString("link");
 //                        Log.v(TAG, "Rainie : link = " + link);
-
 
                         View pic_view = minflater.inflate(R.layout.photo_item, mPhotoBox, false);
                         ImageView img = (ImageView) pic_view.findViewById(R.id.photo_item);
@@ -81,11 +74,10 @@ public class photosFragment extends Fragment
             }
 
         }
-        catch (JSONException e)
-        {
+        catch (JSONException e) {
+            Toast.makeText(this.getContext(), "JSONException", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-
         return view;
     }
 

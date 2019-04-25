@@ -13,37 +13,27 @@ import java.util.List;
 
 public class AutoSuggestAdapter extends ArrayAdapter<String> implements Filterable {
 
-    private List<String> mlistData;
+    private List<String> mAutoList;
 
     public AutoSuggestAdapter(@NonNull Context context, int resource) {
         super(context, resource);
-        mlistData = new ArrayList<>();
+        mAutoList = new ArrayList<>();
     }
 
     public void setData(List<String> list) {
-        mlistData.clear();
-        mlistData.addAll(list);
-    }
-
-    @Override
-    public int getCount() {
-        return mlistData.size();
+        mAutoList.clear();
+        mAutoList.addAll(list);
     }
 
     @Nullable
     @Override
     public String getItem(int position) {
-        return mlistData.get(position);
+        return mAutoList.get(position);
     }
 
-    /**
-     * Used to Return the full object directly from adapter.
-     *
-     * @param position
-     * @return
-     */
-    public String getObject(int position) {
-        return mlistData.get(position);
+    @Override
+    public int getCount() {
+        return mAutoList.size();
     }
 
     @NonNull
@@ -54,8 +44,8 @@ public class AutoSuggestAdapter extends ArrayAdapter<String> implements Filterab
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
                 if (constraint != null) {
-                    filterResults.values = mlistData;
-                    filterResults.count = mlistData.size();
+                    filterResults.values = mAutoList;
+                    filterResults.count = mAutoList.size();
                 }
                 return filterResults;
             }

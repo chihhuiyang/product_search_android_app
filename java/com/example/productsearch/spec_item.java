@@ -15,8 +15,7 @@ public class spec_item extends ArrayAdapter<String> {
 
     public ImageView favoriteView;
 
-    public spec_item(Activity context, String[] spec_value)
-    {
+    public spec_item(Activity context, String[] spec_value) {
         super(context, R.layout.spec_item, spec_value);
 
         this.context = context;
@@ -24,8 +23,7 @@ public class spec_item extends ArrayAdapter<String> {
 
     }
 
-    public View getView(final int position, View view, ViewGroup parent)
-    {
+    public View getView(final int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.spec_item, null,true);
 

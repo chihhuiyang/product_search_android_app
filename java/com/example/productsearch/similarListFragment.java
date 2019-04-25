@@ -22,7 +22,6 @@ public class similarListFragment extends RecyclerView.Adapter<similarListFragmen
 
     private static final String TAG = "similarListFragment";
 
-
     private Context mContext;
     private String[][] mData;
 

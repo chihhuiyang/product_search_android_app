@@ -16,13 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -191,6 +184,7 @@ public class similarFragment extends Fragment {
         }
         catch (JSONException e)
         {
+            Toast.makeText(this.getContext(), "JSONException", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return view;
@@ -198,13 +192,10 @@ public class similarFragment extends Fragment {
 
 
 
-    public void setAdapterForListView(String[][] operateArr)
-    {
+    public void setAdapterForListView(String[][] operateArr) {
         similarListFragment similarListAdapter = new similarListFragment(this.getActivity(), operateArr);
         mSimilarList.setLayoutManager(new GridLayoutManager(this.getActivity(), 1));    // card view
         mSimilarList.setAdapter(similarListAdapter);
-
-
     }
 
 
@@ -258,8 +249,7 @@ public class similarFragment extends Fragment {
         }
     }
 
-    public void sortDoubleAscending(String[][] data, final int index)
-    {
+    public void sortDoubleAscending(String[][] data, final int index) {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override
@@ -272,8 +262,7 @@ public class similarFragment extends Fragment {
         });
     }
 
-    public void sortDoubleDescending(String[][] data, final int index)
-    {
+    public void sortDoubleDescending(String[][] data, final int index) {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override
@@ -288,8 +277,7 @@ public class similarFragment extends Fragment {
 
 
 
-    public void sortIntegerAscending(String[][] data, final int index)
-    {
+    public void sortIntegerAscending(String[][] data, final int index) {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override
@@ -317,8 +305,7 @@ public class similarFragment extends Fragment {
     }
 
 
-    public void sortAscending(String[][] data, final int index)
-    {
+    public void sortAscending(String[][] data, final int index) {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override
@@ -329,8 +316,7 @@ public class similarFragment extends Fragment {
         });
     }
 
-    public void sortDescending(String[][] data, final int index)
-    {
+    public void sortDescending(String[][] data, final int index) {
         Arrays.sort(data, new Comparator<String[]>()
         {
             @Override

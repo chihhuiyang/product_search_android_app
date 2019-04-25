@@ -42,34 +42,24 @@ import java.util.List;
 
 import static android.support.design.widget.TabLayout.MODE_SCROLLABLE;
 
-public class DetailsActivity extends AppCompatActivity
-{
-
-    public TextView mProgressBarMsg;
-    public ProgressBar mProgressBar;
-
-
+public class DetailsActivity extends AppCompatActivity {
+    
     private static final String TAG = "DetailsActivity";
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+
     private MainActivity.SectionsPagerAdapter mSectionsPagerAdapter;
 
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor spEditor;
-
+    
+    public TextView mProgressBarMsg;
+    public ProgressBar mProgressBar;
+    
     private Button wish_button;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private Menu menu;
 
     public Bundle bundle = new Bundle();
-
     public JSONObject jsonObject_detail;
     public JSONObject jsonObject_photo;
     public JSONObject jsonObject_similar;
@@ -84,17 +74,13 @@ public class DetailsActivity extends AppCompatActivity
     private String card_condition;
     private String card_price;
     private String card_wish;
-
-    public String[] saveStr;
+    public String[] packetDetail;
     Context mContext;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-
+    protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
@@ -107,68 +93,45 @@ public class DetailsActivity extends AppCompatActivity
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
         spEditor = mSharedPreferences.edit();
 
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.detailsContainer);
-
         mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message_detail);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar_detail);
-
         wish_button = (Button) findViewById(R.id.wish_button);
-
         tabLayout = (TabLayout) findViewById(R.id.detailsTabs);
         tabLayout.setupWithViewPager(mViewPager);
 //        tabLayout.setTabMode(MODE_SCROLLABLE);
-
 //        setupTabIcons();
 
-
         receiveData();
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
         wish_button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                addToFavorite();    // TODO :
+                addToWishList();    // TODO :
             }
         });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         this.menu = menu;
-
-        if (mSharedPreferences.contains(itemId))
-        {
-            menu.getItem(0).setIcon(R.drawable.cart_remove);
-        }
-
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-
             case R.id.share:
-                try
-                {
+                try {
                     shareToFacebook();
                 }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
+                catch (JSONException e) {
+                    Toast.makeText(DetailsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
                 }
                 return true;
         }
@@ -217,7 +180,6 @@ public class DetailsActivity extends AppCompatActivity
         mSimilarFragment.setArguments(bundle);
         adapter.addFrag(mSimilarFragment, "SIMILAR");
 
-
         viewPager.setAdapter(adapter);
         Log.v(TAG, "Rainie : Finish setupViewPager()");
     }
@@ -225,7 +187,6 @@ public class DetailsActivity extends AppCompatActivity
     public void receiveData()
     {
         Intent mIntent = getIntent();
-
 
         String receivedJsonObjItem_str = mIntent.getStringExtra("jsonObjItem_str");
         String receivedItemId = mIntent.getStringExtra("itemId");
@@ -236,7 +197,6 @@ public class DetailsActivity extends AppCompatActivity
         String receivedCard_condition = mIntent.getStringExtra("card_condition");
         String receivedCard_price = mIntent.getStringExtra("card_price");
         String receivedCard_wish = mIntent.getStringExtra("card_wish");
-
 
         card_product_img = receivedCard_product_img;
         card_zipcode = receivedCard_zipcode;
@@ -266,9 +226,7 @@ public class DetailsActivity extends AppCompatActivity
         } else {
             wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_add));
         }
-
         requestDetails2(receivedTitle, receivedItemId);
-
     }
 
 
@@ -285,8 +243,8 @@ public class DetailsActivity extends AppCompatActivity
             {
                 try
                 {
-                    mProgressBar.setVisibility(View.GONE);
-                    mProgressBarMsg.setVisibility(View.GONE);
+//                    mProgressBar.setVisibility(View.GONE);
+//                    mProgressBarMsg.setVisibility(View.GONE);
 
                     jsonObject_detail = new JSONObject(response);
                     Log.v(TAG, "Rainie: Detail JSON : " + jsonObject_detail.toString());
@@ -332,6 +290,9 @@ public class DetailsActivity extends AppCompatActivity
 
                                                 bundle.putString("jsonObject_similar", jsonObject_similar.toString());
                                                 Log.v(TAG, "Rainie : bundle jsonObject_similar = " + jsonObject_similar.toString());
+
+                                                mProgressBar.setVisibility(View.GONE);
+                                                mProgressBarMsg.setVisibility(View.GONE);
 
                                                 // go to 4 TAB page
                                                 Log.v(TAG, "Rainie : Start setupViewPager()");
@@ -401,21 +362,10 @@ public class DetailsActivity extends AppCompatActivity
     }
 
 
-
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter
-    {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
-
         private final List<String> mFragmentTitleList = new ArrayList<>();
-
-
-        public SectionsPagerAdapter(FragmentManager fm)
-        {
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -428,16 +378,14 @@ public class DetailsActivity extends AppCompatActivity
 
 
         @Override
-        public Fragment getItem(int position)
-        {
+        public Fragment getItem(int position) {
             Log.v(TAG, "Rainie : getItem() = " + position);
             return mFragmentList.get(position);
         }
 
         @Nullable
         @Override
-        public CharSequence getPageTitle(int position)
-        {
+        public CharSequence getPageTitle(int position) {
 //            Log.v(TAG, "Rainie : getPageTitle() = " + position);
             return mFragmentTitleList.get(position);
         }
@@ -449,8 +397,7 @@ public class DetailsActivity extends AppCompatActivity
         }
     }
 
-    public void shareToFacebook() throws JSONException
-    {
+    public void shareToFacebook() throws JSONException {
 
         String url = jsonObject_detail.getJSONObject("Item").getString("ViewItemURLForNaturalSearch");
         String quote = "Buy " + itemTitle + " for $" + price_item + " from Ebay!";
@@ -462,51 +409,45 @@ public class DetailsActivity extends AppCompatActivity
 
     }
 
-    private String urlEncode(String s)
-    {
+    private String urlEncode(String s) {
         try
         {
             return URLEncoder.encode(s, "UTF-8");
         }
         catch (UnsupportedEncodingException e)
         {
+            Toast.makeText(DetailsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
             return "";
         }
     }
 
-    public void addToFavorite()
-    {
-        if (mSharedPreferences.contains(itemId))
-        {
+    public void addToWishList() {
+        if (mSharedPreferences.contains(itemId)) {
             spEditor.remove(itemId);
             spEditor.apply();
             Log.v(TAG, "Rainie : remove wish size = " + mSharedPreferences.getAll().size());
-            wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_add));
-            menu.getItem(0).setIcon(R.drawable.cart_plus);
+            wish_button.setBackground(getDrawable(R.drawable.circle_wish_add));
             Toast.makeText(this, itemTitle + " was removed from wish list", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            saveStr = new String[9];
-            saveStr[0] = itemId;
-            saveStr[1] = card_product_img;
-            saveStr[2] = itemTitle;
-            saveStr[3] = card_zipcode;
-            saveStr[4] = card_shipping_cost;
-            saveStr[5] = card_condition;
-            saveStr[6] = card_price;
-            saveStr[7] = card_wish;
-            saveStr[8] = jsonObjItem_str;
+        } else {
+            packetDetail = new String[9];
+            packetDetail[0] = itemId;
+            packetDetail[1] = card_product_img;
+            packetDetail[2] = itemTitle;
+            packetDetail[3] = card_zipcode;
+            packetDetail[4] = card_shipping_cost;
+            packetDetail[5] = card_condition;
+            packetDetail[6] = card_price;
+            packetDetail[7] = card_wish;
+            packetDetail[8] = jsonObjItem_str;
 
             Gson gson = new Gson();
-            String myStr = gson.toJson(saveStr);
+            String myStr = gson.toJson(packetDetail);
 
             spEditor.putString(itemId, myStr);
             spEditor.apply();
             Log.v(TAG, "Rainie : add wish size = " + mSharedPreferences.getAll().size());
 
-            wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_remove));
-            menu.getItem(0).setIcon(R.drawable.cart_remove);
+            wish_button.setBackground(getDrawable(R.drawable.circle_wish_remove));
             Toast.makeText(this, itemTitle + " was added to wish list", Toast.LENGTH_SHORT).show();
         }
     }

@@ -1,6 +1,5 @@
 package com.example.productsearch;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,8 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ResultsActivity extends AppCompatActivity
-{
+public class ResultsActivity extends AppCompatActivity {
     public TextView mProgressBarMsg;
     public ProgressBar mProgressBar;
 
@@ -64,16 +62,13 @@ public class ResultsActivity extends AppCompatActivity
 
     public JSONArray jsonArray_items;   // 50 items
 
-
-
-    private boolean ifFisrtTime;
+    private boolean isFirstOnCreate;
 
     public Intent newIntent;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
         setTitle("Search Results");
@@ -88,57 +83,41 @@ public class ResultsActivity extends AppCompatActivity
         spEditor = this.getSharedPreferences("mySP", Context.MODE_PRIVATE).edit();
         mSharedPreferences = this.getSharedPreferences("mySP", Context.MODE_PRIVATE);
 
-
         mShowingResult = (LinearLayout)findViewById(R.id.showingResult);
         mNum_results = (TextView)findViewById(R.id.num_results);
         mSearch_keyword = (TextView)findViewById(R.id.search_keyword);
-
         mRecyclerView = (RecyclerView) findViewById(R.id.resultsList2);
-
-
-
         noResultsView = (TextView) findViewById(R.id.noResults);
-
         mProgressBarMsg = (TextView) findViewById(R.id.progress_bar_message);;
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        ifFisrtTime = true;
+        isFirstOnCreate = true;
 
         newIntent = new Intent(this, DetailsActivity.class);
 
-        try
-        {
-            receiveData();
-        }
-        catch (JSONException e)
-        {
+        try {
+            getDataSendApi();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void onResume()
-    {
-
+    public void onResume() {
         Log.v(TAG, "Rainie: onResume()");
         super.onResume();
-        if (!ifFisrtTime)
-        {
+        if (!isFirstOnCreate) {
             Log.v(TAG, "Rainie: not first time");
-            checkIfFavorite();
-            setAdapterForListView();
+            updateWishList();
+            setRecycleViewAdapter();
         }
-//        ifFisrtTime = false;
+//        isFirstOnCreate = false;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            // Respond to the action bar's Up/Home button
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -146,42 +125,25 @@ public class ResultsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void receiveData() throws JSONException
-    {
+    public void getDataSendApi() throws JSONException {
         Intent mIntent = getIntent();
-
 
         String receivedUrl = mIntent.getStringExtra("url");
         String receivedKeyword = mIntent.getStringExtra("keyword");
         Log.v(TAG, "Rainie: receivedUrl : " + receivedUrl);
         Log.v(TAG, "Rainie: receivedKeyword : " + receivedKeyword);
 
-
         mSearch_keyword.setText(receivedKeyword);
 
-
-
-            // Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(this);
-
-
-//         Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, receivedUrl, new Response.Listener<String>()
-            {
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, receivedUrl, new Response.Listener<String>() {
                 @Override
-                public void onResponse(String response)
-                {
-                    try
-                    {
-
+                public void onResponse(String response) {
+                    try {
                         mProgressBar.setVisibility(View.GONE);
                         mProgressBarMsg.setVisibility(View.GONE);
-
-
                         JSONObject jsonObject = new JSONObject(response);
-
                         Log.v(TAG, "Rainie: JSON : " + jsonObject.toString());
-
                         if (jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0).getJSONArray("searchResult") == null) {   // null searchResult
                             noResults();
                         } else {    // valid item
@@ -195,10 +157,7 @@ public class ResultsActivity extends AppCompatActivity
                                 generateTable2(jsonObject);
                             }
                         }
-
-                    }
-                    catch (JSONException e)
-                    {
+                    } catch (JSONException e) {
                         Toast.makeText(ResultsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
                         Log.v(TAG, "Rainie: JSONException");
                         mProgressBar.setVisibility(View.GONE);
@@ -207,13 +166,10 @@ public class ResultsActivity extends AppCompatActivity
                     }
                 }
             },
-            new Response.ErrorListener()
-            {
+            new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error)
-                {
+                public void onErrorResponse(VolleyError error) {
                     Toast.makeText(ResultsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-
                     Log.v(TAG, "Rainie: VolleyError");
                     mProgressBar.setVisibility(View.GONE);
                     mProgressBarMsg.setVisibility(View.GONE);
@@ -221,17 +177,13 @@ public class ResultsActivity extends AppCompatActivity
                 }
             });
             queue.add(stringRequest);
-
-
     }
 
-    public void setAdapterForListView()
-    {
+    public void setRecycleViewAdapter() {
         copylistItem = new ArrayList<>();
         for (int i = 0; i < listItem.size(); i++) {
             copylistItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i], list_jsonArray_item[i]));
         }
-
         RecycleViewAdapter myAdapter = new RecycleViewAdapter(this, copylistItem);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2)); // for card view
         mRecyclerView.setAdapter(myAdapter);
@@ -239,12 +191,9 @@ public class ResultsActivity extends AppCompatActivity
 
 
     public void generateTable2(JSONObject jsonObject) throws JSONException {
-        try
-        {
-
+        try {
             jsonArray_items = jsonObject.getJSONArray("findItemsAdvancedResponse").getJSONObject(0).getJSONArray("searchResult").getJSONObject(0).getJSONArray("item");
             int count_items = jsonArray_items.length();
-
             list_itemId = new String[count_items];
             list_productImg = new String[count_items];
             list_title = new String[count_items];
@@ -264,9 +213,12 @@ public class ResultsActivity extends AppCompatActivity
                 String itemId = jsonArray_items.getJSONObject(i).getJSONArray("itemId").getString(0);
 //                Log.v(TAG, "Rainie : itemId[" + i + "] = " + itemId);
 
-                // productImg
-                String productImg = jsonArray_items.getJSONObject(i).getJSONArray("galleryURL").getString(0);
-//                Log.v(TAG, "Rainie : productImg[" + i + "] = " + productImg);
+                // productImg (could be N/A)
+                String productImg = "N/A";
+                if (!jsonArray_items.getJSONObject(i).isNull("galleryURL")) {
+                    productImg = jsonArray_items.getJSONObject(i).getJSONArray("galleryURL").getString(0);
+//                  Log.v(TAG, "Rainie : productImg[" + i + "] = " + productImg);
+                }
 
                 // short title
                 String title = jsonArray_items.getJSONObject(i).getJSONArray("title").getString(0);
@@ -331,8 +283,6 @@ public class ResultsActivity extends AppCompatActivity
                     list_wish[i] = "no";
                 }
 
-                // TODO : add _jsonObjItem_str variables
-
                 listItem.add(new item(list_itemId[i], list_productImg[i], list_title[i], list_zipcode[i], list_shippingCost[i], list_condition[i], list_price[i], list_wish[i], list_jsonArray_item[i]));
 
             }
@@ -340,17 +290,18 @@ public class ResultsActivity extends AppCompatActivity
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             mRecyclerView.setAdapter(myAdapter);
 
-            ifFisrtTime = false;
-
-        }
-        catch (JSONException e)
-        {
+            isFirstOnCreate = false;
+        } catch (JSONException e) {
+            Toast.makeText(ResultsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
-    public void checkIfFavorite()
-    {
+    public void redirect() {
+        this.startActivity(newIntent);
+    }
+
+    public void updateWishList() {
         if (list_itemId != null) {
             Log.v(TAG, "Rainie : list_itemId is not null");
             for (int i = 0; i < list_itemId.length; i++) {
@@ -364,24 +315,13 @@ public class ResultsActivity extends AppCompatActivity
         }
     }
 
-
-
-
-    public void redirect()
-    {
-        this.startActivity(newIntent);
-    }
-
-
-    public void hasResults()
-    {
+    public void hasResults() {
         mShowingResult.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
         noResultsView.setVisibility(View.GONE);
     }
 
-    public void noResults()
-    {
+    public void noResults() {
         mShowingResult.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.GONE);
         noResultsView.setVisibility(View.VISIBLE);
