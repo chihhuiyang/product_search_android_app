@@ -146,7 +146,7 @@ public class DetailsActivity extends AppCompatActivity
 
         if (mSharedPreferences.contains(itemId))
         {
-            menu.getItem(1).setIcon(R.drawable.cart_remove);
+            menu.getItem(0).setIcon(R.drawable.cart_remove);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -536,7 +536,7 @@ public class DetailsActivity extends AppCompatActivity
             spEditor.apply();
             Log.v(TAG, "Rainie : remove wish size = " + mSharedPreferences.getAll().size());
             wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_add));
-            menu.getItem(1).setIcon(R.drawable.cart_plus);
+            menu.getItem(0).setIcon(R.drawable.cart_plus);
             Toast.makeText(this, itemTitle + " was removed from wish list", Toast.LENGTH_SHORT).show();
         }
         else
@@ -560,7 +560,7 @@ public class DetailsActivity extends AppCompatActivity
             Log.v(TAG, "Rainie : add wish size = " + mSharedPreferences.getAll().size());
 
             wish_button.setBackground(getResources().getDrawable(R.drawable.circle_wish_remove));
-            menu.getItem(1).setIcon(R.drawable.cart_remove);
+            menu.getItem(0).setIcon(R.drawable.cart_remove);
             Toast.makeText(this, itemTitle + " was added to wish list", Toast.LENGTH_SHORT).show();
         }
     }
