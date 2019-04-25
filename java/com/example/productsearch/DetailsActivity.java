@@ -248,16 +248,16 @@ public class DetailsActivity extends AppCompatActivity
         itemTitle = receivedTitle;
         jsonObjItem_str = receivedJsonObjItem_str;
 
-        Log.v(TAG, "Rainie: mIntent : " + mIntent);
-        Log.v(TAG, "Rainie: receivedJsonObjItem_str : " + receivedJsonObjItem_str);
-        Log.v(TAG, "Rainie: receivedItemId : " + receivedItemId);
-        Log.v(TAG, "Rainie: receivedTitle : " + receivedTitle);
-        Log.v(TAG, "Rainie: receivedImg : " + receivedCard_product_img);
-        Log.v(TAG, "Rainie: receivedZipcode : " + receivedCard_zipcode);
-        Log.v(TAG, "Rainie: receivedCost : " + receivedCard_shipping_cost);
-        Log.v(TAG, "Rainie: receivedCondition : " + receivedCard_condition);
-        Log.v(TAG, "Rainie: receivedPrice : " + receivedCard_price);
-        Log.v(TAG, "Rainie: receivedWish : " + receivedCard_wish);
+//        Log.v(TAG, "Rainie: mIntent : " + mIntent);
+//        Log.v(TAG, "Rainie: receivedJsonObjItem_str : " + receivedJsonObjItem_str);
+//        Log.v(TAG, "Rainie: receivedItemId : " + receivedItemId);
+//        Log.v(TAG, "Rainie: receivedTitle : " + receivedTitle);
+//        Log.v(TAG, "Rainie: receivedImg : " + receivedCard_product_img);
+//        Log.v(TAG, "Rainie: receivedZipcode : " + receivedCard_zipcode);
+//        Log.v(TAG, "Rainie: receivedCost : " + receivedCard_shipping_cost);
+//        Log.v(TAG, "Rainie: receivedCondition : " + receivedCard_condition);
+//        Log.v(TAG, "Rainie: receivedPrice : " + receivedCard_price);
+//        Log.v(TAG, "Rainie: receivedWish : " + receivedCard_wish);
 
         setTitle(receivedTitle);
 
@@ -275,12 +275,8 @@ public class DetailsActivity extends AppCompatActivity
 
     // mTitle is short title
     public void requestDetails2(String mTitle, String mItemId) {
-
         String mUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?itemId_single=" + mItemId;
-
         Log.v(TAG, "Rainie : single api : " + mUrl);
-
-
         RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
         {
@@ -289,7 +285,6 @@ public class DetailsActivity extends AppCompatActivity
             {
                 try
                 {
-
                     mProgressBar.setVisibility(View.GONE);
                     mProgressBarMsg.setVisibility(View.GONE);
 
@@ -299,21 +294,16 @@ public class DetailsActivity extends AppCompatActivity
 
                     price_item = jsonObject_detail.getJSONObject("Item").getJSONObject("CurrentPrice").getString("Value");
 
-                    // TODO : transfer single jsonObjItem_str
+                    // DONE : transfer single jsonObjItem_str
                     bundle.putString("jsonObjectItem", jsonObjItem_str);
                     Log.v(TAG, "Rainie : bundle jsonObjectItem = " + jsonObjItem_str);
                     bundle.putString("jsonObject_detail", jsonObject_detail.toString());
                     Log.v(TAG, "Rainie : bundle jsonObject_detail = " + jsonObject_detail.toString());
 
-                        // TODO : request photo api
-                        // Instantiate the RequestQueue.
+                        // DONE : request photo api
                         String mPhotoUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?keyword_photo=" + full_title;
-
                         Log.v(TAG, "Rainie : mPhotoUrl = " + mPhotoUrl);
-
                         RequestQueue queue2 = Volley.newRequestQueue(mContext);
-
-                        // Request a string response from the provided URL.
                         StringRequest stringRequest2 = new StringRequest(Request.Method.GET, mPhotoUrl, new Response.Listener<String>()
                         {
                             @Override
@@ -323,17 +313,12 @@ public class DetailsActivity extends AppCompatActivity
                                 {
                                     jsonObject_photo = new JSONObject(response);
                                     Log.v(TAG, "Rainie: Photo JSON : " + jsonObject_photo.toString());
-
                                     bundle.putString("jsonObject_photo", jsonObject_photo.toString());
                                     Log.v(TAG, "Rainie : bundle jsonObject_photo = " + jsonObject_photo.toString());
 
-
-
-                                    // TODO : request similar api
+                                    // DONE : request similar api
                                     String mSimilarUrl = "http://chihhuiy-app.us-east-2.elasticbeanstalk.com/?similar=true&itemId_similar=" + itemId;
-
                                     Log.v(TAG, "Rainie : mSimilarUrl = " + mSimilarUrl);
-
                                     RequestQueue queue3 = Volley.newRequestQueue(mContext);
                                     StringRequest stringRequest3 = new StringRequest(Request.Method.GET, mSimilarUrl, new Response.Listener<String>()
                                     {
@@ -356,14 +341,9 @@ public class DetailsActivity extends AppCompatActivity
                                             }
                                             catch (JSONException e)
                                             {
-                                                bundle.putString("jsonObject_similar", "");
-
-                                                // go to 4 TAB page
-                                                Log.v(TAG, "Rainie : Start setupViewPager()");
-                                                setupViewPager(mViewPager);
-                                                setupTabIcons();
-
-                                                e.printStackTrace();
+                                                mProgressBar.setVisibility(View.GONE);
+                                                mProgressBarMsg.setVisibility(View.GONE);
+                                                Toast.makeText(DetailsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     },
@@ -372,29 +352,18 @@ public class DetailsActivity extends AppCompatActivity
                                                 @Override
                                                 public void onErrorResponse(VolleyError error)
                                                 {
-
-                                                    Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-                                                    System.out.println("Request error!");
-                                                    System.out.println(error);
-                                                    Log.v(TAG, "Rainie: VolleyError");
+                                                    mProgressBar.setVisibility(View.GONE);
+                                                    mProgressBarMsg.setVisibility(View.GONE);
+                                                    Toast.makeText(DetailsActivity.this, "No Network connection!", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                     queue3.add(stringRequest3);
-
-
-
                                 }
                                 catch (JSONException e)
                                 {
-                                    bundle.putString("jsonObject_photo", "");
-                                    bundle.putString("jsonObject_similar", "");
-
-                                    // go to 4 TAB page
-                                    Log.v(TAG, "Rainie : Start setupViewPager()");
-                                    setupViewPager(mViewPager);
-                                    setupTabIcons();
-
-                                    e.printStackTrace();
+                                    mProgressBar.setVisibility(View.GONE);
+                                    mProgressBarMsg.setVisibility(View.GONE);
+                                    Toast.makeText(DetailsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         },
@@ -403,28 +372,18 @@ public class DetailsActivity extends AppCompatActivity
                                     @Override
                                     public void onErrorResponse(VolleyError error)
                                     {
-
-                                        Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-                                        System.out.println("Request error!");
-                                        System.out.println(error);
-                                        Log.v(TAG, "Rainie: VolleyError");
+                                        mProgressBar.setVisibility(View.GONE);
+                                        mProgressBarMsg.setVisibility(View.GONE);
+                                        Toast.makeText(DetailsActivity.this, "No Network connection!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                         queue2.add(stringRequest2);
-
-
-
-
-                    // go to 4 TAB page
-//                    Log.v(TAG, "Rainie : Start setupViewPager()");
-//                    setupViewPager(mViewPager);
-//                    setupTabIcons();
                 }
                 catch (JSONException e)
                 {
                     mProgressBar.setVisibility(View.GONE);
                     mProgressBarMsg.setVisibility(View.GONE);
-                    e.printStackTrace();
+                    Toast.makeText(DetailsActivity.this, "JSONException", Toast.LENGTH_SHORT).show();
                 }
             }
         },
@@ -433,15 +392,9 @@ public class DetailsActivity extends AppCompatActivity
                     @Override
                     public void onErrorResponse(VolleyError error)
                     {
-
-                        Toast.makeText(DetailsActivity.this, "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-
-                        System.out.println("Request error!");
-                        System.out.println(error);
-
-                        Log.v(TAG, "Rainie: VolleyError");
                         mProgressBar.setVisibility(View.GONE);
                         mProgressBarMsg.setVisibility(View.GONE);
+                        Toast.makeText(DetailsActivity.this, "No Network connection!", Toast.LENGTH_SHORT).show();
                     }
                 });
         queue.add(stringRequest);
@@ -473,13 +426,6 @@ public class DetailsActivity extends AppCompatActivity
             mFragmentTitleList.add(title);
         }
 
-        public void addTitleOnly(String title) {
-            mFragmentTitleList.add(title);
-        }
-
-        public void addFragmentOnly(Fragment fragment) {
-            mFragmentList.add(fragment);
-        }
 
         @Override
         public Fragment getItem(int position)
