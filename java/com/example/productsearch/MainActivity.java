@@ -24,6 +24,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "Rainie : onCreate()");
 
         setTheme(R.style.AppTheme_NoActionBar);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
