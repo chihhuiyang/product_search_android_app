@@ -425,7 +425,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
     {
 
         String ipUrl = "http://ip-api.com/json";
-        // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         StringRequest stringRequest = new StringRequest(Request.Method.GET, ipUrl, new Response.Listener<String>()
         {
@@ -482,12 +481,10 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
                         // current location
                         if (mCurrentLocation.isChecked()) {
                             url_params += "&zipcode=" + currentZip;
-//                getCurrentGeoLocation();
 
                         } else {    // input zipcode location
                             String inputLocationVal = mInputLocation.getText().toString();
                             url_params += "&location=" + inputLocationVal;
-//                requestResultsByInputLocation(inputLocationVal);
                         }
 
                     } else {    // disable nearby : hw9 (new server.js)
@@ -552,67 +549,10 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         queue.add(stringRequest);
     }
 
-    public void requestResultsByInputLocation(String inputLocation)
+
+    public void redirect()
     {
-        String keywordVal = mKeyword.getText().toString();
-//        keywordVal = keywordVal.replaceAll(" ", "%20").toLowerCase();
-        String categoryVal = mSpinner.getSelectedItem().toString();
-//        categoryVal = categoryVal.replaceAll(" ", "_").toLowerCase();
-
-        int distanceVal;
-        if (mDistance.getText().toString().isEmpty())
-        {
-            distanceVal = 10;
-        }
-        else
-        {
-            distanceVal = Integer.parseInt(mDistance.getText().toString());
-        }
-
-        inputLocation = inputLocation.replaceAll(" ", "%20").toLowerCase();
-
-        String mUrl = "http://cs571placesearch-env.us-east-2.elasticbeanstalk.com/?";
-        mUrl += "category=" + categoryVal + "&distance=" + distanceVal +
-                "&keyword=" + keywordVal + "&location=" + inputLocation;
-        System.out.println(mUrl);
-
-
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, mUrl, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("results");
-                    //System.out.println(jsonObject.toString());
-                    mIntent.putExtra("jsonObj", jsonObject.toString());
-                    redirect();
-//                    mProgressDialog.dismiss();
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error)
-                    {
-                        Toast.makeText(getActivity(), "No connection! Please check your internet connection.", Toast.LENGTH_SHORT).show();
-//                        mProgressDialog.dismiss();
-                        System.out.println(error);
-                    }
-                });
-        queue.add(stringRequest);
+        this.getActivity().startActivity(mIntent);
     }
 
 
@@ -671,38 +611,6 @@ public class searchFragment extends Fragment implements GoogleApiClient.OnConnec
         Log.d(TAG, "======after get location..=== lat:" + lat1 + "===lon:" + long1);
 
 //        showFragment(TRAVEL_ASSISTANT_CODE);
-    }
-
-    public void getCurrentGeoLocation()
-    {
-
-        Log.d(TAG, "======before get location..");
-
-        // for android 6.0
-        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "== in android 6.0, getting permission");
-            ActivityCompat.requestPermissions(this.getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        } else{
-            Log.d(TAG, "== in android 5.0");
-            get_location();
-        }
-
-        LocationManager locationManager = (LocationManager)
-                getActivity().getSystemService(LOCATION_SERVICE);
-
-        LocationListener locationListener = new MyLocationListener();
-        if ( ContextCompat.checkSelfPermission( this.getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED )
-        {}
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
-    }
-
-
-    public void redirect()
-    {
-        this.getActivity().startActivity(mIntent);
     }
 
     /*---------- Listener class to get coordinates -------------*/
